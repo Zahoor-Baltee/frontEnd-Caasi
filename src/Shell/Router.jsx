@@ -1,16 +1,14 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "../Access/Login";
-import DefaultLayout from "../Layout/DefaultLayout";
 import NewDefaultLayout from "../Layout/NewDefaultLayout";
 import ForgotPassword from "../Access/ForgotPassword";
 import Confirmation from "../Access/Confirmation";
-import Homepage from "../Pages/Homepage";
 import EnterExpenseReport from "../Pages/Expense Reports/EnterExpenseReport";
-// import NewDashboard from "../Pages/Dashboard/NewDashboard";
 import DashboardUsingGrid from "../Pages/Dashboard/DashboardUsingGrid";
 import TickPlacementBars from "../Componenets/Chart";
 import User from "../Pages/User/User";
+import AddUser from "../Pages/User/AddUser";
 import UserInformation from "../Pages/User/UserInformation";
 import ExpenseReportTable from '../Componenets/ExpenseReportTable';
 import ExpenseReports from "../Pages/Expense Reports/ExpenseReports";
@@ -41,6 +39,10 @@ const Router = () => {
         <Route
           path="/user"
           element={<WithLayout component={<User />} />}
+        />
+        <Route
+          path="/user-add"
+          element={<WithLayout component={<AddUser />} />}
         />
         <Route
           path="/userinformation"

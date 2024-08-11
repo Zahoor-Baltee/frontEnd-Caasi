@@ -9,4 +9,12 @@ export const UserServices = {
     let response = await ExecuteGet("users/list");
     return response;
   },
+  async getDetail(data) {
+    let response = await ExecuteGet(`users/${data.id}/detail`);
+    return response;
+  },
+  async creatUsers(data) {
+    let response = await ExecutePost(`users/create`, data);
+    return response;
+  },
 };

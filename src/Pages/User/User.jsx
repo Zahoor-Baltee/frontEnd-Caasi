@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, TextField, InputAdornment, Button } from '@mui/material'
+import { Box, TextField, InputAdornment, Button, IconButton } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from "@mui/material/Typography";
@@ -13,6 +13,7 @@ import userImage from '../../Assets/man.png'
 import { DataGrid } from '@mui/x-data-grid';
 
 import { UserServices } from '../../Services/User/UserServices';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -70,26 +71,29 @@ const User = () => {
         { _id: 1, userName: "sdjks", fullName: "kjdhj", email: "msdn", status: "ksdj", edit: "msdn" }
     ]
     const [age, setAge] = React.useState('');
+    let navigate = useNavigate()
     const columns = [
         {
-            field: 'userName', headerName: ' Name', width: 350, renderCell: (params) => (
+            field: 'fullName', headerName: 'Name', flex: 1, renderCell: (params) => (
                 <Box sx={{ display: "flex", justifyContent: "start", gap: "10px", alignItems: "center" }}>
                     <Box sx={{ height: "40px", width: "40px" }}>
                         <img className='userImage' src={userImage} sx={{ borderRadius: "50px !important" }} height='100%' width='100%' alt='lol' />
                     </Box>
-                    <Typography variant="body1" sx={{ color: '#000000' }}>Hasnain</Typography>
+                    <Typography variant="body1" sx={{ color: '#000000' }}>{params.value}</Typography>
                 </Box>
             )
         },
 
-        { field: 'fullName', headerName: 'Department', width: 335, },
-        { field: 'email', headerName: 'Role', width: 280, },
+        { field: 'department', headerName: 'Department', width: 335, },
+        { field: 'email', headerName: 'Email', width: 280, },
         { field: 'status', headerName: 'Status', width: 230, },
         {
-            field: 'edit', headerName: 'Edit', width: 100, renderCell: (params) => (
-                <Box >
+            field: '_id', headerName: 'Edit', width: 100, renderCell: (params) => (
+                <IconButton onClick={() => handleOpenDetail(params.value)}>
+
                     <ModeEditOutlineOutlinedIcon />
-                </Box>
+                </IconButton>
+
             )
         },
 
@@ -101,7 +105,9 @@ const User = () => {
         setAge(event.target.value);
     };
 
-
+    const handleOpenDetail = (id) => {
+        navigate("/userinformation", { state: { id: id } })
+    }
     //Get user List
 
     const getUserList = async () => {
@@ -155,7 +161,7 @@ const User = () => {
                                 width: "237px",
                                 height: "53px",
                                 textTransform: "none"
-                            }} variant="contained">Create user</Button>
+                            }} onClick={() => { navigate('/user-add') }} variant="contained">Create user</Button>
                             <div>
                                 <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: "#fff", color: "#F8F8F8" }}>
                                     <Select
@@ -178,7 +184,7 @@ const User = () => {
                     {/* --------------------Header Section Complete--------------- */}
                     <DataGrid
                         minHeight={40}
-                        rows={sv}
+                        rows={user?.list}
                         columns={columns}
                         getRowId={(e) => e._id}
                         // initialState={{
