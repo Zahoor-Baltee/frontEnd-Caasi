@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, IconButton,
-    Typography, Button, Pagination, Menu, MenuItem, Box
+    Typography, Button, Pagination, Menu, MenuItem, Box,
+    Dialog,
+    DialogContent,
+    DialogActions
 } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -11,6 +14,7 @@ import { styled } from '@mui/system';
 import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
 import ArrowDropUpOutlinedIcon from '@mui/icons-material/ArrowDropUpOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import ExpenseReportForm from '../Pages/ExpenseReports/AddExpenseReport';
 
 const StatusButton = styled(Button)(({ status }) => ({
     color: status === 'Approved' ? '#fff' : '#000',
@@ -32,9 +36,13 @@ const tableData = [
 const Root = styled(Box)({
     margin: 0,
     padding: 0,
+    // "& .css-1t1j96h-MuiPaper-root-MuiDialog-paper": {
+    //     maxHeight: "none"
+    // },
     "& .mainContainer": {
         padding: "20px",
         backgroundColor: "#f4f7fe",
+
 
         "& .headerSection": {
             display: "flex",
@@ -75,7 +83,7 @@ const Root = styled(Box)({
 
 function ExpenseReportTable() {
     const [selected, setSelected] = useState([]);
-
+    const [open, setOpen] = React.useState(false);
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
             const newSelected = tableData.map((row) => row.id);
@@ -106,6 +114,18 @@ function ExpenseReportTable() {
     };
 
     const isSelected = (id) => selected.indexOf(id) !== -1;
+
+
+
+
+
+    const openExpenseForm = () => {
+        debugger
+        setOpen(true);
+    }
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <Root>
@@ -143,7 +163,7 @@ function ExpenseReportTable() {
                             width: "237px",
                             height: "53px",
                             textTransform: "none"
-                        }} variant="contained">Create Expense Report</Button>
+                        }} variant="contained" onClick={openExpenseForm}>Create Expense Report</Button>
                         <Box>
                             <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: "#fff", color: "#F8F8F8" }}>
                                 <Select
@@ -272,7 +292,41 @@ function ExpenseReportTable() {
                     </Typography>
                     <Pagination count={1337} color="primary" sx={{ mt: 2 }} />
                 </Box>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    PaperProps={{
+                        style: {
+                            margin: 0, // Remove default margin
+                            maxWidth: '800px', // Fixed width
+                            width: '800px', // Fixed width
+                            height: 'auto', // Allow content to define height
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            overflow: 'visible', // Ensure no overflow scrolling
+                        },
+                    }}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogContent
+                        style={{
+                            padding: '16px',
+                            overflow: 'visible', // Ensure no internal scrolling
+                        }}
+                    >
+                        <ExpenseReportForm />
+                    </DialogContent>
+                    {/* <DialogActions>
+                        <Button onClick={handleClose}>Disagree</Button>
+                        <Button onClick={handleClose} autoFocus>
+                            Agree
+                        </Button>
+                    </DialogActions> */}
+                </Dialog>
             </Box>
+
         </Root>
     );
 }
