@@ -61,7 +61,7 @@ const Root = styled(Box)({
 });
 
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 function ResponsiveDrawer(props) {
     const { window } = props;

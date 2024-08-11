@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from "@mui/material/Button";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { Typography, Grid } from '@mui/material';
+import { Typography, Grid, TextField } from '@mui/material';
 
 
 import image from '../../Assets/man.png';
@@ -12,6 +12,7 @@ import activityReport from '../../Assets/activityReport.png';
 import userAbsense from '../../Assets/userAbsence.png';
 import { useLocation } from 'react-router-dom';
 import { UserServices } from '../../Services/User/UserServices';
+import { Helpers } from '../../Shell/Helper';
 
 const Root = styled(Box)(({ theme }) => ({
     margin: 0,
@@ -103,7 +104,8 @@ const Root = styled(Box)(({ theme }) => ({
 export default function UserInfromation() {
     const [user, setUser] = useState({
         list: [],
-        detail: {}
+        detail: {},
+        isEdit: false
     })
     let { state } = useLocation()
     useEffect(() => {
@@ -111,6 +113,14 @@ export default function UserInfromation() {
             getUserDetail()
         }
     }, [state])
+    const handleEdit = () => {
+        if (user.isEdit) {
+            setUser({ ...user, isEdit: false })
+
+        } else {
+            setUser({ ...user, isEdit: true })
+        }
+    }
     const getUserDetail = async () => {
         let data = {
             id: state?.id
@@ -144,7 +154,7 @@ export default function UserInfromation() {
                         <Button sx={{ color: "black", display: "flex", gap: "8px", textTransform: "none" }} variant="text">
                             <KeyboardBackspaceIcon /> Back
                         </Button>
-                        <Button className='editInfoButton' variant="contained">Edit Information</Button>
+                        <Button className='editInfoButton' onClick={handleEdit} variant="contained">{user.isEdit ? "Save" : "Edit Information"}</Button>
                     </Box>
                     <Box className='cardpo'>
                         <Box sx={{
@@ -163,13 +173,15 @@ export default function UserInfromation() {
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
                                     <Typography className='firstName'>First Name</Typography>
-                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.firstName}</Typography>
+                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='text' name='firstName' />
+                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.firstName}</Typography>}
+
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Email Address</Typography>
                                     <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.email}</Typography>
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Phone Number</Typography>
                                     <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.phoneNumber}</Typography>
                                     <Typography variant="h6" className='firstName' sx={{ textTransform: "none" }}>User's Creation Date</Typography>
-                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.createdDate}</Typography>
+                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{Helpers.dateFormater(user?.detail?.createdDate)}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Last Name</Typography>
@@ -179,7 +191,7 @@ export default function UserInfromation() {
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Status</Typography>
                                     <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.status}</Typography>
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Last Activity</Typography>
-                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.updatedDate}</Typography>
+                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{Helpers.dateFormater(user?.detail?.updatedDate)}</Typography>
                                 </Grid>
                             </Grid>
                         </Box>
