@@ -9,6 +9,7 @@ import logo1 from "../Assets/cassilogo.png";
 import logo from "../Assets/Caasi-croped-logo.png";
 import { UserServices } from "../Services/User/UserServices";
 import { useNavigate } from "react-router-dom";
+import AuthService from "../Services/AuthServices";
 
 const Root = styled(Box)({
   margin: 0,
@@ -74,8 +75,12 @@ const Login = () => {
     try {
       let res = await UserServices.loginUser(data);
       if (res.success) {
+
+        alert(res.message);
+        AuthService.logIn(res.data.user, res.data.accessToken)
+        navigate("/dashboard")
       } else {
-        alert(res.mesage);
+        alert(res.error);
       }
     } catch (error) {
       console.log(error);
@@ -175,7 +180,7 @@ const Login = () => {
             size="large"
             variant="contained"
             fullWidth
-            onClick={() => navigate("/dashboard")}
+            onClick={handleLogIn}
           >
             Login
           </Button>

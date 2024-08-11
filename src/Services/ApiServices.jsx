@@ -28,7 +28,7 @@ const ExecutePost = async (url, data) => {
     })
         .then(response => response.text())
         .then(result => {
-            return result;
+            return JSON.parse(result);
         })
         .catch(error => {
             return error;
