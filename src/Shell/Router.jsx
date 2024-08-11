@@ -4,14 +4,14 @@ import Login from "../Access/Login";
 import NewDefaultLayout from "../Layout/NewDefaultLayout";
 import ForgotPassword from "../Access/ForgotPassword";
 import Confirmation from "../Access/Confirmation";
-import EnterExpenseReport from "../Pages/Expense Reports/EnterExpenseReport";
+import EnterExpenseReport from "../Pages/ExpenseReports/ExpenseReports";
 import DashboardUsingGrid from "../Pages/Dashboard/DashboardUsingGrid";
 import TickPlacementBars from "../Componenets/Chart";
 import User from "../Pages/User/User";
 import AddUser from "../Pages/User/AddUser";
 import UserInformation from "../Pages/User/UserInformation";
 import ExpenseReportTable from '../Componenets/ExpenseReportTable';
-import ExpenseReports from "../Pages/Expense Reports/ExpenseReports";
+import ExpenseReports from "../Pages/ExpenseReports/ExpenseReports";
 import ActivityReport from "../Pages/Activity Report/ActivityReport";
 import AddActivity from "../Pages/ActivityReports/AddActivity"
 import ReportsAndExport from "../Pages/Reports And Exports/ReportsAndExport";
