@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { UserServices } from '../../Services/User/UserServices';
 import { Helpers } from '../../Shell/Helper';
 import AuthService from '../../Services/AuthServices';
+import userImage from '../../Assets/man.png'
+
 
 
 
@@ -100,7 +102,11 @@ const AddUser = () => {
         }
     }
 
-
+    let navigateUser = useNavigate();
+    const routeChange = () => {
+        let path = '/user';
+        navigate(path);
+    }
     return (
         <Root>
             <Box className="mainContainer">
@@ -156,9 +162,11 @@ const AddUser = () => {
                     {/* --------------------Header Section Complete--------------- */}
                     <Box sx={{ p: 2, width: "100%" }}>
                         <Grid container spacing={2}>
-                            <Grid container item xs={6} alignItems="center">
+                            <Grid container item xs={4} alignItems="center">
                                 <Grid item xs={4}>
-                                    <Box className="image">image Preview</Box>
+                                    <Box sx={{ height: "100px", width: "100px" }} className="image">
+                                        <img style={{ borderRadius: "20px" }} height='100%' width='100%' src={userImage} alt="image" />
+                                    </Box>
                                 </Grid>
                                 <Grid item xs={8}>
                                     <TextField className='inputField1' variant='outlined' fullWidth type='file' value={userFields?.image || ''} onChange={handleChange} name='image' />
@@ -171,7 +179,7 @@ const AddUser = () => {
                                 <Typography sx={{ textTransform: "none" }}>Email Address</Typography>
                                 <TextField className='inputField1' fullWidth type='text' value={userFields?.email || ''} onChange={handleChange} name='email' />
                                 <Typography sx={{ textTransform: "none" }}>Phone Number</Typography>
-                                <TextField className='inputField1' fullWidth type='text' value={userFields?.phoneNumber || ''} onChange={handleChange} name='phoneNumber' />
+                                <TextField className='inputField1' inputProps={{ maxLength: 11 }} fullWidth type='text' value={userFields?.phoneNumber || ''} onChange={handleChange} name='phoneNumber' />
                                 <Typography sx={{ textTransform: "none" }}>User's Creation Date</Typography>
                                 <TextField className='inputField1' fullWidth type='date' value={userFields?.createdDate || ''} onChange={handleChange} name='createdDate' />
                             </Grid>
@@ -181,7 +189,18 @@ const AddUser = () => {
                                 <Typography sx={{ textTransform: "none" }}>Team</Typography>
                                 <TextField className='inputField1' fullWidth type='text' value={userFields?.department || ''} onChange={handleChange} name='department' />
                                 <Typography sx={{ textTransform: "none" }}>Status</Typography>
-                                <TextField className='inputField1' fullWidth type='text' value={userFields?.status || ''} onChange={handleChange} name='status' />
+                                <FormControl fullWidth className='inputField1'>
+                                    <Select
+                                        value={userFields?.status || ''}
+                                        onChange={handleChange}
+                                        name='status'
+                                        displayEmpty
+                                    >
+                                        <MenuItem value=''>Select Status</MenuItem>
+                                        <MenuItem value='Active'>Active</MenuItem>
+                                        <MenuItem value='Inactive'>InActive</MenuItem>
+                                    </Select>
+                                </FormControl>
                                 <Typography sx={{ textTransform: "none" }}>Last Activity</Typography>
                                 <TextField className='inputField1' fullWidth type='date' value={userFields?.updatedDate || ''} onChange={handleChange} name='updatedDate' />
                             </Grid>
@@ -192,7 +211,7 @@ const AddUser = () => {
                                 height: "53px",
                                 textTransform: "none"
                             }} variant="contained">Create user</Button>
-                            <Button sx={{
+                            <Button onClick={routeChange} sx={{
                                 width: "237px",
                                 height: "53px",
                                 textTransform: "none"

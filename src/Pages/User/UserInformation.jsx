@@ -4,7 +4,10 @@ import Box from '@mui/material/Box';
 import Button from "@mui/material/Button";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { Typography, Grid, TextField } from '@mui/material';
-
+import { useNavigate } from "react-router-dom";
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 import image from '../../Assets/man.png';
 import expenseReportIcon from '../../Assets/Icon.png';
@@ -36,9 +39,12 @@ const Root = styled(Box)(({ theme }) => ({
                 display: "flex",
                 flexDirection: "column",
                 gap: "20px",
+                // "& .inputField1": {
+                //     height: "12px"
+                // },
 
                 "& .firstName": {
-                    fontSize: "24px",
+                    fontSize: "18px",
                     fontWeight: "600",
                     color: "#808080",
                 },
@@ -54,6 +60,9 @@ const Root = styled(Box)(({ theme }) => ({
                     flexDirection: "row",
                     gap: "40px",
                 },
+                "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": {
+                    height: "10px"
+                }
 
             },
             "& .userImage": {
@@ -102,6 +111,9 @@ const Root = styled(Box)(({ theme }) => ({
 }));
 
 export default function UserInfromation() {
+    const [userFields, setUserFields] = useState({
+
+    })
     const [user, setUser] = useState({
         list: [],
         detail: {},
@@ -137,6 +149,16 @@ export default function UserInfromation() {
             console.error(error)
         }
     }
+    let navigate = useNavigate();
+    const routeChange = () => {
+        let path = `/user`;
+        navigate(path);
+    }
+    const handleChangeStatus = (event) => {
+        let { name, value } = event.target
+        setUserFields({ ...userFields, [name]: value });
+    };
+
     return (
         <Root>
             <Box className='mainContainer'>
@@ -151,7 +173,7 @@ export default function UserInfromation() {
                             gap: 0,
                         },
                     }}>
-                        <Button sx={{ color: "black", display: "flex", gap: "8px", textTransform: "none" }} variant="text">
+                        <Button onClick={routeChange} sx={{ color: "black", display: "flex", gap: "8px", textTransform: "none" }} variant="text">
                             <KeyboardBackspaceIcon /> Back
                         </Button>
                         <Button className='editInfoButton' onClick={handleEdit} variant="contained">{user.isEdit ? "Save" : "Edit Information"}</Button>
@@ -175,23 +197,54 @@ export default function UserInfromation() {
                                     <Typography className='firstName'>First Name</Typography>
                                     {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='text' name='firstName' />
                                         : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.firstName}</Typography>}
-
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Email Address</Typography>
-                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.email}</Typography>
+                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='text' name='email' />
+                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.email}</Typography>}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Phone Number</Typography>
-                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.phoneNumber}</Typography>
+                                    {user.isEdit ? <TextField inputProps={{ maxLength: 11 }} className='inputField1' variant='outlined' fullWidth type='number' name='phoneNumber' />
+                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.phoneNumber}</Typography>}
                                     <Typography variant="h6" className='firstName' sx={{ textTransform: "none" }}>User's Creation Date</Typography>
-                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{Helpers.dateFormater(user?.detail?.createdDate)}</Typography>
+                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='date' name='createdDate' />
+                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{Helpers.dateFormater(user?.detail?.createdDate)}</Typography>}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Last Name</Typography>
-                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.lastName}</Typography>
+                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='text' name='lastName' />
+                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.lastName}</Typography>}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Team</Typography>
-                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.department}</Typography>
+                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='text' name='department' />
+                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.department}</Typography>}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Status</Typography>
-                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.status}</Typography>
+                                    {user.isEdit ? (
+                                        <FormControl sx={{
+                                            "& .MuiInputBase-root": {
+                                                height: "42px"
+                                            }
+                                        }} fullWidth className='inputField1'>
+                                            <Select
+                                                value={userFields?.status || ''}
+                                                onChange={handleChangeStatus}
+                                                name='status'
+                                                displayEmpty
+                                            >
+                                                <MenuItem value=''>Select Status</MenuItem>
+                                                <MenuItem value='Active'>Active</MenuItem>
+                                                <MenuItem value='Inactive'>Inactive</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    ) : (
+                                        <Typography className='lastName' sx={{ textTransform: "none" }}>
+                                            {user?.detail?.status}
+                                        </Typography>
+                                    )}
+
+
+
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Last Activity</Typography>
-                                    <Typography className='lastName' sx={{ textTransform: "none" }}>{Helpers.dateFormater(user?.detail?.updatedDate)}</Typography>
+
+                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='date' name='updatedDate' />
+                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.updatedDate}</Typography>}
+
                                 </Grid>
                             </Grid>
                         </Box>
