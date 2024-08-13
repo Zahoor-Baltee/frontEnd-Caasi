@@ -10,6 +10,7 @@ import logo from "../Assets/Caasi-croped-logo.png";
 import { UserServices } from "../Services/User/UserServices";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../Services/AuthServices";
+import AlertSnackbar from "../Componenets/AlertSnackbar";
 
 const Root = styled(Box)({
   margin: 0,
@@ -65,6 +66,11 @@ const Root = styled(Box)({
 const Login = () => {
   const [data, setData] = useState({});
   const [condition, setCondition] = useState(false);
+  const [alert, setAlert] = useState({
+    alertColor: "primary",
+    alertMessage: "",
+    isAlertOpen: false,
+  });
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -75,12 +81,14 @@ const Login = () => {
     try {
       let res = await UserServices.loginUser(data);
       if (res.success) {
-
-        alert(res.message);
+        debugger
+        setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
         AuthService.logIn(res.data.user, res.data.accessToken)
-        navigate("/dashboard")
+        setTimeout(() => {
+          navigate("/dashboard")
+        }, 3000)
       } else {
-        alert(res.error);
+        setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: res.error });
       }
     } catch (error) {
       console.log(error);
@@ -184,6 +192,9 @@ const Login = () => {
           >
             Login
           </Button>
+        </Box>
+        <Box>
+          <AlertSnackbar alert={alert} setAlert={setAlert} />
         </Box>
       </Box>
     </Root>

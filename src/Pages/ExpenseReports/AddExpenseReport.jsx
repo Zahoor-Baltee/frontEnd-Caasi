@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-    Container,
     TextField,
     Button,
     Typography,
@@ -18,19 +17,28 @@ import { AttachFile, QrCodeScanner } from '@mui/icons-material';
 import { styled } from '@mui/system';
 import QrScanner from 'react-qr-scanner'; // Updated QR code scanner library
 import { ExpenseService } from '../../Services/Expense/ExpenseService';
+import AuthService from '../../Services/AuthServices';
+import AlertSnackbar from '../../Componenets/AlertSnackbar';
+import { useNavigate } from 'react-router-dom';
 
 const Root = styled(Box)({
     margin: 0,
     padding: 0,
 });
 
-const ExpenseReportForm = () => {
+const ExpenseReportForm = ({ open, setOpen }) => {
     const [formFields, setFormFields] = useState({});
     const [userName, setUserName] = useState('');
     const [category, setCategory] = useState('');
     const [file, setFile] = useState(null);
     const [isScannerOpen, setIsScannerOpen] = useState(false);
+    const [alert, setAlert] = useState({
+        alertColor: "primary",
+        alertMessage: "",
+        isAlertOpen: false,
+    });
 
+    const navigate = useNavigate();
     const handleChange = (event) => {
         setFormFields((prev) => ({ ...prev, [event.target.name]: event.target.value }));
     };
@@ -45,8 +53,17 @@ const ExpenseReportForm = () => {
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
-        setFile(selectedFile);
+        if (selectedFile) {
+            const fileData = {
+                name: selectedFile.name,
+                size: selectedFile.size,
+                type: selectedFile.type,
+                lastModified: selectedFile.lastModified,
+            };
+            setFile(JSON.stringify(fileData));
+        }
     };
+
 
     const handleOpenScanner = () => {
         setIsScannerOpen(true);
@@ -68,15 +85,26 @@ const ExpenseReportForm = () => {
         console.error(error);
     };
 
+
+
     const handleSubmit = async () => {
         try {
+            let clientData = AuthService.getUserData()
             let data = formFields;
-            data.attachment = file
-            data.scan = "https://example.com"
-            debugger
+            data.attachment = file;
+            // data.userName = userName;
+            data.category = category;
+            data.clientId = clientData.clientId;
+            data.userName = clientData.name;
+            data.userId = clientData._id;
+            data.scan = "https://example.com";
+            // debugger
             let res = await ExpenseService.createExpense(data)
-            if (res.issussess) {
-
+            if (res.success) {
+                setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
+                setTimeout(() => {
+                    setOpen(false);
+                }, 3000)
             } else {
 
             }
@@ -138,7 +166,7 @@ const ExpenseReportForm = () => {
                 }}
             >
                 <MenuItem value="">Select a Category</MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={"Developer"}>Developer</MenuItem>
                 <MenuItem value={20}>Twenty</MenuItem>
                 <MenuItem value={30}>Thirty</MenuItem>
             </Select>
@@ -221,6 +249,10 @@ const ExpenseReportForm = () => {
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
                     Submit
                 </Button>
+            </Box>
+
+            <Box>
+                <AlertSnackbar alert={alert} setAlert={setAlert} />
             </Box>
 
             <Dialog open={isScannerOpen} onClose={handleCloseScanner}>
