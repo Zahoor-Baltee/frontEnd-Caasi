@@ -29,51 +29,51 @@ const Root = styled(Box)({
 
 const dataset = [
     {
-        expenses: 21,
+        expenses: 400,
         month: 'Jan',
     },
     {
-        expenses: 100,
+        expenses: 300,
         month: 'Feb',
     },
     {
-        expenses: 41,
+        expenses: 200,
         month: 'Mar',
     },
     {
-        expenses: 73,
+        expenses: 100,
         month: 'Apr',
     },
     {
-        expenses: 99,
+        expenses: 80,
         month: 'May',
     },
     {
-        expenses: 144,
+        expenses: 60,
         month: 'June',
     },
     {
-        expenses: 400,
+        expenses: 40,
         month: 'July',
     },
     {
-        expenses: 249,
+        expenses: 30,
         month: 'Aug',
     },
     {
-        expenses: 131,
+        expenses: 20,
         month: 'Sept',
     },
     {
-        expenses: 55,
+        expenses: 15,
         month: 'Oct',
     },
     {
-        expenses: 48,
+        expenses: 10,
         month: 'Nov',
     },
     {
-        expenses: 25,
+        expenses: 5,
         month: 'Dec',
     },
 ];

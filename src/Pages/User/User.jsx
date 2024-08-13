@@ -65,6 +65,7 @@ const Root = styled(Box)({
 const User = () => {
     const [user, setUser] = useState({
         list: [],
+        filterList: [],
         detail: {}
     })
     let sv = [
@@ -74,17 +75,18 @@ const User = () => {
     let navigate = useNavigate()
     const columns = [
         {
-            field: 'fullName', headerName: 'Name', flex: 1, renderCell: (params) => (
+            field: 'firstName', headerName: 'Name', flex: 1, renderCell: (params) => (
                 <Box sx={{ display: "flex", justifyContent: "start", gap: "10px", alignItems: "center" }}>
                     <Box sx={{ height: "40px", width: "40px" }}>
                         <img className='userImage' src={userImage} sx={{ borderRadius: "50px !important" }} height='100%' width='100%' alt='lol' />
                     </Box>
-                    <Typography variant="body1" sx={{ color: '#000000' }}>{params.value}</Typography>
+                    <Typography variant="body1" sx={{ color: '#000000' }}>{params.value} {params.row.lastName}</Typography>
                 </Box>
             )
         },
 
         { field: 'department', headerName: 'Department', width: 335, },
+        { field: 'role', headerName: 'Role', width: 335, },
         { field: 'email', headerName: 'Email', width: 280, },
         { field: 'status', headerName: 'Status', width: 230, },
         {
@@ -114,7 +116,7 @@ const User = () => {
         try {
             let res = await UserServices.getlist()
             if (res.success) {
-                setUser({ ...user, list: res.data })
+                setUser({ ...user, list: res.data, filterList: res.data })
             } else {
                 // alert("failed")
             }
@@ -125,6 +127,12 @@ const User = () => {
     }
 
 
+    const handleSearch = (event) => {
+        let { value } = event.target
+        let filterDataByFirstName = user?.list?.filter(item => item?.firstName?.toLowerCase().includes(value?.toLowerCase()))
+        setUser({ ...user, filterList: filterDataByFirstName })
+    }
+
     return (
         <Root>
             <Box className="mainContainer">
@@ -132,15 +140,14 @@ const User = () => {
                 <Box className="mainBox">
                     {/* --------------------Header Section--------------- */}
                     <Box className="headerSection">
-
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-
                             <TextField
                                 sx={{
                                     "& fieldset": { border: 'none' },
                                 }}
                                 className='inputField'
                                 placeholder='Search'
+                                onChange={handleSearch}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
@@ -149,7 +156,6 @@ const User = () => {
                                     ),
                                 }}
                             />
-
                         </Box>
                         <Box sx={{
                             display: "flex",
@@ -184,7 +190,7 @@ const User = () => {
                     {/* --------------------Header Section Complete--------------- */}
                     <DataGrid
                         minHeight={40}
-                        rows={user?.list}
+                        rows={user?.filterList}
                         columns={columns}
                         getRowId={(e) => e._id}
                         // initialState={{

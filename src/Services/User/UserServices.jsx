@@ -1,4 +1,4 @@
-import { ExecuteGet, ExecutePost } from "../ApiServices";
+import { ExecuteGet, ExecutePatch, ExecutePost } from "../ApiServices";
 
 export const UserServices = {
   async loginUser(data) {
@@ -15,6 +15,10 @@ export const UserServices = {
   },
   async creatUsers(data) {
     let response = await ExecutePost(`users/create`, data);
+    return response;
+  },
+  async updateUsers(id, data) {
+    let response = await ExecutePatch(`users/${id}/update`, data);
     return response;
   },
 };

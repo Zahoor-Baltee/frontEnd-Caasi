@@ -36,8 +36,16 @@ const Root = styled(Box)({
                 height: "100px",
                 width: "100px",
                 borderRadius: "5px",
-                backgroundColor: "#fff"
-            }
+                backgroundColor: "#fff",
+                " & .inputField1": {
+                    backgroundColor: "#ffffff",
+                    border: 0,
+                    '&:before, :after, :hover:not(.Mui-disabled):before': {
+                        borderBottom: 0,
+                    },
+                }
+            },
+
         },
         "& .headerSection": {
             display: "flex",
@@ -49,13 +57,6 @@ const Root = styled(Box)({
             Height: "57.43px",
             borderRadius: "146px"
         },
-        " & .inputField1": {
-            backgroundColor: "#ffffff",
-            border: 0,
-            '&:before, :after, :hover:not(.Mui-disabled):before': {
-                borderBottom: 0,
-            },
-        }
     }
 
 });
@@ -63,6 +64,14 @@ const AddUser = () => {
     const [userFields, setUserFields] = useState({
 
     })
+    const [error, setError] = useState(false);
+    const [helperText, setHelperText] = useState('');
+
+    const validateEmail = (email) => {
+        // Basic email regex pattern
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    };
 
     const [age, setAge] = React.useState('');
     let navigate = useNavigate()
@@ -74,6 +83,15 @@ const AddUser = () => {
     const handleChange = (event) => {
         let { name, value } = event.target
         setUserFields({ ...userFields, [name]: value });
+        if (name === "email") {
+            if (validateEmail(value)) {
+                setError(false)
+                setHelperText('')
+            } else {
+                setError(true)
+                setHelperText('Please inter a valid Email')
+            }
+        }
     };
 
     const handleOpenDetail = (id) => {
@@ -89,8 +107,11 @@ const AddUser = () => {
         data.userName = clientData.name
         data.password = "12345678"
         try {
+            debugger
             let res = await UserServices.creatUsers(data)
+
             if (res.success) {
+                navigateUser()
                 alert(res.message)
                 // setUser({ ...user, list: res.data })
             } else {
@@ -177,7 +198,9 @@ const AddUser = () => {
                                 <Typography >First Name</Typography>
                                 <TextField className='inputField1' variant='outlined' fullWidth type='text' value={userFields?.firstName || ''} onChange={handleChange} name='firstName' />
                                 <Typography sx={{ textTransform: "none" }}>Email Address</Typography>
-                                <TextField className='inputField1' fullWidth type='text' value={userFields?.email || ''} onChange={handleChange} name='email' />
+                                <TextField className='inputField1' fullWidth type='email' helperText={helperText}
+
+                                    value={userFields?.email || ''} onChange={handleChange} name='email' />
                                 <Typography sx={{ textTransform: "none" }}>Phone Number</Typography>
                                 <TextField className='inputField1' inputProps={{ maxLength: 11 }} fullWidth type='text' value={userFields?.phoneNumber || ''} onChange={handleChange} name='phoneNumber' />
                                 <Typography sx={{ textTransform: "none" }}>User's Creation Date</Typography>
@@ -197,8 +220,8 @@ const AddUser = () => {
                                         displayEmpty
                                     >
                                         <MenuItem value=''>Select Status</MenuItem>
-                                        <MenuItem value='Active'>Active</MenuItem>
-                                        <MenuItem value='Inactive'>InActive</MenuItem>
+                                        <MenuItem value='active'>Active</MenuItem>
+                                        <MenuItem value='inactive'>InActive</MenuItem>
                                     </Select>
                                 </FormControl>
                                 <Typography sx={{ textTransform: "none" }}>Last Activity</Typography>
@@ -226,4 +249,4 @@ const AddUser = () => {
 }
 
 
-export default AddUser
+export default AddUser;

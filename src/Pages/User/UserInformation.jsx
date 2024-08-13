@@ -16,6 +16,10 @@ import userAbsense from '../../Assets/userAbsence.png';
 import { useLocation } from 'react-router-dom';
 import { UserServices } from '../../Services/User/UserServices';
 import { Helpers } from '../../Shell/Helper';
+import validator from "validator";
+import { fireEvent } from '@testing-library/react';
+import AuthService from '../../Services/AuthServices';
+
 
 const Root = styled(Box)(({ theme }) => ({
     margin: 0,
@@ -37,19 +41,23 @@ const Root = styled(Box)(({ theme }) => ({
             "& .cardpo": {
                 padding: "20px",
                 display: "flex",
-                flexDirection: "column",
-                gap: "20px",
+                // flexDirection: "column",
+                // gap: "50px",
                 // "& .inputField1": {
                 //     height: "12px"
                 // },
 
                 "& .firstName": {
-                    fontSize: "18px",
+                    fontSize: "20px",
                     fontWeight: "600",
                     color: "#808080",
+                    lineHeight: "30px"
                 },
                 "& .lastName": {
+                    height: "30px",
                     fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#000000",
                     fontWeight: "500",
                 },
                 [theme.breakpoints.down('lg')]: {
@@ -125,9 +133,27 @@ export default function UserInfromation() {
             getUserDetail()
         }
     }, [state])
-    const handleEdit = () => {
+    useEffect(() => {
+        setUserFields(user.detail)
+    }, [user.isEdit])
+    const handleEdit = async () => {
         if (user.isEdit) {
-            setUser({ ...user, isEdit: false })
+            let clientData = AuthService.getUserData()
+            userFields.clientId = clientData.clientId
+            try {
+                let res = await UserServices.updateUsers(state?.id, userFields)
+                if (res.success) {
+                    // setUser({ ...user, detail: res.data })
+                    setUser({ ...user, isEdit: false })
+                    getUserDetail()
+                } else {
+                    // alert("failed")
+                }
+
+            } catch (error) {
+                console.error(error)
+            }
+
 
         } else {
             setUser({ ...user, isEdit: true })
@@ -140,7 +166,7 @@ export default function UserInfromation() {
         try {
             let res = await UserServices.getDetail(data)
             if (res.success) {
-                setUser({ ...user, detail: res.data })
+                setUser({ ...user, detail: res.data, isEdit: false })
             } else {
                 // alert("failed")
             }
@@ -154,7 +180,7 @@ export default function UserInfromation() {
         let path = `/user`;
         navigate(path);
     }
-    const handleChangeStatus = (event) => {
+    const handleChange = (event) => {
         let { name, value } = event.target
         setUserFields({ ...userFields, [name]: value });
     };
@@ -181,8 +207,8 @@ export default function UserInfromation() {
                     <Box className='cardpo'>
                         <Box sx={{
                             height: "300px",
-                            width: "300px",
-                            margin: "0 auto",
+                            width: "350px",
+                            // margin: "0 auto",
                             // "@media (min-width:600px)": {
                             //     height: "100%",
                             //     width: "100%",
@@ -191,29 +217,41 @@ export default function UserInfromation() {
                         }}>
                             <img className='userImage' src={image} width="100%" height="100%" alt="User" />
                         </Box>
-                        <Box sx={{ p: 2, width: "100%" }}>
+                        <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
                                     <Typography className='firstName'>First Name</Typography>
-                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='text' name='firstName' />
-                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.firstName}</Typography>}
+                                    {user.isEdit ?
+                                        <TextField className='inputField1' variant='outlined' value={userFields?.firstName || ''} onChange={handleChange} fullWidth type='text' name='firstName' />
+                                        :
+                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.firstName}</Typography>}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Email Address</Typography>
-                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='text' name='email' />
-                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.email}</Typography>}
+                                    {user.isEdit ?
+                                        <TextField className='inputField1' value={userFields?.email || ''} onChange={handleChange} variant='outlined' fullWidth type='text' name='email' />
+                                        :
+                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.email}</Typography>}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Phone Number</Typography>
-                                    {user.isEdit ? <TextField inputProps={{ maxLength: 11 }} className='inputField1' variant='outlined' fullWidth type='number' name='phoneNumber' />
-                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.phoneNumber}</Typography>}
+                                    {user.isEdit ?
+                                        <TextField inputProps={{ maxLength: 11 }} value={userFields?.phoneNumber || ''} onChange={handleChange} className='inputField1' variant='outlined' fullWidth type='number' name='phoneNumber' />
+                                        :
+                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.phoneNumber}</Typography>}
                                     <Typography variant="h6" className='firstName' sx={{ textTransform: "none" }}>User's Creation Date</Typography>
-                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='date' name='createdDate' />
-                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{Helpers.dateFormater(user?.detail?.createdDate)}</Typography>}
+                                    {user.isEdit ?
+                                        <TextField className='inputField1' value={userFields?.updatedDate || ''} onChange={handleChange} variant='outlined' fullWidth type='date' name='updatedDate' />
+                                        :
+                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{Helpers.dateFormater(user?.detail?.updatedDate)}</Typography>}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Last Name</Typography>
-                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='text' name='lastName' />
-                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.lastName}</Typography>}
+                                    {user.isEdit ?
+                                        <TextField className='inputField1' value={userFields?.lastName || ''} onChange={handleChange} variant='outlined' fullWidth type='text' name='lastName' />
+                                        :
+                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.lastName}</Typography>}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Team</Typography>
-                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='text' name='department' />
-                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.department}</Typography>}
+                                    {user.isEdit ?
+                                        <TextField className='inputField1' value={userFields?.department || ''} onChange={handleChange} variant='outlined' fullWidth type='text' name='department' />
+                                        :
+                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.department}</Typography>}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Status</Typography>
                                     {user.isEdit ? (
                                         <FormControl sx={{
@@ -223,13 +261,13 @@ export default function UserInfromation() {
                                         }} fullWidth className='inputField1'>
                                             <Select
                                                 value={userFields?.status || ''}
-                                                onChange={handleChangeStatus}
+                                                onChange={handleChange}
                                                 name='status'
                                                 displayEmpty
                                             >
                                                 <MenuItem value=''>Select Status</MenuItem>
-                                                <MenuItem value='Active'>Active</MenuItem>
-                                                <MenuItem value='Inactive'>Inactive</MenuItem>
+                                                <MenuItem value='active'>Active</MenuItem>
+                                                <MenuItem value='inactive'>Inactive</MenuItem>
                                             </Select>
                                         </FormControl>
                                     ) : (
@@ -237,14 +275,10 @@ export default function UserInfromation() {
                                             {user?.detail?.status}
                                         </Typography>
                                     )}
-
-
-
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Last Activity</Typography>
 
-                                    {user.isEdit ? <TextField className='inputField1' variant='outlined' fullWidth type='date' name='updatedDate' />
-                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.updatedDate}</Typography>}
-
+                                    {user.isEdit ? <TextField className='inputField1' value={userFields?.createdDate || ''} onChange={handleChange} variant='outlined' fullWidth type='date' name='createdDate' />
+                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{Helpers.dateFormater(user?.detail?.createdDate)}</Typography>}
                                 </Grid>
                             </Grid>
                         </Box>

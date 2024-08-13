@@ -34,8 +34,26 @@ const ExecutePost = async (url, data) => {
             return error;
         });
 };
+const ExecutePatch = async (url, data) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
+    return await fetch(baseURI + url, {
+        method: 'PATCH',
+        redirect: 'follow',
+        headers: myHeaders,
+        body: JSON.stringify(data)
+    })
+        .then(response => response.text())
+        .then(result => {
+            return JSON.parse(result);
+        })
+        .catch(error => {
+            return error;
+        });
+}
 export {
     ExecutePost,
-    ExecuteGet
+    ExecuteGet,
+    ExecutePatch
 }
