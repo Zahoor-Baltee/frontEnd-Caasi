@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, IconButton,
-    Typography, Button, Pagination, Menu, MenuItem, Box,
+    Typography, Button, Pagination, MenuItem, Box,
     Dialog,
     DialogContent,
-    DialogActions
 } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 import { Visibility, MoreVert } from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { styled } from '@mui/system';
 import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
 import ArrowDropUpOutlinedIcon from '@mui/icons-material/ArrowDropUpOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ExpenseReportForm from '../Pages/ExpenseReports/AddExpenseReport';
+import { ExpenseService } from '../Services/Expense/ExpenseService';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import { useNavigate } from 'react-router-dom';
+import { DataGrid } from '@mui/x-data-grid';
 
 const StatusButton = styled(Button)(({ status }) => ({
     color: status === 'Approved' ? '#fff' : '#000',
@@ -82,8 +86,56 @@ const Root = styled(Box)({
 });
 
 function ExpenseReportTable() {
+    const [reports, setReports] = useState({
+        list: [],
+        detail: {}
+    })
     const [selected, setSelected] = useState([]);
     const [open, setOpen] = React.useState(false);
+
+    const columns = [
+        {
+            field: 'userName', headerName: 'Employee', flex: 1, renderCell: (params) => (
+                <Box sx={{ display: "flex", justifyContent: "start", gap: "10px", alignItems: "center" }}>
+
+                    <Typography variant="body1" sx={{ color: '#000000' }}>{params.value}</Typography>
+                </Box>
+            )
+        },
+
+        { field: 'amount', headerName: 'Amount', width: 150, },
+        { field: 'createDate', headerName: 'Date', width: 280, },
+        {
+            field: '_id', headerName: 'View Report', width: 100, renderCell: (params) => (
+                <IconButton onClick={() => handleOpenDetail(params.value)}>
+
+                    <VisibilityIcon color="primary" />
+                </IconButton>)
+        },
+        {
+            field: 'status', headerName: 'Status', width: 100,
+        },
+        {
+            field: 'id', headerName: 'Action', width: 100, renderCell: (params) => (
+                <IconButton onClick={() => handleOpenDetail(params.value)}>
+
+                    <ModeEditOutlineOutlinedIcon />
+                </IconButton>
+
+            )
+        },
+
+    ];
+
+    const isSelected = (id) => selected.indexOf(id) !== -1;
+    let navigate = useNavigate()
+
+    useEffect(() => {
+        getReportsList()
+    }, [])
+
+
+
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
             const newSelected = tableData.map((row) => row.id);
@@ -92,6 +144,8 @@ function ExpenseReportTable() {
         }
         setSelected([]);
     };
+
+
 
     const handleCheckboxClick = (id) => {
         const selectedIndex = selected.indexOf(id);
@@ -112,20 +166,38 @@ function ExpenseReportTable() {
 
         setSelected(newSelected);
     };
-
-    const isSelected = (id) => selected.indexOf(id) !== -1;
-
-
-
-
-
+    // navigate to Details
+    const handleOpenDetail = (id) => {
+        navigate("/expensereports", { state: { id: id } })
+    }
     const openExpenseForm = () => {
-        debugger
         setOpen(true);
     }
     const handleClose = () => {
         setOpen(false);
     };
+
+
+
+    //Get user List
+
+    const getReportsList = async () => {
+
+        try {
+            let res = await ExpenseService.getlist()
+            if (res.success) {
+                debugger
+                setReports({ ...reports, list: res.data })
+            } else {
+                // alert("failed")
+                setReports({ ...reports, list: tableData })
+            }
+
+        } catch (error) {
+            console.error(error)
+            setReports({ ...reports, list: tableData })
+        }
+    }
 
     return (
         <Root>
@@ -183,115 +255,29 @@ function ExpenseReportTable() {
                         </Box>
                     </Box>
                 </Box>
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead sx={{ backgroundColor: "#0171BC" }}>
-                            <TableRow>
-                                <TableCell padding="checkbox">
-                                    <Checkbox
-                                        sx={{ color: "#ffffff" }}
-                                        indeterminate={selected.length > 0 && selected.length < tableData.length}
-                                        checked={tableData.length > 0 && selected.length === tableData.length}
-                                        onChange={handleSelectAllClick}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <Box className="TableTags">
-                                        <Typography className='TableTagsTexts'>Employee</Typography>
-                                        <Box className="UpDownIcon">
-                                            <ArrowDropUpOutlinedIcon className='upIcon' />
-                                            <ArrowDropDownOutlinedIcon className='downIcon' />
-                                        </Box>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Box className="TableTags">
-                                        <Typography className='TableTagsTexts'>Amount</Typography>
-                                        <Box className="UpDownIcon">
-                                            <ArrowDropUpOutlinedIcon className='upIcon' />
-                                            <ArrowDropDownOutlinedIcon className='downIcon' />
-                                        </Box>
-                                    </Box>
 
-                                </TableCell>
-                                <TableCell>
-                                    <Box className="TableTags">
-                                        <Typography className='TableTagsTexts'>Date</Typography>
-                                        <Box className="UpDownIcon">
-                                            <ArrowDropUpOutlinedIcon className='upIcon' />
-                                            <ArrowDropDownOutlinedIcon className='downIcon' />
-                                        </Box>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Box className="TableTags">
-                                        <Typography className='TableTagsTexts'>View Report</Typography>
-                                        <Box className="UpDownIcon">
-                                            <ArrowDropUpOutlinedIcon className='upIcon' />
-                                            <ArrowDropDownOutlinedIcon className='downIcon' />
-                                        </Box>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Typography className='TableTagsTexts'>Status</Typography>
 
-                                </TableCell>
-                                <TableCell>
-                                    <Typography className='TableTagsTexts'>Action</Typography>
+                <DataGrid
+                    minHeight={40}
+                    rows={reports?.list}
+                    columns={columns}
+                    getRowId={(e) => e._id}
+                    // initialState={{
+                    //     pagination: {
+                    //         paginationModel: {
+                    //             pageSize: 5,
+                    //         },
+                    //     },
+                    // }}
+                    pageSizeOptions={[5]}
+                    disableColumnFilter
+                    disableColumnMenu
+                    checkboxSelection
+                    hideFooterPagination
+                />
 
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {tableData.map((row) => {
-                                const isItemSelected = isSelected(row.id);
-                                return (
-                                    <TableRow
-                                        key={row.id}
-                                        selected={isItemSelected}
-                                    >
-                                        <TableCell padding="checkbox">
-                                            <Checkbox
-                                                checked={isItemSelected}
-                                                onClick={() => handleCheckboxClick(row.id)}
-                                            />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography variant="body2">{row.name}</Typography>
-                                            <Typography variant="caption" color="textSecondary">{row.lastName}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography variant="body2" sx={{ color: '#007bff' }}>{row.amount}</Typography>
-                                        </TableCell>
-                                        <TableCell>{row.date}</TableCell>
-                                        <TableCell>
-                                            <IconButton color="primary">
-                                                <Visibility />
-                                            </IconButton>
-                                        </TableCell>
-                                        <TableCell>
-                                            <StatusButton sx={{ width: "104px", textTransform: "none" }} status={row.status}>{row.status}</StatusButton>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Box sx={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                                                <IconButton>
-                                                    <MoreVert />
-                                                </IconButton>
-                                                <KeyboardArrowDownIcon />
-                                            </Box>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
-                        Showing 1 to 10 of 430 entries
-                    </Typography>
-                    <Pagination count={1337} color="primary" sx={{ mt: 2 }} />
-                </Box>
+
+
                 <Dialog
                     open={open}
                     onClose={handleClose}
@@ -316,7 +302,7 @@ function ExpenseReportTable() {
                             overflow: 'visible', // Ensure no internal scrolling
                         }}
                     >
-                        <ExpenseReportForm />
+                        <ExpenseReportForm open={open} setOpen={setOpen} />
                     </DialogContent>
                     {/* <DialogActions>
                         <Button onClick={handleClose}>Disagree</Button>

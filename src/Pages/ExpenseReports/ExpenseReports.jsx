@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box, Typography, Button, Avatar, Stack, useMediaQuery, Divider
 } from '@mui/material';
@@ -9,7 +9,10 @@ import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { CheckCircle, Info } from '@mui/icons-material';
 import Recepit from "../../Assets/receipt.jpeg"
-
+import { useLocation } from 'react-router-dom';
+import { ExpenseService } from '../../Services/Expense/ExpenseService';
+import AlertSnackbar from '../../Componenets/AlertSnackbar';
+import Barcode from 'react-barcode';
 const Root = styled(Box)({
     margin: 0,
     padding: 0,
@@ -34,6 +37,38 @@ const Root = styled(Box)({
 
 });
 function ExpenseReports() {
+    const [reports, setReports] = useState({})
+    const [alert, setAlert] = useState({
+        alertColor: "primary",
+        alertMessage: "",
+        isAlertOpen: false,
+    });
+
+    let { state } = useLocation()
+    useEffect(() => {
+        if (state?.id) {
+            gReportDetail()
+        }
+    }, [state])
+
+    const gReportDetail = async () => {
+        try {
+            let data = {
+                id: state?.id
+            }
+            let res = await ExpenseService.getDetail(data)
+            debugger
+            if (res.success) {
+                setReports(res.data)
+                console.log(res.data)
+
+            } else {
+                setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: res.error });
+            }
+        } catch (error) {
+
+        }
+    }
 
     return (
         <Root>
@@ -49,7 +84,7 @@ function ExpenseReports() {
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                         <Button sx={{ display: "flex", alignItems: "center", gap: "7px", borderRadius: "5px", textTransform: "none", backgroundColor: "#F9D2D3", color: "#374557", width: "170px" }}>
                             <CancelOutlinedIcon sx={{ color: "#ED1C24" }} />
-                            <Typography sx={{ color: "#374557", fontSize: "16px" }}>Rejected</Typography>
+                            <Typography sx={{ color: "#374557", fontSize: "16px" }}>{reports?.status}</Typography>
                         </Button>
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "38px", width: "38px", backgroundColor: "#0A75BD", color: "#ffffff", borderRadius: "10px" }}>
                             <EditOutlinedIcon />
@@ -58,11 +93,11 @@ function ExpenseReports() {
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: "200px", alignItems: 'center', marginBottom: "10px", mt: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <AccountCircleRoundedIcon sx={{ color: "#0073BC" }} />
-                            <Typography sx={{ color: "#374557", fontSize: "16px", fontWeight: "600" }}>Carlos</Typography>
+                            <Typography sx={{ color: "#374557", fontSize: "16px", fontWeight: "600" }}>{reports?.userName}</Typography>
 
                         </Box>
                         <Typography sx={{ color: "#374557", fontSize: "14px", fontWeight: "600" }}>
-                            Date of Submission: 28-June-2024
+                            Date of Submission: {reports?.dateOfSubmitted}
                         </Typography>
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
@@ -92,7 +127,7 @@ function ExpenseReports() {
                                     textTransform: 'none',
                                 }}
                             >
-                                $15
+                                ${reports?.amount}
                             </Button>
                             <CheckCircle sx={{ color: "#18AB56" }} />
                         </Box>
@@ -107,20 +142,23 @@ function ExpenseReports() {
                                     textTransform: 'none',
                                 }}
                             >
-                                20 May,2024
+                                {reports?.createDate}
                             </Button>
                             <CheckCircle sx={{ color: "#18AB56" }} />
                         </Box>
                     </Box>
                     <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <Box sx={{ width: "250px", height: "250" }}>
-                            <img src={Recepit} height='100%' width='100%' alt="" />
-
+                        <Box sx={{ width: "400px", height: "250" }}>
+                            {/* <img src={Recepit} height='100%' width='100%' alt="" /> */}
+                            {/* <QRCodeGenerator scan={reports?.scan} /> */}
+                            {/* <QRCode value={} size={256} /> */}
+                            <Barcode value={reports?.scan} />
+                            {/* <QRCode value="https://example.com" size={150} /> */}
                         </Box>
                     </Box>
                     <Box >
                         <Typography sx={{ color: "#0171BC", fontWeight: "600" }}>
-                            Description
+                            {reports?.description}
                         </Typography>
                         <Divider sx={{ my: 1 }} />
 
@@ -133,7 +171,9 @@ function ExpenseReports() {
                         </Typography>
                     </Box>
                 </Box>
-
+                <Box>
+                    <AlertSnackbar alert={alert} setAlert={setAlert} />
+                </Box>
 
             </Box>
         </Root >
