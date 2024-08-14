@@ -16,8 +16,7 @@ import userAbsense from '../../Assets/userAbsence.png';
 import { useLocation } from 'react-router-dom';
 import { UserServices } from '../../Services/User/UserServices';
 import { Helpers } from '../../Shell/Helper';
-import validator from "validator";
-import { fireEvent } from '@testing-library/react';
+
 import AuthService from '../../Services/AuthServices';
 
 
@@ -122,6 +121,7 @@ export default function UserInfromation() {
     const [userFields, setUserFields] = useState({
 
     })
+
     const [user, setUser] = useState({
         list: [],
         detail: {},

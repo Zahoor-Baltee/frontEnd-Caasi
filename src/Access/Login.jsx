@@ -81,7 +81,7 @@ const Login = () => {
     try {
       let res = await UserServices.loginUser(data);
       if (res.success) {
-        debugger
+
         setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
         AuthService.logIn(res.data.user, res.data.accessToken)
         setTimeout(() => {

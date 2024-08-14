@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from "@mui/material/Typography";
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import { TbEdit } from "react-icons/tb";
 import styled from '@mui/system/styled';
 import userImage from '../../Assets/man.png'
 
@@ -93,7 +93,8 @@ const User = () => {
             field: '_id', headerName: 'Edit', width: 100, renderCell: (params) => (
                 <IconButton onClick={() => handleOpenDetail(params.value)}>
 
-                    <ModeEditOutlineOutlinedIcon />
+                    <TbEdit style={{ marginLeft: '-6px' }} />
+
                 </IconButton>
 
             )
