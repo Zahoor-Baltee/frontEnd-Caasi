@@ -14,6 +14,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 import { UserServices } from '../../Services/User/UserServices';
 import { useNavigate } from 'react-router-dom';
+import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 
 
 
@@ -23,6 +24,9 @@ const Root = styled(Box)({
     },
     "& .MuiDataGrid-topContainer ": {
         backgroundColor: "#2f80ed !important"
+    },
+    "& .MuiDataGrid-virtualScrollerContent ": {
+        backgroundColor: "#fff !important"
     },
     "& .MuiDataGrid-columnHeader": {
         color: "white",
@@ -43,7 +47,7 @@ const Root = styled(Box)({
     padding: 0,
     "& .mainContainer": {
         padding: "20px",
-        backgroundColor: "#f4f7fe",
+        backgroundColor: "#fafbfc",
         "& .mainBox": {
             backgroundColor: "#F8F8F8",
             borderRadius: "44px 44px 0px 0px ",
@@ -52,12 +56,17 @@ const Root = styled(Box)({
         "& .headerSection": {
             display: "flex",
             justifyContent: "space-between",
+            marginBottom: 10
         },
         " & .inputField": {
             backgroundColor: "#ffffff",
             width: "504px",
-            Height: "57.43px",
-            borderRadius: "146px"
+            height: "38px",
+            borderRadius: "146px",
+            boxShadow: "0px 2px 3px 0px #ccc",
+            "& .MuiOutlinedInput-input": {
+                padding: "7px 0 5px"
+            }
         }
     }
 
@@ -68,9 +77,7 @@ const User = () => {
         filterList: [],
         detail: {}
     })
-    let sv = [
-        { _id: 1, userName: "sdjks", fullName: "kjdhj", email: "msdn", status: "ksdj", edit: "msdn" }
-    ]
+    const [isLoading, setIsLoading] = useState(false);
     const [age, setAge] = React.useState('');
     let navigate = useNavigate()
     const columns = [
@@ -86,7 +93,7 @@ const User = () => {
         },
 
         { field: 'department', headerName: 'Department', width: 335, },
-        { field: 'role', headerName: 'Role', width: 335, },
+        { field: 'role', headerName: 'Role', width: 200, },
         { field: 'email', headerName: 'Email', width: 280, },
         { field: 'status', headerName: 'Status', width: 230, },
         {
@@ -114,16 +121,20 @@ const User = () => {
     //Get user List
 
     const getUserList = async () => {
+        setIsLoading(true)
         try {
             let res = await UserServices.getlist()
             if (res.success) {
                 setUser({ ...user, list: res.data, filterList: res.data })
+                setIsLoading(false)
             } else {
                 // alert("failed")
+                setIsLoading(false)
             }
 
         } catch (error) {
             console.error(error)
+            setIsLoading(false)
         }
     }
 
@@ -165,20 +176,20 @@ const User = () => {
 
                         }}>
                             <Button sx={{
-                                width: "237px",
-                                height: "53px",
+                                height: "38px",
                                 textTransform: "none"
                             }} onClick={() => { navigate('/user-add') }} variant="contained">Create user</Button>
                             <div>
                                 <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: "#fff", color: "#F8F8F8" }}>
                                     <Select
                                         value={age}
+                                        size='small'
                                         onChange={handleChange}
                                         displayEmpty
                                         inputProps={{ 'aria-label': 'Without label' }}
                                     >
                                         <MenuItem value="">
-                                            <Typography>filters</Typography>
+                                            <Typography sx={{ color: "#0171BC" }}>filters</Typography>
                                         </MenuItem>
                                         <MenuItem value={10}>Ten</MenuItem>
                                         <MenuItem value={20}>Twenty</MenuItem>
@@ -191,7 +202,7 @@ const User = () => {
                     {/* --------------------Header Section Complete--------------- */}
                     <DataGrid
                         minHeight={40}
-                        rows={user?.filterList}
+                        rows={user?.filterList || []}
                         columns={columns}
                         getRowId={(e) => e._id}
                         // initialState={{
@@ -201,11 +212,15 @@ const User = () => {
                         //         },
                         //     },
                         // }}
+                        loading={isLoading}
                         pageSizeOptions={[5]}
                         disableColumnFilter
                         disableColumnMenu
                         checkboxSelection
                         hideFooterPagination
+                        components={{
+                            NoRowsOverlay: CustomNoRowsOverlay,
+                        }}
                     />
                 </Box>
 

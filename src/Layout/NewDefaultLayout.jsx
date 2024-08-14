@@ -13,7 +13,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import Toolbar from '@mui/material/Toolbar';
 import { AppBar, IconButton, styled, InputAdornment, TextField, FormControl, Select } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-
+import { useNavigate } from 'react-router-dom';
 
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -33,7 +33,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ShowChartOutlinedIcon from '@mui/icons-material/ShowChartOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'; import { useNavigate } from 'react-router-dom';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 const Root = styled(Box)({
     margin: 0,
@@ -115,8 +115,8 @@ function ResponsiveDrawer(props) {
         <Root>
             <Box>
                 <Toolbar />
-                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100px", }}>
-                    <img src={logo} width='90%' alt="logo" />
+                <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center", height: "100px", }}>
+                    <img src={logo} width='90%' alt="logo" onClick={() => navigate('/dashboard')} />
                 </Box>
                 <List>
                     {menuList.map((e, index) => (
@@ -184,18 +184,21 @@ function ResponsiveDrawer(props) {
                                     size='small'
                                     fullWidth
                                     sx={{
+                                        width: "400px",
                                         backgroundColor: "#f4f7fe",
+                                        borderRadius: "10px",
+
                                         "& fieldset": {
                                             border: 'none',
 
                                         },
                                     }}
                                     className='inputField'
-                                    placeholder='Search'
+                                    placeholder='Search here...'
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
-                                                <SearchIcon />
+                                                <SearchIcon sx={{ color: "#0171BC", }} />
                                             </InputAdornment>
                                         ),
                                     }}

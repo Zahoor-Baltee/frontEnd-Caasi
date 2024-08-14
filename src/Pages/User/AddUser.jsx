@@ -15,6 +15,9 @@ import userImage from '../../Assets/man.png'
 
 
 const Root = styled(Box)({
+    "& .MuiOutlinedInput-input": {
+        padding: "10px 14px",
+    },
     '& .MuiInput-root': {
         outline: "none",
         '&:before, :after, :hover:not(.Mui-disabled):before': {
@@ -46,16 +49,6 @@ const Root = styled(Box)({
             },
 
         },
-        "& .headerSection": {
-            display: "flex",
-            justifyContent: "space-between",
-        },
-        " & .inputField": {
-            backgroundColor: "#ffffff",
-            width: "504px",
-            Height: "57.43px",
-            borderRadius: "146px"
-        },
     }
 
 });
@@ -66,6 +59,8 @@ const AddUser = () => {
     const [error, setError] = useState(false);
     const [helperText, setHelperText] = useState('');
     const [isSubmit, setIsSubmit] = useState(false);
+
+    // Email Validation
 
     const validateEmail = (email) => {
         // Basic email regex pattern
@@ -98,12 +93,15 @@ const AddUser = () => {
         navigate("/userinformation", { state: { id: id } })
     }
     //Get user List
-    const navigateToUser = useNavigate();
-
+    let navigateUser = useNavigate();
+    const routeChange = () => {
+        let path = '/user';
+        navigate(path);
+    }
 
     const createUser = async () => {
         setIsSubmit(true)
-        if (!userFields?.firstName) {
+        if (!userFields?.firstName || !userFields?.lastName || !userFields?.email || !userFields?.dapartment || !userFields?.phoneNumber || !userFields?.status || !userFields?.createdDate || !userFields?.updatedDate) {
             return
         }
         let clientData = AuthService.getUserData()
@@ -118,7 +116,7 @@ const AddUser = () => {
 
             if (res.success) {
                 alert(res.message)
-                navigateToUser('/user')
+                navigateUser('/user')
                 // setUser({ ...user, list: res.data })
             } else {
                 // alert("failed")
@@ -129,64 +127,11 @@ const AddUser = () => {
         }
     }
 
-    let navigateUser = useNavigate();
-    const routeChange = () => {
-        let path = '/user';
-        navigate(path);
-    }
+
     return (
         <Root>
             <Box className="mainContainer">
-
                 <Box className="mainBox">
-                    {/* --------------------Header Section--------------- */}
-                    <Box className="headerSection">
-
-                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-
-                            <TextField
-                                sx={{
-                                    "& fieldset": { border: 'none' },
-                                }}
-                                className='inputField'
-                                placeholder='Search'
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SearchIcon />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-
-                        </Box>
-                        <Box sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center"
-
-                        }}>
-
-                            <div>
-                                <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: "#fff", color: "#F8F8F8" }}>
-                                    <Select
-                                        value={age}
-                                        onChange={handleChangeFilter}
-                                        displayEmpty
-                                        inputProps={{ 'aria-label': 'Without label' }}
-                                    >
-                                        <MenuItem value="">
-                                            <Typography>filters</Typography>
-                                        </MenuItem>
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </div>
-                        </Box>
-                    </Box>
-                    {/* --------------------Header Section Complete--------------- */}
                     <Box sx={{ p: 2, width: "100%" }}>
                         <Grid container spacing={2}>
                             <Grid container item xs={4} alignItems="center">
@@ -196,7 +141,7 @@ const AddUser = () => {
                                     </Box>
                                 </Grid>
                                 <Grid item xs={8}>
-                                    <TextField className='inputField1' variant='outlined' fullWidth type='file' value={userFields?.image || ''} onChange={handleChange} name='image' />
+                                    <TextField className='inputField1' size='small' variant='outlined' fullWidth type='file' value={userFields?.image || ''} onChange={handleChange} name='image' />
                                 </Grid>
                             </Grid>
                             <Grid item xs={6}></Grid>
@@ -237,13 +182,11 @@ const AddUser = () => {
                         </Grid>
                         <Grid container my={3} columnGap={1} >
                             <Button onClick={createUser} sx={{
-                                width: "237px",
-                                height: "53px",
+                                height: "38px",
                                 textTransform: "none"
                             }} variant="contained">Create user</Button>
                             <Button onClick={routeChange} sx={{
-                                width: "237px",
-                                height: "53px",
+                                height: "38px",
                                 textTransform: "none"
                             }} variant="contained">Cancel</Button>
                         </Grid>

@@ -186,7 +186,6 @@ function ExpenseReportTable() {
         try {
             let res = await ExpenseService.getlist()
             if (res.success) {
-                debugger
                 setReports({ ...reports, list: res.data })
             } else {
                 // alert("failed")
@@ -261,7 +260,7 @@ function ExpenseReportTable() {
                     minHeight={40}
                     rows={reports?.list}
                     columns={columns}
-                    getRowId={(e) => e._id}
+                    getRowId={(e) => e.id}
                     // initialState={{
                     //     pagination: {
                     //         paginationModel: {

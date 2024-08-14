@@ -16,8 +16,8 @@ import userAbsense from '../../Assets/userAbsence.png';
 import { useLocation } from 'react-router-dom';
 import { UserServices } from '../../Services/User/UserServices';
 import { Helpers } from '../../Shell/Helper';
-
 import AuthService from '../../Services/AuthServices';
+import AlertSnackbar from '../../Componenets/AlertSnackbar';
 
 
 const Root = styled(Box)(({ theme }) => ({
@@ -80,11 +80,10 @@ const Root = styled(Box)(({ theme }) => ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                width: "100%",
-                height: "51px",
+                height: "38px",
                 borderRadius: "50px",
                 "@media (min-width:600px)": {
-                    width: "225px",
+                    // width: "225px",
                 },
                 textTransform: "none",
             },
@@ -105,11 +104,10 @@ const Root = styled(Box)(({ theme }) => ({
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "10px",
-                width: "100%",
-                height: "51px",
+                height: "38px",
                 borderRadius: "50px",
                 "@media (min-width:600px)": {
-                    width: "225px",
+                    // width: "225px",
                 },
                 textTransform: "none",
             }
@@ -118,15 +116,19 @@ const Root = styled(Box)(({ theme }) => ({
 }));
 
 export default function UserInfromation() {
-    const [userFields, setUserFields] = useState({
-
-    })
-
+    const [userFields, setUserFields] = useState({})
+    const [alert, setAlert] = useState({
+        alertColor: "primary",
+        alertMessage: "",
+        isAlertOpen: false,
+    });
     const [user, setUser] = useState({
         list: [],
         detail: {},
         isEdit: false
     })
+    const [isSubmit, setIsSubmit] = useState(false);
+
     let { state } = useLocation()
     useEffect(() => {
         if (state?.id) {
@@ -142,12 +144,17 @@ export default function UserInfromation() {
             userFields.clientId = clientData.clientId
             try {
                 let res = await UserServices.updateUsers(state?.id, userFields)
+                setIsSubmit(true)
+                if (!userFields?.firstName || !userFields?.lastName || !userFields?.email || !userFields?.dapartment || !userFields?.phoneNumber || !userFields?.status || !userFields?.createdDate || !userFields?.updatedDate) {
+                    return
+                }
                 if (res.success) {
                     // setUser({ ...user, detail: res.data })
+                    setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                     setUser({ ...user, isEdit: false })
                     getUserDetail()
                 } else {
-                    // alert("failed")
+                    setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: res.error });
                 }
 
             } catch (error) {
@@ -222,36 +229,84 @@ export default function UserInfromation() {
                                 <Grid item xs={12} sm={6}>
                                     <Typography className='firstName'>First Name</Typography>
                                     {user.isEdit ?
-                                        <TextField className='inputField1' variant='outlined' value={userFields?.firstName || ''} onChange={handleChange} fullWidth type='text' name='firstName' />
-                                        :
-                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.firstName}</Typography>}
+                                        <TextField className='inputField1'
+                                            error={!userFields?.firstName && isSubmit}
+                                            helperText={!userFields?.firstName && isSubmit ? "First Name is required." : ""}
+                                            variant='outlined' value={userFields?.firstName || ''}
+                                            onChange={handleChange} fullWidth type='text' name='firstName' /> :
+                                        <Typography className='lastName'
+                                            sx={{ textTransform: "none" }}>
+                                            {user?.detail?.firstName}
+                                        </Typography>}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Email Address</Typography>
                                     {user.isEdit ?
-                                        <TextField className='inputField1' value={userFields?.email || ''} onChange={handleChange} variant='outlined' fullWidth type='text' name='email' />
-                                        :
-                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.email}</Typography>}
+                                        <TextField className='inputField1'
+                                            error={!userFields?.firstName && isSubmit}
+                                            helperText={!userFields?.email && isSubmit ? "Email is required." : ""}
+                                            value={userFields?.email || ''}
+                                            onChange={handleChange} variant='outlined'
+                                            fullWidth type='text' name='email' /> :
+                                        <Typography className='lastName'
+                                            sx={{ textTransform: "none" }}>
+                                            {user?.detail?.email}
+                                        </Typography>}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Phone Number</Typography>
                                     {user.isEdit ?
-                                        <TextField inputProps={{ maxLength: 11 }} value={userFields?.phoneNumber || ''} onChange={handleChange} className='inputField1' variant='outlined' fullWidth type='number' name='phoneNumber' />
-                                        :
-                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.phoneNumber}</Typography>}
+                                        <TextField inputProps={{ maxLength: 11 }}
+                                            error={!userFields?.phoneNumber && isSubmit}
+                                            helperText={!userFields?.phoneNumber && isSubmit ? "Phone Number is required." : ""}
+                                            value={userFields?.phoneNumber || ''}
+                                            onChange={handleChange}
+                                            className='inputField1'
+                                            variant='outlined' fullWidth
+                                            type='number'
+                                            name='phoneNumber' /> :
+                                        <Typography className='lastName'
+                                            sx={{ textTransform: "none" }}>
+                                            {user?.detail?.phoneNumber}
+                                        </Typography>}
                                     <Typography variant="h6" className='firstName' sx={{ textTransform: "none" }}>User's Creation Date</Typography>
                                     {user.isEdit ?
-                                        <TextField className='inputField1' value={userFields?.updatedDate || ''} onChange={handleChange} variant='outlined' fullWidth type='date' name='updatedDate' />
-                                        :
-                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{Helpers.dateFormater(user?.detail?.updatedDate)}</Typography>}
+                                        <TextField className='inputField1'
+                                            error={!userFields?.createdDate && isSubmit}
+                                            helperText={!userFields?.createdDate && isSubmit ? "Create date is required." : ""}
+                                            value={userFields?.createdDate || ''}
+                                            onChange={handleChange} variant='outlined'
+                                            fullWidth
+                                            type='date' name='createdDate' /> :
+                                        <Typography className='lastName'
+                                            sx={{ textTransform: "none" }}>
+                                            {Helpers.dateFormater(user?.detail?.createdDate)}
+                                        </Typography>}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Last Name</Typography>
                                     {user.isEdit ?
-                                        <TextField className='inputField1' value={userFields?.lastName || ''} onChange={handleChange} variant='outlined' fullWidth type='text' name='lastName' />
-                                        :
-                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.lastName}</Typography>}
+                                        <TextField className='inputField1'
+                                            error={!userFields?.lastName && isSubmit}
+                                            helperText={!userFields?.lastName && isSubmit ? "Last Name is required." : ""}
+                                            value={userFields?.lastName || ''}
+                                            onChange={handleChange}
+                                            variant='outlined' fullWidth
+                                            type='text' name='lastName' /> :
+                                        <Typography className='lastName'
+                                            sx={{ textTransform: "none" }}>
+                                            {user?.detail?.lastName}
+                                        </Typography>}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Team</Typography>
                                     {user.isEdit ?
-                                        <TextField className='inputField1' value={userFields?.department || ''} onChange={handleChange} variant='outlined' fullWidth type='text' name='department' />
-                                        :
-                                        <Typography className='lastName' sx={{ textTransform: "none" }}>{user?.detail?.department}</Typography>}
+                                        <TextField className='inputField1'
+                                            error={!userFields?.department && isSubmit}
+                                            helperText={!userFields?.department && isSubmit ? "Team is required." : ""}
+                                            value={userFields?.department || ''}
+                                            onChange={handleChange}
+                                            variant='outlined' fullWidth
+                                            type='text'
+                                            name='department' /> :
+                                        <Typography className='lastName'
+                                            sx={{ textTransform: "none" }}>
+                                            {user?.detail?.department}
+                                        </Typography>}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Status</Typography>
                                     {user.isEdit ? (
                                         <FormControl sx={{
@@ -260,6 +315,8 @@ export default function UserInfromation() {
                                             }
                                         }} fullWidth className='inputField1'>
                                             <Select
+                                                error={!userFields?.status && isSubmit}
+                                                helperText={!userFields?.status && isSubmit ? "Status is required." : ""}
                                                 value={userFields?.status || ''}
                                                 onChange={handleChange}
                                                 name='status'
@@ -276,29 +333,43 @@ export default function UserInfromation() {
                                         </Typography>
                                     )}
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Last Activity</Typography>
-
-                                    {user.isEdit ? <TextField className='inputField1' value={userFields?.createdDate || ''} onChange={handleChange} variant='outlined' fullWidth type='date' name='createdDate' />
-                                        : <Typography className='lastName' sx={{ textTransform: "none" }}>{Helpers.dateFormater(user?.detail?.createdDate)}</Typography>}
+                                    {user.isEdit ?
+                                        <TextField className='inputField1'
+                                            error={!userFields?.updatedDate && isSubmit}
+                                            helperText={!userFields?.updatedDate && isSubmit ? "Updated Date is required." : ""}
+                                            value={userFields?.updatedDate || ''}
+                                            onChange={handleChange}
+                                            variant='outlined'
+                                            fullWidth type='date'
+                                            name='updatedDate' /> :
+                                        <Typography className='lastName'
+                                            sx={{ textTransform: "none" }}>
+                                            {Helpers.dateFormater(user?.detail?.updatedDate)}
+                                        </Typography>}
                                 </Grid>
                             </Grid>
                         </Box>
                     </Box>
                     <Box className="userCardButtons">
                         <Button className='Buttonpo' variant="contained">
-                            <img src={expenseReportIcon} alt="Expense Report Icon" />
+                            <img width='20px' src={expenseReportIcon} alt="Expense Report Icon" />
                             <span>Expense Report</span>
                         </Button>
                         <Button className='Buttonpo' variant="contained">
-                            <img src={activityReport} alt="Activity Report Icon" />
+                            <img width='20px' src={activityReport} alt="Activity Report Icon" />
                             <span>Activity Report</span>
                         </Button>
                         <Button className='Buttonpo' variant="contained">
-                            <img src={userAbsense} alt="User Absence Icon" />
+                            <img width='20px' src={userAbsense} alt="User Absence Icon" />
                             <span>User Absences</span>
                         </Button>
                     </Box>
                 </Box>
             </Box>
+            <Box>
+                <AlertSnackbar alert={alert} setAlert={setAlert} />
+            </Box>
+
         </Root>
     );
 }
