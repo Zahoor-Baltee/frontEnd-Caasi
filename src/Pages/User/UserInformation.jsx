@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import image from '../../Assets/man.png';
 import expenseReportIcon from '../../Assets/Icon.png';
@@ -128,6 +129,8 @@ export default function UserInfromation() {
         isEdit: false
     })
     const [isSubmit, setIsSubmit] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
 
     let { state } = useLocation()
     useEffect(() => {
@@ -136,28 +139,44 @@ export default function UserInfromation() {
         }
     }, [state])
     useEffect(() => {
-        setUserFields(user.detail)
+        const formattedUserFields = {
+            ...user.detail,
+            updatedDate: Helpers.dateFormater1(user.detail.updatedDate),
+            createdDate: Helpers.dateFormater1(user.detail.createdDate),
+        };
+        console.log(formattedUserFields)
+        setUserFields(formattedUserFields);
     }, [user.isEdit])
+
+
     const handleEdit = async () => {
         if (user.isEdit) {
+            setIsLoading(true)
             let clientData = AuthService.getUserData()
             userFields.clientId = clientData.clientId
             try {
-                let res = await UserServices.updateUsers(state?.id, userFields)
+
                 setIsSubmit(true)
-                if (!userFields?.firstName || !userFields?.lastName || !userFields?.email || !userFields?.dapartment || !userFields?.phoneNumber || !userFields?.status || !userFields?.createdDate || !userFields?.updatedDate) {
+                if (!userFields?.firstName || !userFields?.lastName || !userFields?.email || !userFields?.department || !userFields?.phoneNumber || !userFields?.status || !userFields?.createdDate || !userFields?.updatedDate) {
                     return
                 }
+                let res = await UserServices.updateUsers(state?.id, userFields)
                 if (res.success) {
                     // setUser({ ...user, detail: res.data })
+
                     setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                     setUser({ ...user, isEdit: false })
                     getUserDetail()
-                } else {
+                    setIsLoading(false)
+
+                }
+                else {
+                    setIsLoading(false)
                     setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: res.error });
                 }
 
             } catch (error) {
+                setIsLoading(false)
                 console.error(error)
             }
 
@@ -209,7 +228,7 @@ export default function UserInfromation() {
                         <Button onClick={routeChange} sx={{ color: "black", display: "flex", gap: "8px", textTransform: "none" }} variant="text">
                             <KeyboardBackspaceIcon /> Back
                         </Button>
-                        <Button className='editInfoButton' onClick={handleEdit} variant="contained">{user.isEdit ? "Save" : "Edit Information"}</Button>
+                        <Button className='editInfoButton' startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""} onClick={handleEdit} variant="contained">{user.isEdit ? "Save" : "Edit Information"}</Button>
                     </Box>
                     <Box className='cardpo'>
                         <Box sx={{

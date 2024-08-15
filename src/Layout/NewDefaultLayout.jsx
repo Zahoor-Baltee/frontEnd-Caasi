@@ -34,6 +34,8 @@ import ShowChartOutlinedIcon from '@mui/icons-material/ShowChartOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import AuthService from '../Services/AuthServices';
+import { UserServices } from '../Services/User/UserServices';
 
 const Root = styled(Box)({
     margin: 0,
@@ -76,9 +78,12 @@ function ResponsiveDrawer(props) {
         { name: "Advanced Settings and Management", url: "/advancesetting" },
         { name: "Reports and Export", url: "/reportsandexport" },
         { name: "Days of Absence", url: "/activityreport" },
-
     ]
     let navigate = useNavigate()
+
+
+    let userName = AuthService.getUserName() || "Jhon";
+
     const handleDrawerClose = () => {
         setIsClosing(true);
         setMobileOpen(false);
@@ -146,7 +151,17 @@ function ResponsiveDrawer(props) {
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = () => {
+    const handleClose = async () => {
+        try {
+            let res = await UserServices.logout()
+            if (res.success) {
+                AuthService.logOut()
+            } else {
+                console.log(res)
+            }
+        } catch (error) {
+            console.log(error)
+        }
         setAnchorEl(null);
     };
     const handleChange = (event) => {
@@ -244,9 +259,9 @@ function ResponsiveDrawer(props) {
                                                     aria-haspopup="true"
                                                     aria-expanded={open ? 'true' : undefined}
                                                 >
-                                                    <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                                                    <Avatar sx={{ width: 32, height: 32 }}>{userName?.split('')[0]}</Avatar>
                                                     <Box sx={{ marginX: 1 }}>
-                                                        <Typography variant='subtitle1' sx={{ color: "black", lineHeight: 1.0 }}>John</Typography>
+                                                        <Typography variant='subtitle1' sx={{ color: "black", lineHeight: 1.0 }}>{userName}</Typography>
                                                         <Typography variant='body2'>Admin</Typography>
                                                     </Box>
                                                     <KeyboardArrowDownIcon />

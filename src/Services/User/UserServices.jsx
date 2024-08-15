@@ -21,4 +21,8 @@ export const UserServices = {
     let response = await ExecutePatch(`users/${id}/update`, data);
     return response;
   },
+  async logout(id, data) {
+    let response = await ExecutePost(`users/logout`, data);
+    return response;
+  },
 };

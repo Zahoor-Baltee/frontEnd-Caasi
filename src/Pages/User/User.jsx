@@ -8,13 +8,14 @@ import Select from '@mui/material/Select';
 import { TbEdit } from "react-icons/tb";
 import styled from '@mui/system/styled';
 import userImage from '../../Assets/man.png'
-
+import CircularProgress from "@mui/material/CircularProgress"
 
 import { DataGrid } from '@mui/x-data-grid';
 
 import { UserServices } from '../../Services/User/UserServices';
 import { useNavigate } from 'react-router-dom';
 import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
+import SubmitLoader from '../../Componenets/SubmitLoader';
 
 
 
@@ -30,7 +31,7 @@ const Root = styled(Box)({
     },
     "& .MuiDataGrid-columnHeader": {
         color: "white",
-        backgroundColor: "#2f80ed"
+        backgroundColor: "#2f80ed",
     },
     "& .MuiDataGrid-footerContainer": {
         // backgroundColor: "#d6dcd399"
@@ -39,6 +40,11 @@ const Root = styled(Box)({
         display: "none"
 
     },
+    "& .MuiDataGrid-main": {
+        // remove overflow hidden overwise sticky does not work
+        overflow: "unset"
+    },
+
     "& .MuiDataGrid-cell": {
         display: "flex"
 
@@ -46,6 +52,7 @@ const Root = styled(Box)({
     margin: 0,
     padding: 0,
     "& .mainContainer": {
+
         padding: "20px",
         backgroundColor: "#fafbfc",
         "& .mainBox": {
@@ -61,11 +68,11 @@ const Root = styled(Box)({
         " & .inputField": {
             backgroundColor: "#ffffff",
             width: "504px",
-            height: "38px",
+            height: "42px",
             borderRadius: "146px",
             boxShadow: "0px 2px 3px 0px #ccc",
             "& .MuiOutlinedInput-input": {
-                padding: "7px 0 5px"
+                padding: "9px 0 5px"
             }
         }
     }
@@ -82,7 +89,7 @@ const User = () => {
     let navigate = useNavigate()
     const columns = [
         {
-            field: 'firstName', headerName: 'Name', flex: 1, renderCell: (params) => (
+            field: 'firstName', headerName: 'Name', width: 335, renderCell: (params) => (
                 <Box sx={{ display: "flex", justifyContent: "start", gap: "10px", alignItems: "center" }}>
                     <Box sx={{ height: "40px", width: "40px" }}>
                         <img className='userImage' src={userImage} sx={{ borderRadius: "50px !important" }} height='100%' width='100%' alt='lol' />
@@ -92,10 +99,10 @@ const User = () => {
             )
         },
 
-        { field: 'department', headerName: 'Department', width: 335, },
+        { field: 'department', headerName: 'Department', width: 250, },
         { field: 'role', headerName: 'Role', width: 200, },
         { field: 'email', headerName: 'Email', width: 280, },
-        { field: 'status', headerName: 'Status', width: 230, },
+        { field: 'status', headerName: 'Status', width: 200, },
         {
             field: '_id', headerName: 'Edit', width: 100, renderCell: (params) => (
                 <IconButton onClick={() => handleOpenDetail(params.value)}>
@@ -147,8 +154,22 @@ const User = () => {
 
     return (
         <Root>
-            <Box className="mainContainer">
 
+            <Box className="mainContainer">
+                {/* <Box sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#c4c4c4db",
+                    zIndex: 2
+                }}>
+                    <CircularProgress />
+                </Box> */}
                 <Box className="mainBox">
                     {/* --------------------Header Section--------------- */}
                     <Box className="headerSection">
@@ -200,31 +221,39 @@ const User = () => {
                         </Box>
                     </Box>
                     {/* --------------------Header Section Complete--------------- */}
-                    <DataGrid
-                        minHeight={40}
-                        rows={user?.filterList || []}
-                        columns={columns}
-                        getRowId={(e) => e._id}
-                        // initialState={{
-                        //     pagination: {
-                        //         paginationModel: {
-                        //             pageSize: 5,
-                        //         },
-                        //     },
-                        // }}
-                        loading={isLoading}
-                        pageSizeOptions={[5]}
-                        disableColumnFilter
-                        disableColumnMenu
-                        checkboxSelection
-                        hideFooterPagination
-                        components={{
-                            NoRowsOverlay: CustomNoRowsOverlay,
-                        }}
-                    />
-                </Box>
+                    <Box sx={{ height: 600, overflowY: "auto" }}>
 
+
+                        <DataGrid
+                            autoHeight
+
+                            minHeight={40}
+                            rows={user?.filterList || []}
+                            columns={columns}
+                            getRowId={(e) => e._id}
+                            // initialState={{
+                            //     pagination: {
+                            //         paginationModel: {
+                            //             pageSize: 5,
+                            //         },
+                            //     },
+                            // }}
+                            loading={isLoading}
+                            pageSizeOptions={[5]}
+                            disableColumnFilter
+                            disableColumnMenu
+                            checkboxSelection
+                            hideFooterPagination
+                            slots={{
+                                NoRowsOverlay: CustomNoRowsOverlay,
+                            }}
+                        />
+                    </Box>
+                </Box>
             </Box>
+            {/* <SubmitLoader /> */}
+
+
         </Root>
     )
 }

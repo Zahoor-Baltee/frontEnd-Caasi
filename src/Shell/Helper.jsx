@@ -13,5 +13,15 @@ export const Helpers = {
         let day = date.getDate();
         let year = date.getFullYear();
         return `${day}-${monthNames[month]}-${year}`
+    },
+    dateFormater1(data) {
+        let date = new Date(data)
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let year = date.getFullYear();
+
+        let newDate = `${year}-${month < 10 ? "0" : ""}${month}-${day < 10 ? "0" : ""}${day}`
+        console.log(newDate)
+        return newDate
     }
 }

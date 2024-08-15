@@ -4,8 +4,12 @@ const token = "TOKEN"
 
 
 const AuthService = {
+    isAuthenticated() {
+        return localStorage.getItem(token) !== null
+    },
     logOut() {
-
+        localStorage.clear();
+        window.location.href = "/"
     },
     logIn(data, authtoken) {
         localStorage.setItem(userDate, JSON.stringify(data))
@@ -19,6 +23,10 @@ const AuthService = {
     getToken() {
         let data = localStorage.getItem(token)
         return data
+    },
+    getUserName() {
+        let firstName = AuthService.getUserData().name
+        return firstName
     }
 }
 export default AuthService;

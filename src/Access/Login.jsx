@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -71,6 +72,8 @@ const Login = () => {
     alertMessage: "",
     isAlertOpen: false,
   });
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -79,18 +82,22 @@ const Login = () => {
 
   const handleLogIn = async () => {
     try {
+      setIsLoading(true)
       let res = await UserServices.loginUser(data);
       if (res.success) {
-
         setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
         AuthService.logIn(res.data.user, res.data.accessToken)
         setTimeout(() => {
           navigate("/dashboard")
-        }, 3000)
+        }, 2000)
       } else {
-        setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: res.error });
+        setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: res.message });
+        setIsLoading(false)
+
       }
     } catch (error) {
+      setIsLoading(false)
+
       console.log(error);
     }
 
@@ -185,6 +192,7 @@ const Login = () => {
             <Typography variant="body2">Forget Password?</Typography>
           </Link>
           <Button
+            startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""}
             size="large"
             variant="contained"
             fullWidth

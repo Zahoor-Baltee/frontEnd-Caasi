@@ -17,9 +17,10 @@ import AddActivity from "../Pages/ActivityReports/AddActivity"
 import ReportsAndExport from "../Pages/Reports And Exports/ReportsAndExport";
 import AdvancedSettingAndManagement from "../Pages/Advanced Setting And Management/AdvancedSettingAndManagement";
 import Notification from "../Pages/Notification/Notifications";
+import Protected from "./Protected";
 
 const WithLayout = ({ component }) => {
-  return <NewDefaultLayout>{component}</NewDefaultLayout>;
+  return <NewDefaultLayout><Protected>{component}</Protected></NewDefaultLayout>;
 };
 const Router = () => {
   return (

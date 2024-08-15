@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Box, TextField, InputAdornment, Button, Grid, } from '@mui/material'
-import SearchIcon from '@mui/icons-material/Search';
+import React, { useState } from 'react'
+import { Box, TextField, Button, Grid, } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem';
 import Typography from "@mui/material/Typography";
 import FormControl from '@mui/material/FormControl';
@@ -10,7 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import { UserServices } from '../../Services/User/UserServices';
 import AuthService from '../../Services/AuthServices';
 import userImage from '../../Assets/man.png'
-
+import CircularProgress from '@mui/material/CircularProgress';
+import AlertSnackbar from '../../Componenets/AlertSnackbar';
 
 
 
@@ -59,6 +59,12 @@ const AddUser = () => {
     const [error, setError] = useState(false);
     const [helperText, setHelperText] = useState('');
     const [isSubmit, setIsSubmit] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [alert, setAlert] = useState({
+        alertColor: "primary",
+        alertMessage: "",
+        isAlertOpen: false,
+    });
 
     // Email Validation
 
@@ -101,9 +107,11 @@ const AddUser = () => {
 
     const createUser = async () => {
         setIsSubmit(true)
-        if (!userFields?.firstName || !userFields?.lastName || !userFields?.email || !userFields?.dapartment || !userFields?.phoneNumber || !userFields?.status || !userFields?.createdDate || !userFields?.updatedDate) {
+        console.log(userFields)
+        if (!userFields?.firstName || !userFields?.lastName || !userFields?.email || !userFields?.department || !userFields?.phoneNumber || !userFields?.status || !userFields?.createdDate || !userFields?.updatedDate) {
             return
         }
+        setIsLoading(true)
         let clientData = AuthService.getUserData()
         let data = userFields
         data.fullName = `${userFields.firstName} ${userFields.lastName}`
@@ -113,20 +121,26 @@ const AddUser = () => {
 
         try {
             let res = await UserServices.creatUsers(data)
-
             if (res.success) {
-                alert(res.message)
-                navigateUser('/user')
+                // alert(res.message)
+
+                setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
+                setIsLoading(false)
+                setTimeout(() => {
+                    navigateUser('/user')
+                }, 1000);
                 // setUser({ ...user, list: res.data })
             } else {
                 // alert("failed")
+                setIsLoading(false)
+                setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: res.error });
             }
 
         } catch (error) {
             console.error(error)
+            setIsLoading(false)
         }
     }
-
 
     return (
         <Root>
@@ -164,7 +178,6 @@ const AddUser = () => {
                                 <Typography sx={{ textTransform: "none" }}>Status</Typography>
                                 <FormControl fullWidth className='inputField1'>
                                     <Select
-
                                         error={!userFields?.status && isSubmit} helperText={!userFields?.status && isSubmit ? "Status is required." : ""}
                                         value={userFields?.status || ''}
                                         onChange={handleChange}
@@ -181,18 +194,20 @@ const AddUser = () => {
                             </Grid>
                         </Grid>
                         <Grid container my={3} columnGap={1} >
-                            <Button onClick={createUser} sx={{
+                            <Button startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""} onClick={createUser} sx={{
                                 height: "38px",
                                 textTransform: "none"
                             }} variant="contained">Create user</Button>
                             <Button onClick={routeChange} sx={{
                                 height: "38px",
                                 textTransform: "none"
-                            }} variant="contained">Cancel</Button>
+                            }} variant="contained" color="error">Cancel</Button>
                         </Grid>
                     </Box>
                 </Box>
-
+            </Box>
+            <Box>
+                <AlertSnackbar alert={alert} setAlert={setAlert} />
             </Box>
         </Root >
     )
