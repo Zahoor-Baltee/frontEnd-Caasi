@@ -89,7 +89,7 @@ const User = () => {
     let navigate = useNavigate()
     const columns = [
         {
-            field: 'firstName', headerName: 'Name', width: 335, renderCell: (params) => (
+            field: 'firstName', headerName: 'Name', width: 350, renderCell: (params) => (
                 <Box sx={{ display: "flex", justifyContent: "start", gap: "10px", alignItems: "center" }}>
                     <Box sx={{ height: "40px", width: "40px" }}>
                         <img className='userImage' src={userImage} sx={{ borderRadius: "50px !important" }} height='100%' width='100%' alt='lol' />
@@ -99,9 +99,9 @@ const User = () => {
             )
         },
 
-        { field: 'department', headerName: 'Department', width: 250, },
-        { field: 'role', headerName: 'Role', width: 200, },
-        { field: 'email', headerName: 'Email', width: 280, },
+        { field: 'department', headerName: 'Department', width: 270, },
+        { field: 'role', headerName: 'Role', width: 230, },
+        { field: 'email', headerName: 'Email', width: 300, },
         { field: 'status', headerName: 'Status', width: 200, },
         {
             field: '_id', headerName: 'Edit', width: 100, renderCell: (params) => (
@@ -221,7 +221,7 @@ const User = () => {
                         </Box>
                     </Box>
                     {/* --------------------Header Section Complete--------------- */}
-                    <Box sx={{ height: 600, overflowY: "auto" }}>
+                    <Box sx={{ height: 800, overflowY: "auto" }}>
 
 
                         <DataGrid

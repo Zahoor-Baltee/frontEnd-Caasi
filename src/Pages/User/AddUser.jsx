@@ -117,7 +117,6 @@ const AddUser = () => {
         data.fullName = `${userFields.firstName} ${userFields.lastName}`
         data.clientId = clientData.clientId
         data.userName = clientData.name
-        data.password = "12345678"
 
         try {
             let res = await UserServices.creatUsers(data)
@@ -161,20 +160,76 @@ const AddUser = () => {
                             <Grid item xs={6}></Grid>
                             <Grid container item xs={12} sm={6} rowGap={1}>
                                 <Typography >First Name</Typography>
-                                <TextField className='inputField1' variant='outlined' error={!userFields?.firstName && isSubmit} helperText={!userFields?.firstName && isSubmit ? "First Name is required." : ""} fullWidth type='text' value={userFields?.firstName || ''} onChange={handleChange} name='firstName' />
+                                <TextField
+                                    className='inputField1'
+                                    variant='outlined'
+                                    error={!userFields?.firstName && isSubmit}
+                                    helperText={!userFields?.firstName && isSubmit ? "First Name is required." : ""}
+                                    fullWidth type='text' value={userFields?.firstName || ''}
+                                    onChange={handleChange}
+                                    name='firstName' />
+
                                 <Typography sx={{ textTransform: "none" }}>Email Address</Typography>
-                                <TextField className='inputField1' fullWidth type='email' error={!userFields?.firstName && isSubmit} helperText={!userFields?.email && isSubmit ? "Email is required." : ""}
-                                    value={userFields?.email || ''} onChange={handleChange} name='email' />
-                                <Typography sx={{ textTransform: "none" }}>Phone Number</Typography>
-                                <TextField className='inputField1' inputProps={{ maxLength: 11 }} fullWidth type='text' error={!userFields?.phoneNumber && isSubmit} helperText={!userFields?.phoneNumber && isSubmit ? "Phone Number is required." : ""} value={userFields?.phoneNumber || ''} onChange={handleChange} name='phoneNumber' />
+                                <TextField
+                                    className='inputField1' fullWidth type='email'
+                                    error={!userFields?.firstName && isSubmit}
+                                    helperText={!userFields?.email && isSubmit ? "Email is required." : ""}
+                                    value={userFields?.email || ''}
+                                    onChange={handleChange}
+                                    name='email' />
+
+                                <Typography sx={{ textTransform: "none" }}>Team</Typography>
+                                <TextField className='inputField1' fullWidth type='text'
+                                    error={!userFields?.department && isSubmit}
+                                    helperText={!userFields?.department && isSubmit ? "Team is required." : ""}
+                                    value={userFields?.department || ''}
+                                    onChange={handleChange}
+                                    name='department' />
+
+                                <Typography sx={{ textTransform: "none" }}>Password</Typography>
+                                <TextField className='inputField1' fullWidth type='text'
+                                    error={!userFields?.password && isSubmit}
+                                    helperText={!userFields?.password && isSubmit ? "Password is required." : ""}
+                                    value={userFields?.password || ''}
+                                    onChange={handleChange}
+                                    name='password' />
+
                                 <Typography sx={{ textTransform: "none" }}>User's Creation Date</Typography>
-                                <TextField className='inputField1' fullWidth type='date' error={!userFields?.createdDate && isSubmit} helperText={!userFields?.createdDate && isSubmit ? "Create date is required." : ""} value={userFields?.createdDate || ''} onChange={handleChange} name='createdDate' />
+                                <TextField className='inputField1' fullWidth type='date'
+                                    error={!userFields?.createdDate && isSubmit}
+                                    helperText={!userFields?.createdDate && isSubmit ? "Create date is required." : ""}
+                                    value={userFields?.createdDate || ''}
+                                    onChange={handleChange}
+                                    name='createdDate' />
+
                             </Grid>
                             <Grid container item xs={12} sm={6} rowGap={1}>
+
                                 <Typography sx={{ textTransform: "none" }}>Last Name</Typography>
-                                <TextField className='inputField1' fullWidth type='text' error={!userFields?.lastName && isSubmit} helperText={!userFields?.lastName && isSubmit ? "Last Name is required." : ""} value={userFields?.lastName || ''} onChange={handleChange} name='lastName' />
-                                <Typography sx={{ textTransform: "none" }}>Team</Typography>
-                                <TextField className='inputField1' fullWidth type='text' error={!userFields?.department && isSubmit} helperText={!userFields?.department && isSubmit ? "Team is required." : ""} value={userFields?.department || ''} onChange={handleChange} name='department' />
+                                <TextField className='inputField1' fullWidth type='text'
+                                    error={!userFields?.lastName && isSubmit}
+                                    helperText={!userFields?.lastName && isSubmit ? "Last Name is required." : ""}
+                                    value={userFields?.lastName || ''} onChange={handleChange}
+                                    name='lastName' />
+
+                                <Typography sx={{ textTransform: "none" }}>Phone Number</Typography>
+                                <TextField className='inputField1' inputProps={{ maxLength: 11 }}
+                                    fullWidth type='text'
+                                    error={!userFields?.phoneNumber && isSubmit}
+                                    helperText={!userFields?.phoneNumber && isSubmit ? "Phone Number is required." : ""}
+                                    value={userFields?.phoneNumber || ''}
+                                    onChange={handleChange}
+                                    name='phoneNumber' />
+
+                                <Typography sx={{ textTransform: "none" }}>Role</Typography>
+                                <TextField className='inputField1' inputProps={{ maxLength: 11 }}
+                                    fullWidth type='text'
+                                    error={!userFields?.role && isSubmit}
+                                    helperText={!userFields?.role && isSubmit ? "Role is required." : ""}
+                                    value={userFields?.role || ''}
+                                    onChange={handleChange}
+                                    name='role' />
+
                                 <Typography sx={{ textTransform: "none" }}>Status</Typography>
                                 <FormControl fullWidth className='inputField1'>
                                     <Select
@@ -190,7 +245,12 @@ const AddUser = () => {
                                     </Select>
                                 </FormControl>
                                 <Typography sx={{ textTransform: "none" }}>Last Activity</Typography>
-                                <TextField className='inputField1' fullWidth type='date' error={!userFields?.updatedDate && isSubmit} helperText={!userFields?.updatedDate && isSubmit ? "Updated Date is required." : ""} value={userFields?.updatedDate || ''} onChange={handleChange} name='updatedDate' />
+                                <TextField className='inputField1' fullWidth type='date'
+                                    error={!userFields?.updatedDate && isSubmit}
+                                    helperText={!userFields?.updatedDate && isSubmit ? "Updated Date is required." : ""}
+                                    value={userFields?.updatedDate || ''}
+                                    onChange={handleChange}
+                                    name='updatedDate' />
                             </Grid>
                         </Grid>
                         <Grid container my={3} columnGap={1} >

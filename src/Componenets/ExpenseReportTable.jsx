@@ -277,39 +277,7 @@ function ExpenseReportTable() {
 
 
 
-                <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    PaperProps={{
-                        style: {
-                            margin: 0, // Remove default margin
-                            maxWidth: '800px', // Fixed width
-                            width: '800px', // Fixed width
-                            height: 'auto', // Allow content to define height
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            overflow: 'visible', // Ensure no overflow scrolling
-                        },
-                    }}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogContent
-                        style={{
-                            padding: '16px',
-                            overflow: 'visible', // Ensure no internal scrolling
-                        }}
-                    >
-                        <ExpenseReportForm open={open} setOpen={setOpen} />
-                    </DialogContent>
-                    {/* <DialogActions>
-                        <Button onClick={handleClose}>Disagree</Button>
-                        <Button onClick={handleClose} autoFocus>
-                            Agree
-                        </Button>
-                    </DialogActions> */}
-                </Dialog>
+
             </Box>
 
         </Root>

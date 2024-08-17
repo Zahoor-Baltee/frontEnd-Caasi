@@ -2,7 +2,7 @@ import { ExecuteGet, ExecutePost } from "../ApiServices";
 
 export const ExpenseService = {
     async createExpense(data) {
-        let response = await ExecutePost("expense/expenses", data);
+        let response = await ExecutePost("expense/create", data);
         return response;
     },
 
@@ -11,7 +11,7 @@ export const ExpenseService = {
         return response;
     },
     async getDetail(data) {
-        let response = await ExecuteGet(`expense/${data.id}/detail`);
+        let response = await ExecuteGet(`expense/detail/${data.id}`);
         return response;
     },
 

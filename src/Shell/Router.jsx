@@ -11,6 +11,7 @@ import User from "../Pages/User/User";
 import AddUser from "../Pages/User/AddUser";
 import UserInformation from "../Pages/User/UserInformation";
 import ExpenseReportTable from '../Componenets/ExpenseReportTable';
+import ExpenseList from '../Pages/ExpenseReports/ExpenseReportList';
 import ExpenseReports from "../Pages/ExpenseReports/ExpenseReports";
 import ActivityReport from "../Pages/Activity Report/ActivityReport";
 import AddActivity from "../Pages/ActivityReports/AddActivity"
@@ -52,6 +53,10 @@ const Router = () => {
         <Route
           path="/expensereporttable"
           element={<WithLayout component={<ExpenseReportTable />} />}
+        />
+        <Route
+          path="/expense-list"
+          element={<WithLayout component={<ExpenseList />} />}
         />
         <Route
           path="/expensereports"

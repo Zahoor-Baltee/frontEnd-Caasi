@@ -94,7 +94,7 @@ const ExpenseReportForm = ({ open, setOpen }) => {
             data.attachment = file;
             // data.userName = userName;
             data.category = category;
-            data.clientId = clientData.clientId;
+            data.clientId = clientData.clientId
             data.userName = clientData.name;
             data.userId = clientData._id;
             data.scan = "https://example.com";

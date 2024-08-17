@@ -73,7 +73,7 @@ function ResponsiveDrawer(props) {
     const menuList = [
         { name: "Dashboard", url: "/dashboard" },
         { name: "User", url: "/user" },
-        { name: "Expense Report", url: "/expensereporttable" },
+        { name: "Expense Report", url: "/expense-list" },
         { name: "Activity Report", url: "/activityreport" },
         { name: "Advanced Settings and Management", url: "/advancesetting" },
         { name: "Reports and Export", url: "/reportsandexport" },
