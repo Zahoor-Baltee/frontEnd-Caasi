@@ -94,6 +94,7 @@ const ExpenseList = () => {
     const [open, setOpen] = React.useState(false);
     const [age, setAge] = React.useState('');
     let navigate = useNavigate()
+
     const columns = [
         {
             field: 'userName',
@@ -131,7 +132,7 @@ const ExpenseList = () => {
                 </Typography>
         },
         {
-            field: 'email',
+            field: '_id',
             headerName: 'View Report',
             width: 300,
             renderCell: (params) => (
@@ -145,32 +146,38 @@ const ExpenseList = () => {
             headerName: 'Status',
             width: 200,
             renderCell: (params) => (
-                <Button sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "#FEFFE5",
-                    textTransform: "none",
-                    fontWeight: "bold",
-                    color: "#FFBC10",
-                    height: "40px",
-                    width: "100px",
-                    borderRadius: "10px"
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Button sx={{
+                        backgroundColor: params.value === "Pending" ? "#FEFFE5" : params.value === "Approved" ? "#f0fff8" : "#fff0f0",
+                        textTransform: "none",
+                        fontWeight: "bold",
+                        color: params.value === "Pending" ? "#FFBC10" : params.value === "Approved" ? "#18ab56" : "#eb5757",
+                        height: "40px",
+                        width: "100px",
+                        borderRadius: "5px",
+                        border: params.value === "Pending" ? "1px solid #FFBC10" : params.value === "Approved" ? "1px solid #18ab56" : "1px solid #eb5757",
 
-                }}>
-                    {(params.value)}
-                </Button>
+                    }}>
+                        {params.value}
+                    </Button>
+                </Box>
             )
         },
         {
-            field: '_id',
+            field: 'userId',
             headerName: 'Actions',
             width: 100,
             renderCell: (params) => (
-                <IconButton>
-                    <MoreVertIcon onClick={() => handleOpenDetail(params.value)} />
-                    {/* <KeyboardArrowDownIcon onClick={() => handleOpenDetail(params.value)} /> */}
-                </IconButton>
+                <>
+                    <IconButton>
+                        <MoreVertIcon onClick={() => handleOpenDetail(params.value)} />
+                    </IconButton>
+                    <IconButton>
+                        <KeyboardArrowDownIcon onClick={() => handleOpenDetail(params.value)} />
+                    </IconButton>
+
+                </>
+
             )
         },
 

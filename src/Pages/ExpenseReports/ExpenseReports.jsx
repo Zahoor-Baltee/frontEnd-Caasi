@@ -13,6 +13,9 @@ import { useLocation } from 'react-router-dom';
 import { ExpenseService } from '../../Services/Expense/ExpenseService';
 import AlertSnackbar from '../../Componenets/AlertSnackbar';
 import Barcode from 'react-barcode';
+import { Helpers } from '../../Shell/Helper';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WatchLaterIcon from '@mui/icons-material/WatchLater';
 const Root = styled(Box)({
     margin: 0,
     padding: 0,
@@ -57,7 +60,6 @@ function ExpenseReports() {
                 id: state?.id
             }
             let res = await ExpenseService.getDetail(data)
-            debugger
             if (res.success) {
                 setReports(res.data)
                 console.log(res.data)
@@ -82,9 +84,24 @@ function ExpenseReports() {
                 </Box>
                 <Box className="ReportContainer">
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Button sx={{ display: "flex", alignItems: "center", gap: "7px", borderRadius: "5px", textTransform: "none", backgroundColor: "#F9D2D3", color: "#374557", width: "170px" }}>
-                            <CancelOutlinedIcon sx={{ color: "#ED1C24" }} />
-                            <Typography sx={{ color: "#374557", fontSize: "16px" }}>{reports?.status}</Typography>
+                        <Button
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                border: reports?.status === "Pending" ? "1px solid #FFBC10" : reports?.status === "Approved" ? "1px solid #18ab56" : "1px solid #eb5757",
+                                gap: "5px",
+                                borderRadius: "5px",
+                                textTransform: "none",
+                                backgroundColor: reports?.status === "Pending" ? "#FEFFE5" : reports?.status === "Approved" ? "#f0fff8" : "#fff0f0", color: "#374557",
+                                height: "40px",
+                                width: "115px",
+                            }}>
+                            {reports?.status === 'Pending' ? <WatchLaterIcon sx={{ fontSize: "20px", color: "#F38F19" }} /> : reports?.status === 'Approved' ? <CheckCircleIcon sx={{ color: "#18ab56" }} /> : <CancelOutlinedIcon sx={{ color: "red" }} />}
+                            <Typography sx={{
+                                color: reports?.status === "Pending" ? "#FFBC10" : reports?.status === "Approved" ? "#18ab56" : "#eb5757",
+                            }}>
+                                {reports?.status}
+                            </Typography>
                         </Button>
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "38px", width: "38px", backgroundColor: "#0A75BD", color: "#ffffff", borderRadius: "10px" }}>
                             <EditOutlinedIcon />
@@ -97,7 +114,7 @@ function ExpenseReports() {
 
                         </Box>
                         <Typography sx={{ color: "#374557", fontSize: "14px", fontWeight: "600" }}>
-                            Date of Submission: {reports?.dateOfSubmitted}
+                            Date of Submission: {Helpers.dateFormater(reports?.dateOfSubmitted)}
                         </Typography>
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
@@ -142,7 +159,7 @@ function ExpenseReports() {
                                     textTransform: 'none',
                                 }}
                             >
-                                {reports?.createDate}
+                                {Helpers.dateFormater(reports?.updateDate)}
                             </Button>
                             <CheckCircle sx={{ color: "#18AB56" }} />
                         </Box>

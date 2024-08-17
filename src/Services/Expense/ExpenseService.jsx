@@ -11,7 +11,7 @@ export const ExpenseService = {
         return response;
     },
     async getDetail(data) {
-        let response = await ExecuteGet(`expense/detail/${data.id}`);
+        let response = await ExecuteGet(`expense/${data.id}/datail`);
         return response;
     },
 
