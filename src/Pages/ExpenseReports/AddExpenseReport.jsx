@@ -46,8 +46,6 @@ const ExpenseReportForm = ({ open, setOpen }) => {
         isAlertOpen: false,
     });
 
-    const navigate = useNavigate();
-
     useEffect(() => {
         getUserList()
     }, [])
@@ -135,11 +133,18 @@ const ExpenseReportForm = ({ open, setOpen }) => {
 
         }
     }
+    let navigate = useNavigate();
+
+    const handleClick = () => {
+        console.log('Navigating to /expense-list');
+        navigate('/expense-list');
+    };
+
 
     return (
         <Root>
             <Box sx={{ display: "flex", justifyContent: "start", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
-                <IoIosArrowDropleftCircle style={{ fontSize: "30px", color: "#0073BC" }} />
+                <IoIosArrowDropleftCircle onClick={handleClick} style={{ fontSize: "30px", color: "#0073BC" }} />
                 <Typography sx={{ fontWeight: "bold", fontSize: "24px" }}>Enter expense report</Typography>
             </Box>
 

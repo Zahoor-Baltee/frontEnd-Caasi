@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Box, Typography, Button, Avatar, Stack, useMediaQuery, Divider
+    Box, Typography, Button, Divider
 } from '@mui/material';
 import styled from '@emotion/styled'; // This is correct
-import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
+import { IoIosArrowDropleftCircle } from "react-icons/io";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { CheckCircle, Info } from '@mui/icons-material';
-import Recepit from "../../Assets/receipt.jpeg"
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ExpenseService } from '../../Services/Expense/ExpenseService';
 import AlertSnackbar from '../../Componenets/AlertSnackbar';
 import Barcode from 'react-barcode';
@@ -71,15 +70,20 @@ function ExpenseReports() {
 
         }
     }
+    let navigate = useNavigate();
 
+    const handleClick = () => {
+        console.log('Navigating to /expense-list');
+        navigate('/expense-list');
+    };
     return (
         <Root>
             <Box className="mainContainer">
 
                 <Box sx={{ display: "flex", alignItems: "center", gap: "5px", marginBottom: "10px" }}>
-                    <ArrowCircleLeftRoundedIcon sx={{ color: "#0073BC" }} />
+                    <IoIosArrowDropleftCircle onClick={handleClick} style={{ cursor: "pointer", fontSize: "30px", color: "#0073BC" }} />
                     <Typography sx={{ color: "#374557", fontSize: "20px", fontWeight: "600" }}>
-                        Rejected expense report
+                        {reports?.status === "Pending" ? 'Pending' : reports?.status === 'Approved' ? 'Approved' : 'Rejected'} expense report
                     </Typography>
                 </Box>
                 <Box className="ReportContainer">
@@ -108,10 +112,9 @@ function ExpenseReports() {
                         </Box>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: "200px", alignItems: 'center', marginBottom: "10px", mt: 2 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <AccountCircleRoundedIcon sx={{ color: "#0073BC" }} />
-                            <Typography sx={{ color: "#374557", fontSize: "16px", fontWeight: "600" }}>{reports?.userName}</Typography>
-
+                        <Box sx={{ display: 'flex', justifyContent: "center", alignItems: 'center' }}>
+                            <AccountCircleRoundedIcon sx={{ fontSize: "35px", color: "#0073BC" }} />
+                            <Typography sx={{ color: "#374557", fontSize: "18px", fontWeight: "600" }}>{reports?.userName}</Typography>
                         </Box>
                         <Typography sx={{ color: "#374557", fontSize: "14px", fontWeight: "600" }}>
                             Date of Submission: {Helpers.dateFormater(reports?.dateOfSubmitted)}
