@@ -1,48 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, IconButton,
-    Typography, Button, Pagination, MenuItem, Box,
-    Dialog,
-    DialogContent,
-} from '@mui/material';
+import { IconButton, Typography, Button, MenuItem, Box, } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
-import { Visibility, MoreVert } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { styled } from '@mui/system';
-import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
-import ArrowDropUpOutlinedIcon from '@mui/icons-material/ArrowDropUpOutlined';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import ExpenseReportForm from '../Pages/ExpenseReports/AddExpenseReport';
 import { ExpenseService } from '../Services/Expense/ExpenseService';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 
-const StatusButton = styled(Button)(({ status }) => ({
-    color: status === 'Approved' ? '#fff' : '#000',
-    backgroundColor: status === 'Approved' ? '#4caf50' : status === 'Pending' ? '#ff9800' : '#f44336',
-    pointerEvents: 'none',
-}));
-
-const tableData = [
-    { id: 1, name: 'Albert Flores', lastName: 'Flores', amount: '$1000', date: '23 Feb 2024', status: 'Approved' },
-    { id: 2, name: 'Wade Warren', lastName: 'Warren', amount: '$1000', date: '23 Feb 2024', status: 'Approved' },
-    { id: 3, name: 'Ronald Richards', lastName: 'Richards', amount: '$1000', date: '23 Feb 2024', status: 'Pending' },
-    { id: 4, name: 'Courtney Henry', lastName: 'Courtney', amount: '$1000', date: '23 Feb 2024', status: 'Rejected' },
-    { id: 5, name: 'Courtney Henry', lastName: 'Courtney', amount: '$1000', date: '23 Feb 2024', status: 'Rejected' },
-    { id: 6, name: 'Courtney Henry', lastName: 'Courtney', amount: '$1000', date: '23 Feb 2024', status: 'Rejected' },
-
-    // Add more rows as necessary
-];
-
 const Root = styled(Box)({
     margin: 0,
     padding: 0,
-    // "& .css-1t1j96h-MuiPaper-root-MuiDialog-paper": {
-    //     maxHeight: "none"
-    // },
     "& .mainContainer": {
         padding: "20px",
         backgroundColor: "#f4f7fe",
@@ -90,7 +59,6 @@ function ExpenseReportTable() {
         list: [],
         detail: {}
     })
-    const [selected, setSelected] = useState([]);
     const [open, setOpen] = React.useState(false);
 
     const columns = [
@@ -103,8 +71,12 @@ function ExpenseReportTable() {
             )
         },
 
-        { field: 'amount', headerName: 'Amount', width: 150, },
-        { field: 'createDate', headerName: 'Date', width: 280, },
+        {
+            field: 'amount', headerName: 'Amount', width: 150,
+        },
+        {
+            field: 'createDate', headerName: 'Date', width: 280,
+        },
         {
             field: '_id', headerName: 'View Report', width: 100, renderCell: (params) => (
                 <IconButton onClick={() => handleOpenDetail(params.value)}>
@@ -127,45 +99,12 @@ function ExpenseReportTable() {
 
     ];
 
-    const isSelected = (id) => selected.indexOf(id) !== -1;
     let navigate = useNavigate()
 
     useEffect(() => {
         getReportsList()
     }, [])
 
-
-
-    const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
-            const newSelected = tableData.map((row) => row.id);
-            setSelected(newSelected);
-            return;
-        }
-        setSelected([]);
-    };
-
-
-
-    const handleCheckboxClick = (id) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        setSelected(newSelected);
-    };
     // navigate to Details
     const handleOpenDetail = (id) => {
         navigate("/expensereports", { state: { id: id } })
@@ -173,11 +112,6 @@ function ExpenseReportTable() {
     const openExpenseForm = () => {
         setOpen(true);
     }
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-
 
     //Get user List
 
@@ -189,12 +123,12 @@ function ExpenseReportTable() {
                 setReports({ ...reports, list: res.data })
             } else {
                 // alert("failed")
-                setReports({ ...reports, list: tableData })
+                setReports({ ...reports, list: [] })
             }
 
         } catch (error) {
             console.error(error)
-            setReports({ ...reports, list: tableData })
+            setReports({ ...reports, list: [] })
         }
     }
 

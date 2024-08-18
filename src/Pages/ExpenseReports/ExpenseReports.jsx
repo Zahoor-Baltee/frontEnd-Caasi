@@ -177,9 +177,14 @@ function ExpenseReports() {
                         </Box>
                     </Box>
                     <Box >
-                        <Typography sx={{ color: "#0171BC", fontWeight: "600" }}>
-                            {reports?.description}
-                        </Typography>
+                        <Box>
+                            <Typography sx={{ color: "#0171BC", fontWeight: "600" }}>
+                                Discription
+                            </Typography>
+                            <Typography>
+                                {reports?.description}
+                            </Typography>
+                        </Box>
                         <Divider sx={{ my: 1 }} />
 
                         <Typography sx={{ color: "#0171BC", fontWeight: "600" }}>

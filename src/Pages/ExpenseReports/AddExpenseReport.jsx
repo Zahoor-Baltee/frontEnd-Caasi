@@ -13,6 +13,7 @@ import {
     DialogContent,
     DialogTitle,
     IconButton,
+    FormControl,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import QrScanner from 'react-qr-scanner'; // Updated QR code scanner library
@@ -34,9 +35,12 @@ const Root = styled(Box)({
 });
 
 const ExpenseReportForm = ({ open, setOpen }) => {
-    const [formFields, setFormFields] = useState({});
+    const [formFields, setFormFields] = useState({
+        userName: "",
+        category: ""
+    });
+    const [isSubmit, setIsSubmit] = useState(false);
     const [user, setUser] = useState([]);
-    const [userName, setUserName] = useState('');
     const [category, setCategory] = useState('');
     const [file, setFile] = useState(null);
     const [isScannerOpen, setIsScannerOpen] = useState(false);
@@ -50,16 +54,11 @@ const ExpenseReportForm = ({ open, setOpen }) => {
         getUserList()
     }, [])
 
-
     const handleChange = (event) => {
         setFormFields((prev) => ({ ...prev, [event.target.name]: event.target.value }));
     };
 
 
-
-    const handleChangeCategory = (event) => {
-        setCategory(event.target.value);
-    };
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
@@ -73,7 +72,6 @@ const ExpenseReportForm = ({ open, setOpen }) => {
             setFile(JSON.stringify(fileData));
         }
     };
-
 
     const handleOpenScanner = () => {
         setIsScannerOpen(true);
@@ -108,14 +106,15 @@ const ExpenseReportForm = ({ open, setOpen }) => {
         }
     }
 
-
     const handleSubmit = async () => {
+        setIsSubmit(true)
+        if (!formFields?.userName || !formFields?.category || !formFields?.amount || !formFields?.dateOfSubmitted || !formFields?.description) {
+            return
+        }
         try {
             let clientData = AuthService.getUserData()
             let data = formFields;
             data.attachment = file;
-            // data.userName = userName;
-            data.category = category;
             data.clientId = clientData.clientId
             data.userId = clientData._id;
             data.scan = "https://example.com";
@@ -143,153 +142,182 @@ const ExpenseReportForm = ({ open, setOpen }) => {
 
     return (
         <Root>
-            <Box sx={{ display: "flex", justifyContent: "start", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "start",
+                    gap: "10px",
+                    alignItems: "center",
+                    marginBottom: "10px"
+                }}>
                 <IoIosArrowDropleftCircle onClick={handleClick} style={{ fontSize: "30px", color: "#0073BC" }} />
                 <Typography sx={{ fontWeight: "bold", fontSize: "24px" }}>Enter expense report</Typography>
             </Box>
+            <FormControl fullWidth>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    fullWidth
+                    value={formFields?.userName}
+                    error={!formFields.userName && isSubmit}
+                    name="userName"
+                    size="small"
+                    sx={{
+                        padding: '4px 8px',
+                        borderRadius: "8px",
+                        marginBottom: '10px',
+                        backgroundColor: "#d5dce4",
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            border: 'none',
+                        },
+                    }}
+                    displayEmpty
+                    onChange={handleChange}
+                    MenuProps={{
+                        PaperProps: {
+                            sx: {
+                                padding: '5px 8px',
+                                '& .MuiMenuItem-root': {
+                                    padding: '4px 8px',
+                                },
+                            },
+                        },
+                    }}
+                >
+                    <MenuItem value="">Select User</MenuItem>
+                    {user?.map((el, index) => (
+                        <MenuItem key={index} value={`${el.firstName}${el.lastName}`}>{el.firstName}{el.lastName}</MenuItem>
+                    ))}
+                </Select>
+                {!formFields.userName && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
 
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={formFields.userName}
-                name="userName"
-                size="small"
-                sx={{
-                    padding: '4px 8px',
-                    borderRadius: "8px",
+            </FormControl>
+            <FormControl fullWidth>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    name='category'
+                    fullWidth
+                    value={formFields?.category}
+                    error={!formFields?.category && isSubmit}
+                    size="small"
+                    sx={{
+                        padding: '4px 8px',
+                        backgroundColor: "#d5dce4",
+                        borderRadius: "8px",
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            border: 'none',
+                        },
+                    }}
+                    displayEmpty
+                    onChange={handleChange}
+                    MenuProps={{
+                        PaperProps: {
+                            sx: {
+                                padding: '5px 8px',
+                                '& .MuiMenuItem-root': {
+                                    padding: '4px 8px',
+                                },
+                            },
+                        },
+                    }}
+                >
+                    <MenuItem value="">Select a Category</MenuItem>
+                    <MenuItem value={"Developer"}>Developer</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+                {!formFields.category && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}>Category is required</Typography> : ""}
 
-                    marginBottom: '10px',
-                    backgroundColor: "#d5dce4",
-                    '& .MuiOutlinedInput-notchedOutline': {
-                        border: 'none',
-                    },
-                }}
-                fullWidth
-                displayEmpty
-                onChange={handleChange}
-                MenuProps={{
-                    PaperProps: {
-                        sx: {
-                            padding: '5px 8px',
-                            '& .MuiMenuItem-root': {
+            </FormControl>
+            <FormControl fullWidth>
+                <TextField
+                    sx={{
+                        backgroundColor: "#d5dce4",
+                        borderRadius: "8px",
+                        padding: '4px 8px',
+                        '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                border: 'none',
                                 padding: '4px 8px',
                             },
                         },
-                    },
-                }}
-            >
-                <MenuItem value="">Select User</MenuItem>
-                {user?.map((el, index) => (
-                    <MenuItem key={index} value={`${el.firstName}${el.lastName}`}>{el.firstName}{el.lastName}</MenuItem>
-                ))}
-            </Select>
+                    }}
+                    fullWidth
+                    size="small"
+                    placeholder="$ Enter Amount"
+                    name="amount"
+                    type="number"
+                    error={!formFields?.amount && isSubmit}
+                    onChange={handleChange}
+                    value={formFields?.amount}
+                    margin="normal"
+                    variant="outlined"
+                />
+                {!formFields.amount && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}> Amount is required</Typography> : ""}
+            </FormControl>
 
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={category}
-                size="small"
-                sx={{
-                    padding: '4px 8px',
-                    backgroundColor: "#d5dce4",
-                    borderRadius: "8px",
-                    '& .MuiOutlinedInput-notchedOutline': {
-                        border: 'none',
-                    },
-                }}
-                fullWidth
-                displayEmpty
-                onChange={handleChangeCategory}
-                MenuProps={{
-                    PaperProps: {
-                        sx: {
-                            padding: '5px 8px',
-                            '& .MuiMenuItem-root': {
+            <FormControl fullWidth>
+                <TextField
+                    sx={{
+                        backgroundColor: "#d5dce4",
+                        borderRadius: "8px",
+                        padding: '4px 8px',
+                        '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                border: 'none',
                                 padding: '4px 8px',
                             },
                         },
-                    },
-                }}
-            >
-                <MenuItem value="">Select a Category</MenuItem>
-                <MenuItem value={"Developer"}>Developer</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
-            <TextField
-                sx={{
-                    backgroundColor: "#d5dce4",
-                    borderRadius: "8px",
-                    padding: '4px 8px',
-                    '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                            border: 'none',
-                            padding: '4px 8px',
+                    }}
+                    fullWidth
+                    size="small"
+                    margin="normal"
+                    variant="outlined"
+                    type="date"
+                    onChange={handleChange}
+                    name="dateOfSubmitted"
+                    placeholder="Enter Date"
+                    error={!formFields?.dateOfSubmitted && isSubmit}
+                    value={formFields?.dateOfSubmitted}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+                {!formFields.dateOfSubmitted && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}> Submitted is required</Typography> : ""}
+
+            </FormControl>
+            <FormControl fullWidth>
+
+                <TextField
+                    sx={{
+                        backgroundColor: "#d5dce4",
+                        borderRadius: "8px",
+                        height: "100px",
+
+                        '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                border: 'none',
+                                padding: '4px 8px',
+                            },
                         },
-                    },
-                }}
-                fullWidth
-                size="small"
-                placeholder="$ Enter Amount"
-                name="amount"
-                type="number"
-                onChange={handleChange}
-                value={formFields?.amount}
-                margin="normal"
-                variant="outlined"
-            />
+                    }}
+                    fullWidth
+                    placeholder="Add a description"
+                    size="small"
+                    margin="normal"
+                    name="description"
+                    onChange={handleChange}
+                    error={!formFields?.description && isSubmit}
+                    value={formFields?.description}
+                    variant="outlined"
+                    multiline
+                    rows={2}
 
-            <TextField
-                sx={{
-                    backgroundColor: "#d5dce4",
-                    borderRadius: "8px",
-                    padding: '4px 8px',
-                    '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                            border: 'none',
-                            padding: '4px 8px',
-                        },
-                    },
-                }}
-                fullWidth
-                size="small"
-                margin="normal"
-                variant="outlined"
-                type="date"
-                onChange={handleChange}
-                name="dateOfSubmitted"
-                placeholder="Enter Date"
-                value={formFields?.dateOfSubmitted}
-                InputLabelProps={{
-                    shrink: true,
-                }}
-            />
+                />
+                {!formFields.description && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}> Description is required</Typography> : ""}
 
-            <TextField
-                sx={{
-                    backgroundColor: "#d5dce4",
-                    borderRadius: "8px",
-                    height: "100px",
-
-                    '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                            border: 'none',
-                            padding: '4px 8px',
-                        },
-                    },
-                }}
-                fullWidth
-                placeholder="Add a description"
-                size="small"
-                margin="normal"
-                name="description"
-                onChange={handleChange}
-                value={formFields?.description}
-                variant="outlined"
-                multiline
-                rows={2}
-
-            />
+            </FormControl>
 
             <Box sx={{ mt: 2, mb: 2 }}>
                 <Grid container spacing={2}>
@@ -301,7 +329,7 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                                 onChange={handleFileChange}
                                 style={{ display: 'none' }}
                             />
-                            <IconButton sx={{ borderRadius: "0px", }} onClick={handleOpenScanner}>
+                            <IconButton sx={{ borderRadius: "0px", }}>
                                 <Box
                                     sx={{
                                         border: "3px solid #6CBCDF",
