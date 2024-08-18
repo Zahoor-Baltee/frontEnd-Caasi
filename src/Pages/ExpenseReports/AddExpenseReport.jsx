@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     TextField,
     Button,
@@ -12,22 +12,30 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    IconButton,
 } from '@mui/material';
-import { AttachFile, QrCodeScanner } from '@mui/icons-material';
 import { styled } from '@mui/system';
 import QrScanner from 'react-qr-scanner'; // Updated QR code scanner library
 import { ExpenseService } from '../../Services/Expense/ExpenseService';
+import { UserServices } from '../../Services/User/UserServices';
 import AuthService from '../../Services/AuthServices';
 import AlertSnackbar from '../../Componenets/AlertSnackbar';
 import { useNavigate } from 'react-router-dom';
+import { IoIosArrowDropleftCircle } from "react-icons/io";
+import { ImAttachment } from "react-icons/im";
+import { RiQrScan2Line } from "react-icons/ri";
 
 const Root = styled(Box)({
     margin: 0,
     padding: 0,
+    "& .MuiInputBase-root": {
+        border: "none"
+    }
 });
 
 const ExpenseReportForm = ({ open, setOpen }) => {
     const [formFields, setFormFields] = useState({});
+    const [user, setUser] = useState([]);
     const [userName, setUserName] = useState('');
     const [category, setCategory] = useState('');
     const [file, setFile] = useState(null);
@@ -39,13 +47,17 @@ const ExpenseReportForm = ({ open, setOpen }) => {
     });
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        getUserList()
+    }, [])
+
+
     const handleChange = (event) => {
         setFormFields((prev) => ({ ...prev, [event.target.name]: event.target.value }));
     };
 
-    const handleChangeUser = (event) => {
-        setUserName(event.target.value);
-    };
+
 
     const handleChangeCategory = (event) => {
         setCategory(event.target.value);
@@ -84,7 +96,19 @@ const ExpenseReportForm = ({ open, setOpen }) => {
     const handleError = (error) => {
         console.error(error);
     };
+    const getUserList = async () => {
+        try {
+            let res = await UserServices.getlist()
+            if (res.success) {
+                setUser(res.data)
+            } else {
+                // alert("failed")
+            }
 
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
 
     const handleSubmit = async () => {
@@ -95,7 +119,6 @@ const ExpenseReportForm = ({ open, setOpen }) => {
             // data.userName = userName;
             data.category = category;
             data.clientId = clientData.clientId
-            data.userName = clientData.name;
             data.userId = clientData._id;
             data.scan = "https://example.com";
             // debugger
@@ -115,19 +138,30 @@ const ExpenseReportForm = ({ open, setOpen }) => {
 
     return (
         <Root>
-            <Typography variant="h6" gutterBottom>
-                Enter expense report
-            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "start", gap: "10px", alignItems: "center", marginBottom: "10px" }}>
+                <IoIosArrowDropleftCircle style={{ fontSize: "30px", color: "#0073BC" }} />
+                <Typography sx={{ fontWeight: "bold", fontSize: "24px" }}>Enter expense report</Typography>
+            </Box>
 
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={userName}
+                value={formFields.userName}
+                name="userName"
                 size="small"
-                style={{ padding: '1px 8px', marginBottom: '10px' }}
+                sx={{
+                    padding: '4px 8px',
+                    borderRadius: "8px",
+
+                    marginBottom: '10px',
+                    backgroundColor: "#d5dce4",
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        border: 'none',
+                    },
+                }}
                 fullWidth
                 displayEmpty
-                onChange={handleChangeUser}
+                onChange={handleChange}
                 MenuProps={{
                     PaperProps: {
                         sx: {
@@ -140,9 +174,9 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                 }}
             >
                 <MenuItem value="">Select User</MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                {user?.map((el, index) => (
+                    <MenuItem key={index} value={`${el.firstName}${el.lastName}`}>{el.firstName}{el.lastName}</MenuItem>
+                ))}
             </Select>
 
             <Select
@@ -150,7 +184,14 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                 id="demo-simple-select"
                 value={category}
                 size="small"
-                style={{ padding: '1px 8px' }}
+                sx={{
+                    padding: '4px 8px',
+                    backgroundColor: "#d5dce4",
+                    borderRadius: "8px",
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        border: 'none',
+                    },
+                }}
                 fullWidth
                 displayEmpty
                 onChange={handleChangeCategory}
@@ -170,8 +211,18 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                 <MenuItem value={20}>Twenty</MenuItem>
                 <MenuItem value={30}>Thirty</MenuItem>
             </Select>
-
             <TextField
+                sx={{
+                    backgroundColor: "#d5dce4",
+                    borderRadius: "8px",
+                    padding: '4px 8px',
+                    '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                            border: 'none',
+                            padding: '4px 8px',
+                        },
+                    },
+                }}
                 fullWidth
                 size="small"
                 placeholder="$ Enter Amount"
@@ -184,6 +235,17 @@ const ExpenseReportForm = ({ open, setOpen }) => {
             />
 
             <TextField
+                sx={{
+                    backgroundColor: "#d5dce4",
+                    borderRadius: "8px",
+                    padding: '4px 8px',
+                    '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                            border: 'none',
+                            padding: '4px 8px',
+                        },
+                    },
+                }}
                 fullWidth
                 size="small"
                 margin="normal"
@@ -199,8 +261,20 @@ const ExpenseReportForm = ({ open, setOpen }) => {
             />
 
             <TextField
+                sx={{
+                    backgroundColor: "#d5dce4",
+                    borderRadius: "8px",
+                    height: "100px",
+
+                    '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                            border: 'none',
+                            padding: '4px 8px',
+                        },
+                    },
+                }}
                 fullWidth
-                label="Add a description"
+                placeholder="Add a description"
                 size="small"
                 margin="normal"
                 name="description"
@@ -209,6 +283,7 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                 variant="outlined"
                 multiline
                 rows={2}
+
             />
 
             <Box sx={{ mt: 2, mb: 2 }}>
@@ -221,31 +296,34 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                                 onChange={handleFileChange}
                                 style={{ display: 'none' }}
                             />
-                            <Button
-                                fullWidth
-                                variant="outlined"
-                                startIcon={<AttachFile />}
-                                component="span"
-                            >
-                                Attach a document
-                            </Button>
+                            <IconButton sx={{ borderRadius: "0px", }} onClick={handleOpenScanner}>
+                                <Box
+                                    sx={{
+                                        border: "3px solid #6CBCDF",
+                                        display: "flex", justifyContent: "center",
+                                        alignItems: "center", height: "60px",
+                                        width: "60px",
+                                        backgroundColor: "#0073BC",
+                                        borderRadius: "50px"
+                                    }}>
+                                    <ImAttachment style={{ color: "white", fontSize: "30px", }} />
+                                </Box>
+                                <Typography sx={{ color: "#737791", fontSize: "22px", marginLeft: "5px" }}> Attach a document</Typography>
+                            </IconButton>
+
                         </label>
                     </Grid>
                     <Grid item xs={6}>
-                        <Button
-                            fullWidth
-                            variant="outlined"
-                            startIcon={<QrCodeScanner />}
-                            onClick={handleOpenScanner}
-                        >
-                            Scan your report
-                        </Button>
+                        <IconButton sx={{ borderRadius: "0px" }} onClick={handleOpenScanner}>
+                            <RiQrScan2Line style={{ color: "#0073BC", fontSize: "60px" }} />
+                            <Typography sx={{ color: "#737791", fontSize: "22px", marginLeft: "5px" }}> Scan your report</Typography>
+                        </IconButton>
                     </Grid>
                 </Grid>
             </Box>
 
             <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button variant="outlined">Reset</Button>
+                <Button variant="outlined" >Reset</Button>
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
                     Submit
                 </Button>

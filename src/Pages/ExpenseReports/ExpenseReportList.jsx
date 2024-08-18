@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, IconButton, Dialog, DialogContent, Grid } from '@mui/material'
+import { Box, Button, IconButton, Dialog, DialogContent, Grid, Menu } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem';
 import Typography from "@mui/material/Typography";
 import FormControl from '@mui/material/FormControl';
@@ -93,6 +93,14 @@ const ExpenseList = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [open, setOpen] = React.useState(false);
     const [age, setAge] = React.useState('');
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const openMenu = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
     let navigate = useNavigate()
 
     const columns = [
@@ -170,8 +178,66 @@ const ExpenseList = () => {
             renderCell: (params) => (
                 <>
                     <IconButton>
-                        <MoreVertIcon onClick={() => handleOpenDetail(params.value)} />
+                        <MoreVertIcon onClick={handleClick} />
                     </IconButton>
+                    <Menu
+                        sx={{ "& .MuiPaper-root ": { boxShadow: "#aba4a43d 0px 3px 8px" } }}
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={openMenu}
+                        onClose={handleCloseMenu}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#f0fff8",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#18ab56",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #18ab56",
+
+                            }}>
+                                Approved
+                            </Button>
+                        </MenuItem>
+
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#FEFFE5",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#FFBC10",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #FFBC10",
+
+                            }}>
+                                Pending
+                            </Button>
+                        </MenuItem>
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#fff0f0",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#eb5757",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #eb5757",
+
+                            }}>
+                                Rejected
+                            </Button>
+                        </MenuItem>
+                    </Menu>
                     <IconButton>
                         <KeyboardArrowDownIcon onClick={() => handleOpenDetail(params.value)} />
                     </IconButton>
@@ -230,30 +296,34 @@ const ExpenseList = () => {
                 <Box className="mainBox">
                     {/* --------------------Header Section--------------- */}
                     <Grid justifyContent="flex-end" xs={12} container className="headerSection">
-                        <Button sx={{
-                            height: "38px",
-                            textTransform: "none"
-                        }}
-                            onClick={openExpenseForm}
-                            variant="contained"
-                        >Create Expense Report</Button>
+                        <Grid item xs={6}></Grid>
+                        <Grid container alignItems="center" justifyContent="end" item xs={6}>
+                            <Button sx={{
+                                height: "38px",
+                                textTransform: "none"
+                            }}
+                                onClick={openExpenseForm}
+                                variant="contained"
+                            >Create Expense Report</Button>
 
-                        <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: "#fff", color: "#F8F8F8" }}>
-                            <Select
-                                value={age}
-                                size='small'
-                                onChange={handleChange}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Without label' }}
-                            >
-                                <MenuItem value="">
-                                    <Typography sx={{ color: "#0171BC" }}>filters</Typography>
-                                </MenuItem>
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
-                            </Select>
-                        </FormControl>
+                            <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: "#fff", color: "#F8F8F8" }}>
+                                <Select
+                                    value={age}
+                                    size='small'
+                                    onChange={handleChange}
+                                    displayEmpty
+                                    inputProps={{ 'aria-label': 'Without label' }}
+                                >
+                                    <MenuItem value="">
+                                        <Typography sx={{ color: "#0171BC" }}>filters</Typography>
+                                    </MenuItem>
+                                    <MenuItem value={10}>Ten</MenuItem>
+                                    <MenuItem value={20}>Twenty</MenuItem>
+                                    <MenuItem value={30}>Thirty</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
                     </Grid>
                     {/* --------------------Header Section Complete--------------- */}
                     <Box sx={{ height: 800, overflowY: "auto" }}>
