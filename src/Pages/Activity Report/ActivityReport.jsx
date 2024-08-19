@@ -1,303 +1,386 @@
-import React, { useState } from 'react';
-import {
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox,
-    Typography, Button, Pagination, Menu, MenuItem, Box
-} from '@mui/material';
-import IconButton from '@mui/material/IconButton';
+import React, { useEffect, useState } from 'react'
+import { Box, Button, IconButton, Dialog, DialogContent, Grid, Menu } from '@mui/material'
+import MenuItem from '@mui/material/MenuItem';
+import Typography from "@mui/material/Typography";
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { MoreVert } from '@mui/icons-material';
-import styled from '@emotion/styled'; // This is correct
-import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
-import ArrowDropUpOutlinedIcon from '@mui/icons-material/ArrowDropUpOutlined';
+import styled from '@mui/system/styled';
+import { DataGrid } from '@mui/x-data-grid';
+import { useNavigate } from 'react-router-dom';
+import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
+import { Helpers } from '../../Shell/Helper';
+import { ExpenseService } from '../../Services/Expense/ExpenseService';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AddActivityReport from './AddActivity';
 
-const StatusButton = styled(Button)(({ status }) => ({
-    color: status === 'Approved' ? '#fff' : '#000',
-    backgroundColor: status === 'Approved' ? '#4caf50' : status === 'Pending' ? '#ff9800' : '#f44336',
-    pointerEvents: 'none',
-}));
-
-const tableData = [
-    { id: 1, name: 'Albert Flores', lastName: 'Flores', contact: 'has@gmail.com', phone: '(+62) 21-2323-3434', date: '23 Feb 2024', status: 'Approved' },
-    { id: 2, name: 'Wade Warren', lastName: 'Warren', contact: 'has@gmail.com', phone: '(+62) 21-2323-3434', date: '23 Feb 2024', status: 'Approved' },
-    { id: 3, name: 'Ronald Richards', lastName: 'Richards', contact: 'has@gmail.com', phone: '(+62) 21-2323-3434', date: '23 Feb 2024', status: 'Pending' },
-    { id: 4, name: 'Courtney Henry', lastName: 'Courtney', contact: 'has@gmail.com', phone: '(+62) 21-2323-3434', date: '23 Feb 2024', status: 'Rejected' },
-    { id: 5, name: 'Courtney Henry', lastName: 'Courtney', contact: 'has@gmail.com', phone: '(+62) 21-2323-3434', date: '23 Feb 2024', status: 'Rejected' },
-    { id: 6, name: 'Courtney Henry', lastName: 'Courtney', contact: 'has@gmail.com', phone: '(+62) 21-2323-3434', date: '23 Feb 2024', status: 'Rejected' },
-    // Add more rows as necessary
-];
 
 const Root = styled(Box)({
+    "& .userImage": {
+        borderRadius: "50px"
+    },
+    "& .MuiDataGrid-topContainer ": {
+        backgroundColor: "#2f80ed !important"
+    },
+    "& .MuiDataGrid-virtualScrollerContent ": {
+        backgroundColor: "#fff !important"
+    },
+    "& .MuiDataGrid-columnHeader": {
+        color: "white",
+        backgroundColor: "#2f80ed",
+    },
+    "& .MuiDataGrid-footerContainer": {
+        // backgroundColor: "#d6dcd399"
+    },
+    "& .MuiDataGrid-iconSeparator": {
+        display: "none"
+
+    },
+    "& .MuiDataGrid-main": {
+        // remove overflow hidden overwise sticky does not work
+        overflow: "unset"
+    },
+
+    "& .MuiDataGrid-cell": {
+        display: "flex",
+        fontWeight: "bold"
+
+    },
+    "& .MuiDataGrid-cell--textLef": {
+        display: "flex",
+        fontWeight: "bold",
+        color: "#0171BC"
+
+    },
     margin: 0,
     padding: 0,
     "& .mainContainer": {
-        padding: "20px",
-        backgroundColor: "#f4f7fe",
 
+        padding: "20px",
+        backgroundColor: "#fafbfc",
+        "& .mainBox": {
+            backgroundColor: "#F8F8F8",
+            borderRadius: "44px 44px 0px 0px ",
+            padding: "0px 40px 0px 40px"
+        },
         "& .headerSection": {
             display: "flex",
             justifyContent: "space-between",
+            marginBottom: 10
         },
-        "& .TableTags": {
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center"
-        },
-        "& .UpDownIcon": {
-            display: 'flex',
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 0,
-            padding: 0,
-            margin: 0
-        },
-        "& .TableTagsTexts": {
-            color: "#ffffff",
-            fontSize: "15px",
-            fontWeight: "600"
-        },
-        "& .upIcon": {
-            marginBottom: "-18px",
-            padding: "0px",
-            color: "#FFFFFF"
-        },
-        "& .downIcon": {
-            margin: 0,
-            padding: 0,
-            color: "#FFFFFF"
-        },
-        "& .css-1ygcj2i-MuiTableCell-root": {
-            width: "25%"
-        },
+        " & .inputField": {
+            backgroundColor: "#ffffff",
+            width: "504px",
+            height: "42px",
+            borderRadius: "146px",
+            boxShadow: "0px 2px 3px 0px #ccc",
+            "& .MuiOutlinedInput-input": {
+                padding: "9px 0 5px"
+            }
+        }
     }
+
 });
+const ActivityReport = () => {
+    const [expense, setExpense] = useState({
+        list: [],
+        filterList: [],
+        detail: {}
+    })
+    const [isLoading, setIsLoading] = useState(false);
+    const [open, setOpen] = React.useState(false);
+    const [age, setAge] = React.useState('');
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const openMenu = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
+    let navigate = useNavigate()
 
-function ActivityReport() {
-    const [selected, setSelected] = useState([]);
-    const [age, setAge] = useState('');
-    const [anchorEl, setAnchorEl] = useState(null);
+    const columns = [
+        {
+            field: 'userName',
+            headerName: 'Employee',
+            width: 350,
+        },
+        {
+            field: 'contact',
+            headerName: 'Contact',
+            width: 270,
+            renderCell: (params) =>
+                <Typography
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "#0171BC"
+                    }}>
+                    ${params.value}
+                </Typography>
+        },
+        {
+            field: 'dateOfSubmitted',
+            headerName: 'Date',
+            width: 230,
+            renderCell: (params) =>
+                <Typography
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "#828282"
+                    }}>
+                    {Helpers.dateFormater(params.value)}
+                </Typography>
+        },
+        {
+            field: 'status',
+            headerName: 'Status',
+            width: 200,
+            renderCell: (params) => (
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Button sx={{
+                        backgroundColor: params.value === "Pending" ? "#FEFFE5" : params.value === "Approved" ? "#f0fff8" : "#fff0f0",
+                        textTransform: "none",
+                        fontWeight: "bold",
+                        color: params.value === "Pending" ? "#FFBC10" : params.value === "Approved" ? "#18ab56" : "#eb5757",
+                        height: "40px",
+                        width: "100px",
+                        borderRadius: "5px",
+                        border: params.value === "Pending" ? "1px solid #FFBC10" : params.value === "Approved" ? "1px solid #18ab56" : "1px solid #eb5757",
 
+                    }}>
+                        {params.value}
+                    </Button>
+                </Box>
+            )
+        },
+        {
+            field: 'userId',
+            headerName: 'Actions',
+            width: 100,
+            renderCell: (params) => (
+                <>
+                    <IconButton>
+                        <MoreVertIcon onClick={handleClick} />
+                    </IconButton>
+                    <Menu
+                        sx={{ "& .MuiPaper-root ": { boxShadow: "#aba4a43d 0px 3px 8px" } }}
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={openMenu}
+                        onClose={handleCloseMenu}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#f0fff8",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#18ab56",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #18ab56",
+
+                            }}>
+                                Approved
+                            </Button>
+                        </MenuItem>
+
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#FEFFE5",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#FFBC10",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #FFBC10",
+
+                            }}>
+                                Pending
+                            </Button>
+                        </MenuItem>
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#fff0f0",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#eb5757",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #eb5757",
+
+                            }}>
+                                Rejected
+                            </Button>
+                        </MenuItem>
+                    </Menu>
+                    <IconButton>
+                        <KeyboardArrowDownIcon onClick={() => handleOpenDetail(params.value)} />
+                    </IconButton>
+
+                </>
+
+            )
+        },
+
+    ];
+    useEffect(() => {
+        getExpenseList()
+    }, [])
     const handleChange = (event) => {
         setAge(event.target.value);
     };
 
-    const handleMenuClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
 
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
+    //Get user List
 
-    const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
-            const newSelected = tableData.map((row) => row.id);
-            setSelected(newSelected);
-        } else {
-            setSelected([]);
+    const getExpenseList = async () => {
+        setIsLoading(true)
+        try {
+            let res = await ExpenseService.getlist()
+            if (res.success) {
+                setExpense({ ...expense, list: res.data, filterList: res.data })
+                setIsLoading(false)
+            } else {
+                // alert("failed")
+                setIsLoading(false)
+            }
+
+        } catch (error) {
+            console.error(error)
+            setIsLoading(false)
         }
+    }
+
+
+
+    // navigate to Details
+    const handleOpenDetail = (id) => {
+        navigate("/expensereports", { state: { id: id } })
+    }
+    const openAddActivityReport = () => {
+        navigate("/add-activity")
+    }
+    const handleClose = () => {
+        setOpen(false);
     };
-
-    const handleCheckboxClick = (id) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        setSelected(newSelected);
-    };
-
-    const isSelected = (id) => selected.indexOf(id) !== -1;
-
     return (
         <Root>
+
             <Box className="mainContainer">
-                <Box className="headerSection">
 
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Box className="mainBox">
+                    {/* --------------------Header Section--------------- */}
+                    <Grid justifyContent="flex-end" xs={12} container className="headerSection">
+                        <Grid item xs={6}></Grid>
+                        <Grid container alignItems="center" justifyContent="end" item xs={6}>
+                            <Button sx={{
+                                height: "38px",
+                                textTransform: "none"
+                            }}
+                                onClick={openAddActivityReport}
+                                variant="contained"
+                            >Add Activity Report</Button>
 
-                        <Typography>Show</Typography>
-                        <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: "#fff", color: "#F8F8F8" }}>
-                            <Select
-                                value={age}
-                                onChange={handleChange}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Without label' }}
-                            >
-                                <MenuItem value="">
-                                    <Typography>10</Typography>
-                                </MenuItem>
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <Typography>entries</Typography>
-
-                    </Box>
-                    <Box sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center"
-
-                    }}>
-                        <Button sx={{
-                            width: "237px",
-                            height: "53px",
-                            textTransform: "none"
-                        }} variant="contained">Add Activity Report</Button>
-                        <Box>
                             <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: "#fff", color: "#F8F8F8" }}>
                                 <Select
                                     value={age}
+                                    size='small'
                                     onChange={handleChange}
                                     displayEmpty
                                     inputProps={{ 'aria-label': 'Without label' }}
                                 >
                                     <MenuItem value="">
-                                        <Typography>Sort by</Typography>
+                                        <Typography sx={{ color: "#0171BC" }}>filters</Typography>
                                     </MenuItem>
                                     <MenuItem value={10}>Ten</MenuItem>
                                     <MenuItem value={20}>Twenty</MenuItem>
                                     <MenuItem value={30}>Thirty</MenuItem>
                                 </Select>
                             </FormControl>
-                        </Box>
+                        </Grid>
+
+                    </Grid>
+                    {/* --------------------Header Section Complete--------------- */}
+                    <Box sx={{ height: 800, overflowY: "auto" }}>
+
+
+                        <DataGrid
+                            autoHeight
+
+                            minHeight={40}
+                            rows={expense?.list || []}
+                            columns={columns}
+                            getRowId={(e) => e._id}
+                            // initialState={{
+                            //     pagination: {
+                            //         paginationModel: {
+                            //             pageSize: 5,
+                            //         },
+                            //     },
+                            // }}
+                            loading={isLoading}
+                            pageSizeOptions={[5]}
+                            disableColumnFilter
+                            disableColumnMenu
+                            checkboxSelection
+                            hideFooterPagination
+                            slots={{
+                                NoRowsOverlay: CustomNoRowsOverlay,
+                            }}
+                        />
                     </Box>
                 </Box>
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead sx={{ backgroundColor: "#0171BC" }}>
-                            <TableRow>
-                                <TableCell padding="checkbox">
-                                    <Checkbox
-                                        sx={{ color: "#ffffff" }}
-                                        indeterminate={selected.length > 0 && selected.length < tableData.length}
-                                        checked={tableData.length > 0 && selected.length === tableData.length}
-                                        onChange={handleSelectAllClick}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <Box className="TableTags">
-                                        <Typography className='TableTagsTexts'>Name</Typography>
-                                        <Box className="UpDownIcon">
-                                            <ArrowDropUpOutlinedIcon className='upIcon' />
-                                            <ArrowDropDownOutlinedIcon className='downIcon' />
-                                        </Box>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Box className="TableTags">
-                                        <Typography className='TableTagsTexts'>Contact</Typography>
-                                        <Box className="UpDownIcon">
-                                            <ArrowDropUpOutlinedIcon className='upIcon' />
-                                            <ArrowDropDownOutlinedIcon className='downIcon' />
-                                        </Box>
-                                    </Box>
-
-                                </TableCell>
-                                <TableCell>
-                                    <Box className="TableTags">
-                                        <Typography className='TableTagsTexts'>Date</Typography>
-                                        <Box className="UpDownIcon">
-                                            <ArrowDropUpOutlinedIcon className='upIcon' />
-                                            <ArrowDropDownOutlinedIcon className='downIcon' />
-                                        </Box>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Box className="TableTags">
-                                        <Typography className='TableTagsTexts'>Status</Typography>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Box className="TableTags">
-                                        <Typography className='TableTagsTexts'>Action</Typography>
-
-                                    </Box>
-                                </TableCell>
-                                <TableCell padding="checkbox" />
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {tableData.map((row) => {
-                                const isItemSelected = isSelected(row.id);
-                                return (
-                                    <TableRow
-                                        key={row.id}
-                                        hover
-                                        role="checkbox"
-                                        aria-checked={isItemSelected}
-                                        selected={isItemSelected}
-                                    >
-                                        <TableCell padding="checkbox">
-                                            <Checkbox
-                                                checked={isItemSelected}
-                                                onClick={() => handleCheckboxClick(row.id)}
-                                            />
-                                        </TableCell>
-                                        <TableCell>{row.name} {row.lastName}</TableCell>
-                                        <TableCell>{row.contact}<br />{row.phone}</TableCell>
-                                        <TableCell>{row.date}</TableCell>
-                                        <TableCell>
-                                            <StatusButton status={row.status}>
-                                                {row.status}
-                                            </StatusButton>
-                                        </TableCell>
-                                        <TableCell >
-                                            <Box sx={{ display: "flex" }}>
-                                                <Box>
-                                                    <IconButton
-                                                        aria-label="more"
-                                                        aria-controls="long-menu"
-                                                        aria-haspopup="true"
-                                                        onClick={handleMenuClick}
-                                                    >
-                                                        <MoreVert />
-                                                    </IconButton>
-                                                </Box>
-                                                <Box>
-                                                    <IconButton>
-                                                        <KeyboardArrowDownIcon />                                                    </IconButton>
-                                                </Box>
-                                            </Box>
-                                            <Menu
-                                                anchorEl={anchorEl}
-                                                keepMounted
-                                                open={Boolean(anchorEl)}
-                                                onClose={handleMenuClose}
-                                            >
-                                                <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
-                                                <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
-                                            </Menu>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
-                        Showing 1 to 10 of 430 entries
-                    </Typography>
-                    <Pagination count={1337} color="primary" sx={{ mt: 2 }} />
-                </Box>
             </Box>
-        </Root >
-    );
+            {/* <SubmitLoader /> */}
+            {/* <Dialog
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                    style: {
+                        margin: 0, // Remove default margin
+                        maxWidth: '800px', // Fixed width
+                        width: '800px', // Fixed width
+                        height: 'auto', // Allow content to define height
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        overflow: 'visible', // Ensure no overflow scrolling
+                    },
+                }}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent
+                    style={{
+                        padding: '16px',
+                        overflow: 'visible', // Ensure no internal scrolling
+                    }}
+                >
+                    <AddActivityReport open={open} setOpen={setOpen} />
+                </DialogContent>
+                <DialogActions>
+                        <Button onClick={handleClose}>Disagree</Button>
+                        <Button onClick={handleClose} autoFocus>
+                            Agree
+                        </Button>
+                    </DialogActions>
+         </Dialog> */}
+
+        </Root>
+    )
 }
 
-export default ActivityReport;
+
+export default ActivityReport

@@ -13,12 +13,13 @@ import UserInformation from "../Pages/User/UserInformation";
 import ExpenseReportTable from '../Componenets/ExpenseReportTable';
 import ExpenseList from '../Pages/ExpenseReports/ExpenseReportList';
 import ExpenseReports from "../Pages/ExpenseReports/ExpenseReports";
-import ActivityReport from "../Pages/Activity Report/ActivityReport";
-import AddActivity from "../Pages/ActivityReports/AddActivity"
+
 import ReportsAndExport from "../Pages/Reports And Exports/ReportsAndExport";
 import AdvancedSettingAndManagement from "../Pages/Advanced Setting And Management/AdvancedSettingAndManagement";
 import Notification from "../Pages/Notification/Notifications";
 import Protected from "./Protected";
+import ActivityReport from "../Pages/Activity Report/ActivityReport";
+import AddActivity from "../Pages/Activity Report/AddActivity";
 
 const WithLayout = ({ component }) => {
   return <NewDefaultLayout><Protected>{component}</Protected></NewDefaultLayout>;
@@ -67,6 +68,10 @@ const Router = () => {
           element={<WithLayout component={<ActivityReport />} />}
         />
         <Route
+          path="/add-activity"
+          element={<WithLayout component={<AddActivity />} />}
+        />
+        <Route
           path="/reportsandexport"
           element={<WithLayout component={<ReportsAndExport />} />}
         />
@@ -84,7 +89,6 @@ const Router = () => {
         <Route path="/productlist" element={<WithLayout component="" />} />
         <Route path="/dashboardusinggrid" element={<DashboardUsingGrid />} />
         <Route path="/chart" element={<TickPlacementBars />} />
-        <Route path="activityreports" element={<WithLayout component={<AddActivity />} />} />
       </Routes>
     </BrowserRouter>
   );

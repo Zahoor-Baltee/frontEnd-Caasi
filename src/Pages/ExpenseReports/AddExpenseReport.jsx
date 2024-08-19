@@ -192,7 +192,7 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                         <MenuItem key={index} value={`${el.firstName}${el.lastName}`}>{el.firstName}{el.lastName}</MenuItem>
                     ))}
                 </Select>
-                {!formFields.userName && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
+                {!formFields.userName && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
             </FormControl>
             <FormControl sx={{
                 "& .MuiInputBase-root": {
@@ -233,7 +233,7 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                     <MenuItem value={20}>Twenty</MenuItem>
                     <MenuItem value={30}>Thirty</MenuItem>
                 </Select>
-                {!formFields.category && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}>Category is required</Typography> : ""}
+                {!formFields.category && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>Category is required</Typography> : ""}
 
             </FormControl>
             <FormControl fullWidth>
@@ -260,7 +260,7 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                     margin="normal"
                     variant="outlined"
                 />
-                {!formFields.amount && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}> Amount is required</Typography> : ""}
+                {!formFields.amount && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}> Amount is required</Typography> : ""}
             </FormControl>
             <FormControl fullWidth>
                 <TextField
@@ -289,7 +289,7 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                         shrink: true,
                     }}
                 />
-                {!formFields.dateOfSubmitted && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}> Submitted is required</Typography> : ""}
+                {!formFields.dateOfSubmitted && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}> Submitted is required</Typography> : ""}
 
             </FormControl>
             <FormControl fullWidth>
@@ -319,7 +319,7 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                     rows={2}
 
                 />
-                {!formFields.description && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}> Description is required</Typography> : ""}
+                {!formFields.description && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}> Description is required</Typography> : ""}
             </FormControl>
 
             <Box sx={{ mt: 2, mb: 2 }}>
