@@ -31,6 +31,9 @@ const Root = styled(Box)({
     padding: 0,
     "& .MuiInputBase-root": {
         border: "none"
+    },
+    "& .MuiFormControl-root": {
+        marginBottom: "0px"
     }
 });
 
@@ -163,9 +166,9 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                     name="userName"
                     size="small"
                     sx={{
-                        padding: '4px 8px',
+                        padding: '5px 8px',
                         borderRadius: "8px",
-                        marginBottom: '10px',
+                        // marginBottom: '16px',
                         backgroundColor: "#d5dce4",
                         '& .MuiOutlinedInput-notchedOutline': {
                             border: 'none',
@@ -176,9 +179,9 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                     MenuProps={{
                         PaperProps: {
                             sx: {
-                                padding: '5px 8px',
+                                // padding: '5px 8px',
                                 '& .MuiMenuItem-root': {
-                                    padding: '4px 8px',
+                                    // padding: '5px 8px',
                                 },
                             },
                         },
@@ -190,9 +193,12 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                     ))}
                 </Select>
                 {!formFields.userName && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
-
             </FormControl>
-            <FormControl fullWidth>
+            <FormControl sx={{
+                "& .MuiInputBase-root": {
+                    marginTop: "16px"
+                }
+            }} fullWidth>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -256,7 +262,6 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                 />
                 {!formFields.amount && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}> Amount is required</Typography> : ""}
             </FormControl>
-
             <FormControl fullWidth>
                 <TextField
                     sx={{
@@ -288,7 +293,6 @@ const ExpenseReportForm = ({ open, setOpen }) => {
 
             </FormControl>
             <FormControl fullWidth>
-
                 <TextField
                     sx={{
                         backgroundColor: "#d5dce4",
@@ -316,7 +320,6 @@ const ExpenseReportForm = ({ open, setOpen }) => {
 
                 />
                 {!formFields.description && isSubmit ? <Typography sx={{ color: "red", fontSize: "10px" }}> Description is required</Typography> : ""}
-
             </FormControl>
 
             <Box sx={{ mt: 2, mb: 2 }}>
