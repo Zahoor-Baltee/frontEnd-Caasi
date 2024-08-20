@@ -292,7 +292,7 @@ const AddActivityReport = () => {
                                 events={events}
                                 startAccessor="start"
                                 endAccessor="end"
-                                style={{ height: 600, width: '100%' }}
+                                style={{ height: 650, width: '100%' }}
                                 defaultView="month"
                                 views={['month']}
                                 date={date}
@@ -369,8 +369,8 @@ const AddActivityReport = () => {
                                 }}>
                                     <ListItem>
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
-                                            <Typography style={{ color: "blue" }}>{activity.date}</Typography>
-                                            <Typography>{activity.status ? activity.status : "No report added"}</Typography>
+                                            <Typography style={{ color: "#0075BC" }}>{activity.date}</Typography>
+                                            <Typography sx={{ color: "#727272" }}>{activity.status ? activity.status : "No report added"}</Typography>
                                         </Box>
                                         <ListItemSecondaryAction>
                                             {!activity.status ?

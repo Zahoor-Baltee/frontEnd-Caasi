@@ -138,7 +138,7 @@ const ActivityReport = () => {
         {
             field: 'status',
             headerName: 'Status',
-            width: 200,
+            width: 250,
             renderCell: (params) => (
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Button sx={{
@@ -160,7 +160,7 @@ const ActivityReport = () => {
         {
             field: 'userId',
             headerName: 'Actions',
-            width: 100,
+            width: 150,
             renderCell: (params) => (
                 <>
                     <IconButton>
