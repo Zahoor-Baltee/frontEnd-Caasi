@@ -59,7 +59,14 @@ const Root = styled(Grid)(({ theme }) => ({
         // height: '100vh', 
         padding: "30px",
         "& .gridpo": {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             "& .CalendarContainer": {
+                width: "80%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
                 backgroundColor: "#FFFFFF",
                 padding: "5px 20px 20px 20px",
                 borderRadius: "20px",
@@ -68,9 +75,6 @@ const Root = styled(Grid)(({ theme }) => ({
         "& .toolbarContainer": {
             width: '100%',
             marginBottom: "16px",
-        },
-        "& .calendarContainer": {
-            width: '75%',
         },
         "& .CommentSec": {
             marginTop: "16px",
@@ -288,7 +292,7 @@ const AddActivityReport = () => {
                                 events={events}
                                 startAccessor="start"
                                 endAccessor="end"
-                                style={{ height: 700, width: '100%' }}
+                                style={{ height: 600, width: '100%' }}
                                 defaultView="month"
                                 views={['month']}
                                 date={date}

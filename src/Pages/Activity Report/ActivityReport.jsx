@@ -12,7 +12,6 @@ import { Helpers } from '../../Shell/Helper';
 import { ExpenseService } from '../../Services/Expense/ExpenseService';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import AddActivityReport from './AddActivity';
 
 
 const Root = styled(Box)({
@@ -343,41 +342,6 @@ const ActivityReport = () => {
                     </Box>
                 </Box>
             </Box>
-            {/* <SubmitLoader /> */}
-            {/* <Dialog
-                open={open}
-                onClose={handleClose}
-                PaperProps={{
-                    style: {
-                        margin: 0, // Remove default margin
-                        maxWidth: '800px', // Fixed width
-                        width: '800px', // Fixed width
-                        height: 'auto', // Allow content to define height
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        overflow: 'visible', // Ensure no overflow scrolling
-                    },
-                }}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogContent
-                    style={{
-                        padding: '16px',
-                        overflow: 'visible', // Ensure no internal scrolling
-                    }}
-                >
-                    <AddActivityReport open={open} setOpen={setOpen} />
-                </DialogContent>
-                <DialogActions>
-                        <Button onClick={handleClose}>Disagree</Button>
-                        <Button onClick={handleClose} autoFocus>
-                            Agree
-                        </Button>
-                    </DialogActions>
-         </Dialog> */}
-
         </Root>
     )
 }
