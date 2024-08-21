@@ -117,7 +117,7 @@ const ActivityReport = () => {
                         alignItems: "center",
                         color: "#0171BC"
                     }}>
-                    ${params.value}
+                    {params.value}
                 </Typography>
         },
         {

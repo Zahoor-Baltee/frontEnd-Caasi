@@ -26,6 +26,7 @@ import Logout from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import logo from '../Assets/cassimainlogo.png'
+import man from '../Assets/man.png'
 import Uae from '../Assets/uae.png'
 import Us from '../Assets/UsFlag.webp'
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -259,7 +260,11 @@ function ResponsiveDrawer(props) {
                                                     aria-haspopup="true"
                                                     aria-expanded={open ? 'true' : undefined}
                                                 >
-                                                    <Avatar sx={{ width: 32, height: 32 }}>{userName?.split('')[0]}</Avatar>
+                                                    <Avatar sx={{ width: 32, height: 32 }}>
+                                                        {/* {userName?.split('')[0]} */}
+                                                        <img height='100%' width='100%' src={man} alt="" />
+                                                    </Avatar>
+
                                                     <Box sx={{ marginX: 1 }}>
                                                         <Typography variant='subtitle1' sx={{ color: "black", lineHeight: 1.0 }}>{userName}</Typography>
                                                         <Typography variant='body2'>Admin</Typography>

@@ -59,9 +59,6 @@ const Root = styled(Grid)(({ theme }) => ({
         // height: '100vh', 
         padding: "30px",
         "& .gridpo": {
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
             "& .CalendarContainer": {
                 width: "80%",
                 display: "flex",
@@ -70,6 +67,10 @@ const Root = styled(Grid)(({ theme }) => ({
                 backgroundColor: "#FFFFFF",
                 padding: "5px 20px 20px 20px",
                 borderRadius: "20px",
+            },
+            "& .rbc-button-link": {
+                color: "#2086C5",
+                fontWeight: "bold",
             }
         },
         "& .toolbarContainer": {
@@ -82,10 +83,12 @@ const Root = styled(Grid)(({ theme }) => ({
             backgroundColor: "#0075bc",
             border: "1px solid #0075bc",
             borderRadius: "10px",
+            width: "80%",
             "& .headerSec": {
                 display: "flex",
                 justifyContent: "space-between",
-                alignItem: "center"
+                alignItem: "center",
+                width: "100%"
             },
             "& .textSec": {
 
@@ -128,8 +131,10 @@ const Root = styled(Grid)(({ theme }) => ({
             display: 'flex',
             flexDirection: 'column',
             height: '100vh',
+            width: "100%",
             // marginTop: "20px",
             // marginLeft: "5px",
+
             "& .formSection": {
                 padding: "20px",
                 boxShadow: "1px 2px 14px 1px rgba(0, 0, 0, 0.19)",
@@ -285,7 +290,12 @@ const AddActivityReport = () => {
         <Root>
             <Box className='mainContainer'>
                 <Grid className='gridpo' container spacing={2} md={12} xs={12}>
-                    <Grid item xs={12} md={8} spacing={3}>
+                    <Grid sx={{
+                        display: "flex",
+                        // justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column"
+                    }} item xs={12} md={8} spacing={3}>
                         <Box className="CalendarContainer">
                             <Calendar
                                 localizer={localizer}
@@ -354,7 +364,7 @@ const AddActivityReport = () => {
                     </Grid>
 
                     <Grid item xs={12} md={4}>
-                        <Box className="activityList" sx={{
+                        {/* <Box className="activityList" sx={{
                             display: 'flex',
                             flexDirection: 'column',
                             gap: "5px",
@@ -435,9 +445,9 @@ const AddActivityReport = () => {
                             }
 
 
-                        </Box>
+                        </Box> */}
 
-                        {/* <Grid item className='formSec' spacing={3} md={4} marginTop={5}>
+                        <Grid item className='formSec' spacing={3} md={12} marginTop={5}>
                             <Grid item xs={12}>
                                 <Box className="formSection">
                                     <Box className="textField">
@@ -459,7 +469,7 @@ const AddActivityReport = () => {
                                     <Accordion defaultExpanded className="accordion">
                                         <AccordionSummary expandIcon={<ExpandMoreIcon />} className="accordionSummary">
                                             <Typography variant="h6">Total Worked Days: 4</Typography>
-                                             <Box> <Typography variant="h6">Show details</Typography></Box> 
+                                            <Box> <Typography variant="h6">Show details</Typography></Box>
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Grid container className='workdayList'  >
@@ -526,11 +536,10 @@ const AddActivityReport = () => {
                                     </Accordion>
                                 </Box>
                             </Grid>
-                        </Grid> */}
+                        </Grid>
                     </Grid >
                 </Grid >
             </Box>
-
         </Root >
     );
 };
