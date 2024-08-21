@@ -153,7 +153,8 @@ const Root = styled(Grid)(({ theme }) => ({
             },
             "& .accordionSummary": {
                 display: 'flex',
-                // justifyContent: 'space-between',
+                justifyContent: 'space-between',
+                width: "100%",
                 alignItems: 'center',
             },
             "& .workdayList": {
@@ -172,6 +173,7 @@ const Root = styled(Grid)(({ theme }) => ({
             },
             "& .icon": {
                 marginRight: "8px",
+                fontWeight: "bold", color: "#2086C5",
             },
         }
     }
@@ -451,61 +453,71 @@ const AddActivityReport = () => {
                             <Grid item xs={12}>
                                 <Box className="formSection">
                                     <Box className="textField">
-                                        <Typography variant="h6">Name</Typography>
-                                        <TextField fullWidth variant="outlined" value="Carlos" className='input' />
+                                        <Typography fontWeight='bold' variant="h6">Name</Typography>
+                                        <TextField sx={{ fontWeight: 'bold' }} fullWidth variant="outlined" value="Carlos" className='input' />
                                     </Box>
                                     <Box className="textField">
-                                        <Typography variant="h6">Surname</Typography>
-                                        <TextField fullWidth variant="outlined" value="Fonte" className='input' />
+                                        <Typography fontWeight='bold' variant="h6">Surname</Typography>
+                                        <TextField sx={{ fontWeight: 'bold' }} fontWeight='bold' fullWidth variant="outlined" value="Fonte" className='input' />
                                     </Box>
                                     <Box className="textField">
-                                        <Typography variant="h6">Date of Submission</Typography>
-                                        <TextField fullWidth variant="outlined" value="23 Mar 2024" className='input' />
+                                        <Typography fontWeight='bold' variant="h6">Date of Submission</Typography>
+                                        <TextField sx={{ fontWeight: 'bold' }} fontWeight='bold' fullWidth variant="outlined" value="23 Mar 2024" className='input' />
                                     </Box>
                                 </Box>
                             </Grid>
                             <Grid item xs={12} marginTop={2}>
                                 <Box className="formSection">
                                     <Accordion defaultExpanded className="accordion">
-                                        <AccordionSummary expandIcon={<ExpandMoreIcon />} className="accordionSummary">
-                                            <Typography variant="h6">Total Worked Days: 4</Typography>
-                                            <Box> <Typography variant="h6">Show details</Typography></Box>
+                                        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ fontWeight: "bold", color: "#2086C5" }} />} className="accordionSummary">
+                                            <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between !important" }}>
+                                                <Typography sx={{ fontWeight: "bold", color: "#2086C5" }}
+                                                    variant="h6">
+                                                    Total Worked Days: 4
+                                                </Typography>
+
+                                                <Typography sx={{ fontWeight: "bold", color: "#2086C5" }}
+                                                    variant="h6">
+                                                    See details
+                                                </Typography>
+                                            </Box>
+
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Grid container className='workdayList'  >
                                                 <Box className="workText" >
                                                     <Box> <TrainIcon className="icon" /></Box>
-                                                    <Box><Typography>Travel</Typography></Box>
+                                                    <Box><Typography sx={{ fontWeight: "bold", color: "#2086C5" }}>Travel</Typography></Box>
                                                 </Box>
                                                 <Box md={8} justifyContent={"flex-end"}>
-                                                    <Typography>1</Typography>
+                                                    <Typography sx={{ fontWeight: "bold", color: "#2086C5" }}>1</Typography>
                                                 </Box>
                                             </Grid>
                                             <Grid container className='workdayList'>
                                                 <Box className="workText" >
                                                     <Box> <BusinessIcon className="icon" /></Box>
-                                                    <Box><Typography>Office</Typography></Box>
+                                                    <Box><Typography sx={{ fontWeight: "bold", color: "#2086C5" }}>Office</Typography></Box>
                                                 </Box>
                                                 <Box >
-                                                    <Typography>1</Typography>
+                                                    <Typography sx={{ fontWeight: "bold", color: "#2086C5" }}>1</Typography>
                                                 </Box>
                                             </Grid>
                                             <Grid container className='workdayList'>
                                                 <Box className="workText" >
                                                     <Box> <HomeIcon className="icon" /></Box>
-                                                    <Box><Typography>Remote</Typography></Box>
+                                                    <Box><Typography sx={{ fontWeight: "bold", color: "#2086C5" }}>Remote</Typography></Box>
                                                 </Box>
                                                 <Box >
-                                                    <Typography>1</Typography>
+                                                    <Typography sx={{ fontWeight: "bold", color: "#2086C5" }}>1</Typography>
                                                 </Box>
                                             </Grid>
                                             <Grid container className='workdayList'>
                                                 <Box className="workText" >
                                                     <Box> <WorkIcon className="icon" /></Box>
-                                                    <Box><Typography>Training</Typography></Box>
+                                                    <Box><Typography sx={{ fontWeight: "bold", color: "#2086C5" }}>Training</Typography></Box>
                                                 </Box>
                                                 <Box >
-                                                    <Typography>1</Typography>
+                                                    <Typography sx={{ fontWeight: "bold", color: "#2086C5" }}>1</Typography>
                                                 </Box>
                                             </Grid>
                                         </AccordionDetails>
@@ -515,8 +527,11 @@ const AddActivityReport = () => {
                             <Grid item xs={12} marginTop={1}>
                                 <Box className="formSection">
                                     <Accordion className="accordion">
-                                        <AccordionSummary expandIcon={<ExpandMoreIcon />} className="accordionSummary">
-                                            <Typography variant="h6">Absences 1</Typography>
+                                        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ fontWeight: "bold", color: "#2086C5" }} />} className="accordionSummary">
+                                            <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between !important" }}>
+                                                <Typography sx={{ fontWeight: "bold", color: "#2086C5" }} variant="h6">Absences 1</Typography>
+                                                <Typography sx={{ fontWeight: "bold", color: "#2086C5" }} variant="h6">See Details</Typography>
+                                            </Box>
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Typography>Absence details go here...</Typography>
@@ -527,8 +542,11 @@ const AddActivityReport = () => {
                             <Grid item xs={12}>
                                 <Box className="formSection">
                                     <Accordion className="accordion">
-                                        <AccordionSummary expandIcon={<ExpandMoreIcon />} className="accordionSummary">
-                                            <Typography variant="h6">Half days 1</Typography>
+                                        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ fontWeight: "bold", color: "#2086C5" }} />} className="accordionSummary">
+                                            <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between !important" }}>
+                                                <Typography sx={{ fontWeight: "bold", color: "#2086C5" }} variant="h6">Half days 1</Typography>
+                                                <Typography sx={{ fontWeight: "bold", color: "#2086C5" }} variant="h6">See Details</Typography>
+                                            </Box>
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Typography>Half day details go here...</Typography>
