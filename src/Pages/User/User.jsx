@@ -102,7 +102,7 @@ const User = () => {
         { field: 'department', headerName: 'Department', width: 270, },
         { field: 'role', headerName: 'Role', width: 230, },
         { field: 'email', headerName: 'Email', width: 300, },
-        { field: 'status', headerName: 'Status', width: 200, },
+        { field: 'status', headerName: 'Status', flex: 1, },
         {
             field: '_id', headerName: 'Edit', width: 100, renderCell: (params) => (
                 <IconButton onClick={() => handleOpenDetail(params.value)}>

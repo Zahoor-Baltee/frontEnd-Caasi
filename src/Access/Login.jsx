@@ -103,7 +103,11 @@ const Login = () => {
 
     setCondition(true);
   };
-
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleLogIn()
+    }
+  }
   return (
     <Root>
       <Box className="mainContainer">
@@ -170,6 +174,7 @@ const Login = () => {
               className="textField"
               size="small"
               name="password"
+              onKeyDown={handleKeyDown}
               value={data?.password || ""}
               onChange={handleChange}
               type="password"

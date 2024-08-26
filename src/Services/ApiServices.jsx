@@ -1,11 +1,18 @@
 
 import AppSetting from "./AppSetting";
+import AuthService from "./AuthServices";
 const baseURI = AppSetting.serverUrl
+const token = AuthService.getToken()
 
 const ExecuteGet = async (url) => {
+    const token = AuthService.getToken()
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
     return await fetch(baseURI + url, {
         method: 'GET',
-        redirect: 'follow'
+        redirect: 'follow',
+        headers: myHeaders,
     })
         .then(response => response.text())
         .then(result => {
@@ -17,9 +24,10 @@ const ExecuteGet = async (url) => {
 };
 
 const ExecutePost = async (url, data) => {
+    const token = AuthService.getToken()
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
+    myHeaders.append("Authorization", `Bearer ${token}`);
     return await fetch(baseURI + url, {
         method: 'POST',
         redirect: 'follow',
@@ -35,9 +43,10 @@ const ExecutePost = async (url, data) => {
         });
 };
 const ExecutePatch = async (url, data) => {
+    const token = AuthService.getToken()
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
+    myHeaders.append("Authorization", `Bearer ${token}`);
     return await fetch(baseURI + url, {
         method: 'PATCH',
         redirect: 'follow',
