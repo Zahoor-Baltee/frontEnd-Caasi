@@ -128,11 +128,11 @@ function ExpenseReports() {
                                 sx={{
                                     textAlign: "center",
                                     width: "800px",
-                                    backgroundColor: '#DC3545',
+                                    backgroundColor: reports?.status === "Rejected" ? '#DC3545' : "#0A75BD",
                                     textTransform: 'none',
                                 }}
                             >
-                                Transportation
+                                {reports?.category}
                             </Button>
                             <Info sx={{ color: "#DC3545" }} />
                         </Box>

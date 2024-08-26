@@ -29,9 +29,11 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
     };
 
     const label = () => {
-        const month = date.toLocaleString('default', { month: 'long' });
-        const year = date.getFullYear();
-        return `${month} ${year}`;
+        if (date) {
+            const month = date.toLocaleString('default', { month: 'long' });
+            const year = date.getFullYear();
+            return `${month} ${year}`;
+        }
     };
 
     return (

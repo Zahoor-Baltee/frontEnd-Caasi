@@ -31,8 +31,6 @@ const Router = () => {
         <Route path="/" element={<Login />} />
         <Route
           path="/dashboard"
-          // element={<WithLayout component={<NewDashboard />} />}
-          // element={<WithLayout component={<Homepage />} />}
           element={<WithLayout component={<DashboardUsingGrid />} />}
         />
         <Route

@@ -18,6 +18,9 @@ const Root = styled(Box)({
     "& .userImage": {
         borderRadius: "50px"
     },
+    "& .MuiDataGrid-container--top": {
+        backgroundColor: "yellow"
+    },
     "& .MuiDataGrid-topContainer ": {
         backgroundColor: "#2f80ed !important"
     },
@@ -103,12 +106,12 @@ const ActivityReport = () => {
         {
             field: 'userName',
             headerName: 'Employee',
-            width: 350,
+            width: 200,
         },
         {
             field: 'contact',
             headerName: 'Contact',
-            width: 270,
+            width: 200,
             renderCell: (params) =>
                 <Typography
                     sx={{
@@ -123,7 +126,7 @@ const ActivityReport = () => {
         {
             field: 'dateOfSubmitted',
             headerName: 'Date',
-            width: 230,
+            width: 200,
             renderCell: (params) =>
                 <Typography
                     sx={{
@@ -138,7 +141,8 @@ const ActivityReport = () => {
         {
             field: 'status',
             headerName: 'Status',
-            width: 250,
+            // width: 200,
+            flex: 1,
             renderCell: (params) => (
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Button sx={{

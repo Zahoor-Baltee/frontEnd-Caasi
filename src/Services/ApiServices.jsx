@@ -52,8 +52,21 @@ const ExecutePatch = async (url, data) => {
             return error;
         });
 }
+const ExecuteDelete = async (url) => {
+    try {
+        const response = await fetch(baseURI + url, {
+            method: 'DELETE',
+            redirect: 'follow',
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error during DELETE request:", error);
+        throw error;
+    }
+};
 export {
     ExecutePost,
     ExecuteGet,
-    ExecutePatch
+    ExecutePatch,
+    ExecuteDelete
 }

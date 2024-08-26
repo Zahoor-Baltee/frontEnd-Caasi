@@ -107,12 +107,12 @@ const ExpenseList = () => {
         {
             field: 'userName',
             headerName: 'Employee',
-            width: 350,
+            width: 200,
         },
         {
             field: 'amount',
             headerName: 'Amount',
-            width: 270,
+            width: 150,
             renderCell: (params) =>
                 <Typography
                     sx={{
@@ -127,7 +127,7 @@ const ExpenseList = () => {
         {
             field: 'dateOfSubmitted',
             headerName: 'Date',
-            width: 230,
+            width: 200,
             renderCell: (params) =>
                 <Typography
                     sx={{
@@ -142,7 +142,7 @@ const ExpenseList = () => {
         {
             field: '_id',
             headerName: 'View Report',
-            width: 300,
+            width: 100,
             renderCell: (params) => (
                 <IconButton onClick={() => handleOpenDetail(params.value)}>
                     <Visibility sx={{ color: "#0171BC" }} />
@@ -152,7 +152,8 @@ const ExpenseList = () => {
         {
             field: 'status',
             headerName: 'Status',
-            width: 200,
+            // width: 200,
+            flex: 1,
             renderCell: (params) => (
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Button sx={{
@@ -187,7 +188,7 @@ const ExpenseList = () => {
                         open={openMenu}
                         onClose={handleCloseMenu}
                         MenuListProps={{
-                            'aria-labelledby': 'basic-button',
+                            'aria-labelledby': 'basic-button'
                         }}
                     >
 

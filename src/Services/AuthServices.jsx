@@ -25,7 +25,11 @@ const AuthService = {
         return data
     },
     getUserName() {
-        let firstName = AuthService.getUserData().name
+        let firstName = this.getUserData().name
+        return firstName
+    },
+    getUserid() {
+        let firstName = this.getUserData()._id
         return firstName
     }
 }

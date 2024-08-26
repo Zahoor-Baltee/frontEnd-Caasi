@@ -153,8 +153,11 @@ function ResponsiveDrawer(props) {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = async () => {
+        let data = {
+            id: AuthService.getUserid()
+        }
         try {
-            let res = await UserServices.logout()
+            let res = await UserServices.logout(data)
             if (res.success) {
                 AuthService.logOut()
             } else {

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Container, Grid, TextField, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, MenuItem, Box, Menu, IconButton, Button, Paper, Accordion, AccordionSummary, AccordionDetails, Divider } from '@mui/material';
 import { CheckCircle, Cancel, Add, AttachFile } from '@mui/icons-material';
 import styled from '@emotion/styled'; // This is correct
@@ -182,59 +182,78 @@ const Root = styled(Grid)(({ theme }) => ({
 
 const AddActivityReport = () => {
     const [comments, setComments] = useState('');
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedMonth, setSelectedMonth] = useState('2024-05');
+    const [anchorEl, setAnchorEl] = useState(false);
+    const [selectedMonth, setSelectedMonth] = useState('');
     const [employee, setEmployee] = useState('');
-    const [date, setDate] = useState(startOfMonth(parseISO(selectedMonth)));
+    const [date, setDate] = useState();
     const [events, setEvents] = useState([]);
     const [visibleItems, setVisibleItems] = useState(10);
+    const [curActivityDate, setCurActivityDate] = useState('')
     const label = () => {
-        const month = date.toLocaleString('default', { month: 'long' });
-        const year = date.getFullYear();
-        const day = date.getDay();
-        return `${month} ${year}`;
+        if (selectedMonth && date) {
+            const month = date.toLocaleString('default', { month: 'long' });
+            const year = date.getFullYear();
+            return `${month} ${year}`;
+        }
     };
-    const [activities, setActivities] = useState([
-        { date: `31 ${label()}`, status: '' },
-        { date: `30 ${label()}`, status: '' },
-        { date: `29 ${label()}`, status: '' },
-        { date: `28 ${label()}`, status: '' },
-        { date: `27 ${label()}`, status: '' },
-        { date: `26 ${label()}`, status: '' },
-        { date: `25 ${label()}`, status: '' },
-        { date: `24 ${label()}`, status: '' },
-        { date: `23 ${label()}`, status: '' },
-        { date: `22 ${label()}`, status: '' },
-        { date: `21 ${label()}`, status: '' },
-        { date: `20 ${label()}`, status: '' },
-        { date: `19 ${label()}`, status: '' },
-        { date: `18 ${label()}`, status: '' },
-        { date: `17 ${label()}`, status: '' },
-        { date: `16 ${label()}`, status: '' },
-        { date: `15 ${label()}`, status: '' },
-        { date: `14 ${label()}`, status: '' },
-        { date: `13 ${label()}`, status: '' },
-        { date: `12 ${label()}`, status: '' },
-        { date: `11 ${label()}`, status: '' },
-        { date: `10 ${label()}`, status: '' },
-        { date: `09 ${label()}`, status: '' },
-        { date: `08 ${label()}`, status: '' },
-        { date: `07 ${label()}`, status: '' },
-        { date: `06 ${label()}`, status: '' },
-        { date: `05 ${label()}`, status: '' },
-        { date: `04 ${label()}`, status: '' },
-        { date: `03 ${label()}`, status: '' },
-        { date: `02 ${label()}`, status: '' },
-        { date: `01 ${label()}`, status: '' },
-    ]);
+    const [activities, setActivities] = useState([]);
 
+    React.useEffect(() => {
+        const a = new Date();
+        const currentMonth = (a.getMonth() + 1).toString().padStart(2, '0'); // Ensures the month is always two digits
+        const currentYear = a.getFullYear();
+
+        setSelectedMonth(`${currentYear}-${currentMonth}`);
+    }, [])
+    React.useEffect(() => {
+        if (selectedMonth) {
+            setDate(startOfMonth(parseISO(selectedMonth)));
+        }
+    }, [selectedMonth])
+    React.useEffect(() => {
+        if (date) {
+
+            setActivities([
+                { date: `31 ${label()}`, status: '' },
+                { date: `30 ${label()}`, status: '' },
+                { date: `29 ${label()}`, status: '' },
+                { date: `28 ${label()}`, status: '' },
+                { date: `27 ${label()}`, status: '' },
+                { date: `26 ${label()}`, status: '' },
+                { date: `25 ${label()}`, status: '' },
+                { date: `24 ${label()}`, status: '' },
+                { date: `23 ${label()}`, status: '' },
+                { date: `22 ${label()}`, status: '' },
+                { date: `21 ${label()}`, status: '' },
+                { date: `20 ${label()}`, status: '' },
+                { date: `19 ${label()}`, status: '' },
+                { date: `18 ${label()}`, status: '' },
+                { date: `17 ${label()}`, status: '' },
+                { date: `16 ${label()}`, status: '' },
+                { date: `15 ${label()}`, status: '' },
+                { date: `14 ${label()}`, status: '' },
+                { date: `13 ${label()}`, status: '' },
+                { date: `12 ${label()}`, status: '' },
+                { date: `11 ${label()}`, status: '' },
+                { date: `10 ${label()}`, status: '' },
+                { date: `09 ${label()}`, status: '' },
+                { date: `08 ${label()}`, status: '' },
+                { date: `07 ${label()}`, status: '' },
+                { date: `06 ${label()}`, status: '' },
+                { date: `05 ${label()}`, status: '' },
+                { date: `04 ${label()}`, status: '' },
+                { date: `03 ${label()}`, status: '' },
+                { date: `02 ${label()}`, status: '' },
+                { date: `01 ${label()}`, status: '' },
+            ])
+        }
+    }, [date])
     const handleShowMore = () => {
-        setVisibleItems((prev) => prev + 10);
+        setVisibleItems((prev) => prev + 10)
     };
     const handleCommentsChange = (event) => {
         setComments(event.target.value);
     };
-    const [curActivityDate, setCurActivityDate] = useState('')
     const handleMenuOpen = (event, date) => {
         setCurActivityDate(date)
         setAnchorEl(event.currentTarget);
@@ -255,9 +274,8 @@ const AddActivityReport = () => {
         };
         return new Date(year, months[month], day);
     };
-
-    const handleMenuClose = (value) => {
-        setAnchorEl(null);
+    const handleSelect = (value) => {
+        setAnchorEl(false);
         if (value && curActivityDate) {
             const date = parseDate(curActivityDate);
             setActivities((prevActivities) =>
@@ -271,8 +289,12 @@ const AddActivityReport = () => {
                 end: date,
             };
             setEvents((prevEvents) => [...prevEvents, newEvent]);
-
         }
+    }
+
+    const handleMenuClose = (value) => {
+        setAnchorEl(false);
+
     };
 
     const handleMonthChange = (newMonth) => {
@@ -294,7 +316,6 @@ const AddActivityReport = () => {
                 <Grid className='gridpo' container spacing={2} md={12} xs={12}>
                     <Grid sx={{
                         display: "flex",
-                        // justifyContent: "center",
                         alignItems: "center",
                         flexDirection: "column"
                     }} item xs={12} md={8} spacing={3}>
@@ -320,6 +341,16 @@ const AddActivityReport = () => {
                                             onNavigate={(newDate) => setDate(newDate)}
                                         />
                                     ),
+                                }}
+                                eventPropGetter={(event, start, end, isSelected) => {
+                                    let backgroundColor = '#3174ad'; // Default color
+
+                                    // Dynamically set color based on event properties
+                                    if (event.title === 'At office' || event.title === 'Telework' || event.title === 'Training' || event.title === 'Remote Work') backgroundColor = 'green';
+                                    if (event.title === 'Vacation' || event.title === 'Unpaid Leave' || event.title === 'Medical Apiontment' || event.title === 'Illness') backgroundColor = 'red';
+                                    if (event.title === 'high') backgroundColor = 'orange';
+
+                                    return { style: { backgroundColor } };
                                 }}
                             />
                         </Box>
@@ -366,7 +397,7 @@ const AddActivityReport = () => {
                     </Grid>
 
                     <Grid item xs={12} md={4}>
-                        {/* <Box className="activityList" sx={{
+                        <Box className="activityList" sx={{
                             display: 'flex',
                             flexDirection: 'column',
                             gap: "5px",
@@ -418,10 +449,10 @@ const AddActivityReport = () => {
                                         },
                                     }}
                                 >
-                                    <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleMenuClose("At office")}>At office</MenuItem>
-                                    <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleMenuClose("Remote Work")}>Remote Work</MenuItem>
-                                    <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleMenuClose("Training")}>Training</MenuItem>
-                                    <MenuItem onClick={() => handleMenuClose("Telework")}>Telework</MenuItem>
+                                    <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleSelect("At office")}>At office</MenuItem>
+                                    <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleSelect("Remote Work")}>Remote Work</MenuItem>
+                                    <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleSelect("Training")}>Training</MenuItem>
+                                    <MenuItem onClick={() => handleSelect("Telework")}>Telework</MenuItem>
                                 </Menu>
                                 :
 
@@ -447,9 +478,9 @@ const AddActivityReport = () => {
                             }
 
 
-                        </Box> */}
+                        </Box>
 
-                        <Grid item className='formSec' spacing={3} md={12} marginTop={5}>
+                        {/* <Grid item className='formSec' spacing={3} md={12} marginTop={5}>
                             <Grid item xs={12}>
                                 <Box className="formSection">
                                     <Box className="textField">
@@ -554,7 +585,7 @@ const AddActivityReport = () => {
                                     </Accordion>
                                 </Box>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
                     </Grid >
                 </Grid >
             </Box>

@@ -229,9 +229,10 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                     }}
                 >
                     <MenuItem value="">Select a Category</MenuItem>
-                    <MenuItem value={"Developer"}>Developer</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    <MenuItem value="Medical">Medical</MenuItem>
+                    <MenuItem value='Transportation'>Transportation</MenuItem>
+                    <MenuItem value='Food'>Food</MenuItem>
+                    <MenuItem value='Travel'>Travel</MenuItem>
                 </Select>
                 {!formFields.category && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>Category is required</Typography> : ""}
 

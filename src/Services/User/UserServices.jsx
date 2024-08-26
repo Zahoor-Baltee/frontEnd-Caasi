@@ -1,4 +1,4 @@
-import { ExecuteGet, ExecutePatch, ExecutePost } from "../ApiServices";
+import { ExecuteGet, ExecutePatch, ExecutePost, ExecuteDelete } from "../ApiServices";
 
 export const UserServices = {
   async loginUser(data) {
@@ -21,7 +21,7 @@ export const UserServices = {
     let response = await ExecutePatch(`users/${id}/update`, data);
     return response;
   },
-  async logout(id, data) {
+  async logout(data) {
     let response = await ExecutePost(`users/logout`, data);
     return response;
   },
