@@ -283,19 +283,20 @@ export default function UserInfromation() {
                                             sx={{ textTransform: "none" }}>
                                             {user?.detail?.department}
                                         </Typography>}
-                                    <Typography className='firstName' sx={{ textTransform: "none" }}>Password</Typography>
+                                    <Typography className='firstName' sx={{ textTransform: "none" }}>Role</Typography>
                                     {user.isEdit ?
-                                        <TextField className='inputField1'
-                                            error={!userFields?.password && isSubmit}
-                                            helperText={!userFields?.password && isSubmit ? "Password is required." : ""}
-                                            value={userFields?.password || ''}
+                                        <TextField inputProps={{ maxLength: 11 }}
+                                            error={!userFields?.role && isSubmit}
+                                            helperText={!userFields?.role && isSubmit ? "Phone Number is required." : ""}
+                                            value={userFields?.role || ''}
                                             onChange={handleChange}
+                                            className='inputField1'
                                             variant='outlined' fullWidth
-                                            type='text'
-                                            name='password' /> :
+                                            type='role'
+                                            name='role' /> :
                                         <Typography className='lastName'
                                             sx={{ textTransform: "none" }}>
-                                            {user?.detail?.password}
+                                            {user?.detail?.role}
                                         </Typography>}
                                     <Typography variant="h6" className='firstName' sx={{ textTransform: "none" }}>User's Creation Date</Typography>
                                     {user.isEdit ?
@@ -340,21 +341,7 @@ export default function UserInfromation() {
                                             sx={{ textTransform: "none" }}>
                                             {user?.detail?.phoneNumber}
                                         </Typography>}
-                                    <Typography className='firstName' sx={{ textTransform: "none" }}>Role</Typography>
-                                    {user.isEdit ?
-                                        <TextField inputProps={{ maxLength: 11 }}
-                                            error={!userFields?.role && isSubmit}
-                                            helperText={!userFields?.role && isSubmit ? "Phone Number is required." : ""}
-                                            value={userFields?.role || ''}
-                                            onChange={handleChange}
-                                            className='inputField1'
-                                            variant='outlined' fullWidth
-                                            type='role'
-                                            name='role' /> :
-                                        <Typography className='lastName'
-                                            sx={{ textTransform: "none" }}>
-                                            {user?.detail?.role}
-                                        </Typography>}
+
 
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Status</Typography>
                                     {user.isEdit ? (

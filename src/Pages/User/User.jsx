@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, TextField, InputAdornment, Button, IconButton } from '@mui/material'
+import { Box, TextField, InputAdornment, Button, IconButton, Grid } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from "@mui/material/Typography";
@@ -16,7 +16,6 @@ import { UserServices } from '../../Services/User/UserServices';
 import { useNavigate } from 'react-router-dom';
 import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 import SubmitLoader from '../../Componenets/SubmitLoader';
-import FilterForm from '../../Componenets/FilterForm';
 
 
 
@@ -57,9 +56,9 @@ const Root = styled(Box)({
         padding: "20px",
         backgroundColor: "#fafbfc",
         "& .mainBox": {
-            backgroundColor: "#F8F8F8",
-            borderRadius: "44px 44px 0px 0px ",
-            padding: "0px 40px 0px 40px"
+            backgroundColor: "#efecec",
+            borderRadius: "20px 20px 0px 0px ",
+            padding: "20px 40px"
         },
         "& .headerSection": {
             display: "flex",
@@ -69,8 +68,8 @@ const Root = styled(Box)({
         " & .inputField": {
             backgroundColor: "#ffffff",
             width: "504px",
-            height: "42px",
-            borderRadius: "146px",
+            height: "45px",
+            borderRadius: "10px",
             boxShadow: "0px 2px 3px 0px #ccc",
             "& .MuiOutlinedInput-input": {
                 padding: "9px 0 5px"
@@ -85,8 +84,9 @@ const User = () => {
         filterList: [],
         detail: {}
     })
+    const [userFields, setUserFields] = useState({})
     const [isLoading, setIsLoading] = useState(false);
-    const [age, setAge] = React.useState('');
+    const [isFltShow, setIsFltShow] = useState(false);
     let navigate = useNavigate()
     const columns = [
         {
@@ -119,9 +119,7 @@ const User = () => {
     useEffect(() => {
         getUserList()
     }, [])
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
+
 
     const handleOpenDetail = (id) => {
         navigate("/userinformation", { state: { id: id } })
@@ -152,95 +150,109 @@ const User = () => {
         let filterDataByFirstName = user?.list?.filter(item => item?.firstName?.toLowerCase().includes(value?.toLowerCase()))
         setUser({ ...user, filterList: filterDataByFirstName })
     }
-
+    const handleChange = (e) => {
+        setUserFields({ ...userFields, [e.target.name]: e.target.value })
+    }
+    const serchUser = () => {
+        let filterData = user?.list?.filter(user =>
+            (!userFields.status || user?.status?.toLowerCase().includes(userFields.status.toLowerCase())) &&
+            (!userFields.department || user?.department?.toLowerCase().includes(userFields.department.toLowerCase())) &&
+            (!userFields.role || user?.role?.toLowerCase().includes(userFields.role.toLowerCase()))
+        );
+        setUser({ ...user, filterList: filterData })
+    }
+    const handleFilter = () => {
+        setIsFltShow(!isFltShow)
+    }
     return (
         <Root>
 
             <Box className="mainContainer">
-                {/* <Box sx={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "#c4c4c4db",
-                    zIndex: 2
-                }}>
-                    <CircularProgress />
-                </Box> */}
-                <Box className="mainBox">
-                    {/* --------------------Header Section--------------- */}
-                    <Box className="headerSection">
-                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <TextField
-                                sx={{
-                                    "& fieldset": { border: 'none' },
-                                }}
-                                className='inputField'
-                                placeholder='Search'
-                                onChange={handleSearch}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SearchIcon />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                        </Box>
-                        <Box sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center"
+                <Grid container alignItems="center" className="mainBox">
+                    <Grid item xs={6} >
+                        <TextField
+                            sx={{
+                                "& fieldset": { border: 'none' },
+                                "& .MuiInputBase-input": {
+                                    marginTop: "2px"
+                                }
+                            }}
+                            className='inputField'
+                            placeholder='Search'
+                            onChange={handleSearch}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon sx={{ marginTop: "8px" }} />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </Grid>
+                    <Grid textAlign="end" xs={6} >
+                        <Button sx={{
+                            textTransform: "none"
+                        }} onClick={() => { navigate('/user-add') }} variant="contained">Create user</Button>
+                        <Button sx={{
+                            marginLeft: "8px",
+                            textTransform: "none"
+                        }} onClick={handleFilter} variant="contained">Filters</Button>
 
-                        }}>
-                            <Button sx={{
+
+
+                    </Grid>
+                    {isFltShow ? <Grid container backgroundColor="#fff" justifyContent="space-between" sx={{ borderRadius: "10px" }} p={2} my={2} >
+                        <Grid item xs={5.5} >
+                            <Typography sx={{ textTransform: "none" }}>Status</Typography>
+                            <FormControl fullWidth className='inputField1'>
+                                <Select
+                                    size='small'
+                                    value={userFields?.status || ''}
+                                    onChange={handleChange}
+                                    name='status'
+                                    displayEmpty
+                                >
+                                    <MenuItem value=''>Select Status</MenuItem>
+                                    <MenuItem value='active'>Active</MenuItem>
+                                    <MenuItem value='inactive'>InActive</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <Typography >Employment Status</Typography>
+                            <TextField
+                                size='small'
+                                fullWidth
+                                className='inputField1'
+                                variant='outlined'
+                                onChange={handleChange}
+                                name='firstName' />
+                        </Grid>
+                        <Grid item xs={5.5} >
+                            <Typography sx={{ textTransform: "none" }}>Team</Typography>
+                            <TextField className='inputField1' fullWidth size='small' type='text'
+                                value={userFields?.department || ''}
+                                onChange={handleChange}
+                                name='department' />
+                            <Typography sx={{ textTransform: "none" }}>Role</Typography>
+                            <TextField className='inputField1'
+                                fullWidth size='small' type='text'
+                                value={userFields?.role || ''}
+                                onChange={handleChange}
+                                name='role' />
+                        </Grid>
+                        <Grid item xs={12} mt={2} textAlign="right"  >
+                            <Button startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""} onClick={serchUser} sx={{
                                 height: "38px",
                                 textTransform: "none"
-                            }} onClick={() => { navigate('/user-add') }} variant="contained">Create user</Button>
-                            <div>
-                                <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: "#fff", color: "#F8F8F8" }}>
-                                    <Select
-                                        value={age}
-                                        size='small'
-                                        onChange={handleChange}
-                                        displayEmpty
-                                        inputProps={{ 'aria-label': 'Without label' }}
-                                    >
-                                        <MenuItem value="">
-                                            <Typography sx={{ color: "#0171BC" }}>filters</Typography>
-                                        </MenuItem>
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </div>
-                        </Box>
-                    </Box>
-                    {/* --------------------Header Section Complete--------------- */}
-                    <Box sx={{ height: 800, overflowY: "auto" }}>
-
-                        <Box>
-                            <FilterForm />
-                        </Box>
+                            }} variant="contained">Search</Button>
+                        </Grid>
+                    </Grid> : ""}
+                    <Grid xs={12} sx={{ marginTop: isFltShow ? 0 : "12px", height: isFltShow ? 750 : 1000, overflowY: "auto" }}>
                         <DataGrid
                             autoHeight
-
                             minHeight={40}
                             rows={user?.filterList || []}
                             columns={columns}
                             getRowId={(e) => e._id}
-                            // initialState={{
-                            //     pagination: {
-                            //         paginationModel: {
-                            //             pageSize: 5,
-                            //         },
-                            //     },
-                            // }}
                             loading={isLoading}
                             pageSizeOptions={[5]}
                             disableColumnFilter
@@ -251,8 +263,8 @@ const User = () => {
                                 NoRowsOverlay: CustomNoRowsOverlay,
                             }}
                         />
-                    </Box>
-                </Box>
+                    </Grid>
+                </Grid>
             </Box>
             {/* <SubmitLoader /> */}
 

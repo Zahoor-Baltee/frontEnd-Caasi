@@ -29,6 +29,7 @@ import { RiQrScan2Line } from "react-icons/ri";
 const Root = styled(Box)({
     margin: 0,
     padding: 0,
+
     "& .MuiInputBase-root": {
         border: "none"
     },
@@ -168,7 +169,6 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                     sx={{
                         padding: '5px 8px',
                         borderRadius: "8px",
-                        // marginBottom: '16px',
                         backgroundColor: "#d5dce4",
                         '& .MuiOutlinedInput-notchedOutline': {
                             border: 'none',
@@ -176,16 +176,6 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                     }}
                     displayEmpty
                     onChange={handleChange}
-                    MenuProps={{
-                        PaperProps: {
-                            sx: {
-                                // padding: '5px 8px',
-                                '& .MuiMenuItem-root': {
-                                    // padding: '5px 8px',
-                                },
-                            },
-                        },
-                    }}
                 >
                     <MenuItem value="">Select User</MenuItem>
                     {user?.map((el, index) => (
@@ -299,7 +289,6 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                         backgroundColor: "#d5dce4",
                         borderRadius: "8px",
                         height: "100px",
-
                         '& .MuiOutlinedInput-root': {
                             '& fieldset': {
                                 border: 'none',
@@ -317,12 +306,9 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                     value={formFields?.description}
                     variant="outlined"
                     multiline
-                    rows={2}
-
-                />
+                    rows={2} />
                 {!formFields.description && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}> Description is required</Typography> : ""}
             </FormControl>
-
             <Box sx={{ mt: 2, mb: 2 }}>
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
@@ -358,18 +344,15 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                     </Grid>
                 </Grid>
             </Box>
-
             <Box sx={{ display: 'flex', gap: 2 }}>
                 <Button variant="outlined" >Reset</Button>
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
                     Submit
                 </Button>
             </Box>
-
             <Box>
                 <AlertSnackbar alert={alert} setAlert={setAlert} />
             </Box>
-
             <Dialog open={isScannerOpen} onClose={handleCloseScanner}>
                 <DialogTitle>Scan QR Code</DialogTitle>
                 <DialogContent>

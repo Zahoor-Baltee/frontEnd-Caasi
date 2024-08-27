@@ -33,14 +33,12 @@ const Root = styled(Box)({
         backgroundColor: "#2f80ed",
     },
     "& .MuiDataGrid-footerContainer": {
-        // backgroundColor: "#d6dcd399"
     },
     "& .MuiDataGrid-iconSeparator": {
         display: "none"
 
     },
     "& .MuiDataGrid-main": {
-        // remove overflow hidden overwise sticky does not work
         overflow: "unset"
     },
 
@@ -62,9 +60,9 @@ const Root = styled(Box)({
         padding: "20px",
         backgroundColor: "#fafbfc",
         "& .mainBox": {
-            backgroundColor: "#F8F8F8",
-            borderRadius: "44px 44px 0px 0px ",
-            padding: "0px 40px 0px 40px"
+            backgroundColor: "#efecec",
+            borderRadius: "20px 20px 0px 0px ",
+            padding: "20px 40px"
         },
         "& .headerSection": {
             display: "flex",
@@ -295,7 +293,6 @@ const ExpenseList = () => {
             <Box className="mainContainer">
 
                 <Box className="mainBox">
-                    {/* --------------------Header Section--------------- */}
                     <Grid justifyContent="flex-end" xs={12} container className="headerSection">
                         <Grid item xs={6}></Grid>
                         <Grid container alignItems="center" justifyContent="end" item xs={6}>
@@ -326,7 +323,6 @@ const ExpenseList = () => {
                         </Grid>
 
                     </Grid>
-                    {/* --------------------Header Section Complete--------------- */}
                     <Box sx={{ height: 800, overflowY: "auto" }}>
 
 
@@ -337,13 +333,6 @@ const ExpenseList = () => {
                             rows={expense?.list || []}
                             columns={columns}
                             getRowId={(e) => e._id}
-                            // initialState={{
-                            //     pagination: {
-                            //         paginationModel: {
-                            //             pageSize: 5,
-                            //         },
-                            //     },
-                            // }}
                             loading={isLoading}
                             pageSizeOptions={[5]}
                             disableColumnFilter
@@ -363,33 +352,25 @@ const ExpenseList = () => {
                 onClose={handleClose}
                 PaperProps={{
                     style: {
-                        margin: 0, // Remove default margin
-                        maxWidth: '800px', // Fixed width
-                        width: '800px', // Fixed width
-                        height: 'auto', // Allow content to define height
+                        margin: 0,
+                        maxWidth: '800px',
+                        width: '800px',
+                        height: 'auto',
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        overflow: 'visible', // Ensure no overflow scrolling
+                        overflow: 'visible',
                     },
                 }}
                 aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
+                aria-describedby="alert-dialog-description" >
                 <DialogContent
                     style={{
                         padding: '16px',
-                        overflow: 'visible', // Ensure no internal scrolling
-                    }}
-                >
+                        overflow: 'visible',
+                    }} >
                     <ExpenseReportForm open={open} setOpen={setOpen} />
                 </DialogContent>
-                {/* <DialogActions>
-                        <Button onClick={handleClose}>Disagree</Button>
-                        <Button onClick={handleClose} autoFocus>
-                            Agree
-                        </Button>
-                    </DialogActions> */}
             </Dialog>
 
         </Root>

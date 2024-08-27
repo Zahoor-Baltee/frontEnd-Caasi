@@ -17,7 +17,7 @@ const Root = styled(Box)({
   margin: 0,
   "& .mainContainer": {
     width: "100%",
-    height: "calc(100vh - 16px)",
+    height: "100vh",
     display: "flex",
     alignItems: "center",
     "& .content1": {
