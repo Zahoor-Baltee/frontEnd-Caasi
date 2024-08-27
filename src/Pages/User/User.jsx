@@ -16,6 +16,7 @@ import { UserServices } from '../../Services/User/UserServices';
 import { useNavigate } from 'react-router-dom';
 import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 import SubmitLoader from '../../Componenets/SubmitLoader';
+import FilterForm from '../../Componenets/FilterForm';
 
 
 
@@ -223,7 +224,9 @@ const User = () => {
                     {/* --------------------Header Section Complete--------------- */}
                     <Box sx={{ height: 800, overflowY: "auto" }}>
 
-
+                        <Box>
+                            <FilterForm />
+                        </Box>
                         <DataGrid
                             autoHeight
 

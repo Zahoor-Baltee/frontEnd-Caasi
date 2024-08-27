@@ -243,7 +243,7 @@ const AddUser = () => {
                                         <MenuItem value='active'>Active</MenuItem>
                                         <MenuItem value='inactive'>InActive</MenuItem>
                                     </Select>
-                                    {!userFields?.status && isSubmit ? <Typography variant="body2" sx={{ color: "red" }}>Status is required</Typography> : ""}
+                                    {!userFields?.status && isSubmit ? <Typography variant="body2" sx={{ fontSize: "0.75rem", marginLeft: "12px", color: "#D32F2F" }}>Status is required</Typography> : ""}
                                 </FormControl>
                                 <Typography sx={{ textTransform: "none" }}>Last Activity</Typography>
                                 <TextField className='inputField1' fullWidth type='date'

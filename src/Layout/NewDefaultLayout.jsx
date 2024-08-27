@@ -37,6 +37,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import AuthService from '../Services/AuthServices';
 import { UserServices } from '../Services/User/UserServices';
+import { MdPieChart } from 'react-icons/md';
+import { HiUserGroup } from "react-icons/hi2";
+import { MdCalendarMonth } from "react-icons/md";
+import { MdOutlineEditCalendar } from "react-icons/md";
 
 const Root = styled(Box)({
     margin: 0,
@@ -101,15 +105,19 @@ function ResponsiveDrawer(props) {
     };
     const getIconByIndex = (index, url) => {
         if (index === 0) {
-            return <DashboardIcon sx={{ color: routes === url ? "#fff" : "", }} />
+            return <MdPieChart style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
         } else if (index === 1) {
-            return <PersonIcon sx={{ color: routes === url ? "#fff" : "", }} />
+            return <HiUserGroup style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
         } else if (index === 2) {
-            return <CalendarMonthIcon sx={{ color: routes === url ? "#fff" : "", }} />
+            return <MdCalendarMonth style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
         } else if (index === 3) {
-            return <ShowChartOutlinedIcon sx={{ color: routes === url ? "#fff" : "", }} />
+            return <MdOutlineEditCalendar style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
         } else if (index === 4) {
-            return <SettingsOutlinedIcon sx={{ color: routes === url ? "#fff" : "", }} />
+            return <SettingsOutlinedIcon style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
+        } else if (index === 5) {
+            return <SettingsOutlinedIcon style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
+        } else if (index === 6) {
+            return <MdCalendarMonth style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
         }
 
     }

@@ -269,20 +269,33 @@ export default function UserInfromation() {
                                             sx={{ textTransform: "none" }}>
                                             {user?.detail?.email}
                                         </Typography>}
-                                    <Typography className='firstName' sx={{ textTransform: "none" }}>Phone Number</Typography>
+                                    <Typography className='firstName' sx={{ textTransform: "none" }}>Team</Typography>
                                     {user.isEdit ?
-                                        <TextField inputProps={{ maxLength: 11 }}
-                                            error={!userFields?.phoneNumber && isSubmit}
-                                            helperText={!userFields?.phoneNumber && isSubmit ? "Phone Number is required." : ""}
-                                            value={userFields?.phoneNumber || ''}
+                                        <TextField className='inputField1'
+                                            error={!userFields?.department && isSubmit}
+                                            helperText={!userFields?.department && isSubmit ? "Team is required." : ""}
+                                            value={userFields?.department || ''}
                                             onChange={handleChange}
-                                            className='inputField1'
                                             variant='outlined' fullWidth
-                                            type='number'
-                                            name='phoneNumber' /> :
+                                            type='text'
+                                            name='department' /> :
                                         <Typography className='lastName'
                                             sx={{ textTransform: "none" }}>
-                                            {user?.detail?.phoneNumber}
+                                            {user?.detail?.department}
+                                        </Typography>}
+                                    <Typography className='firstName' sx={{ textTransform: "none" }}>Password</Typography>
+                                    {user.isEdit ?
+                                        <TextField className='inputField1'
+                                            error={!userFields?.password && isSubmit}
+                                            helperText={!userFields?.password && isSubmit ? "Password is required." : ""}
+                                            value={userFields?.password || ''}
+                                            onChange={handleChange}
+                                            variant='outlined' fullWidth
+                                            type='text'
+                                            name='password' /> :
+                                        <Typography className='lastName'
+                                            sx={{ textTransform: "none" }}>
+                                            {user?.detail?.password}
                                         </Typography>}
                                     <Typography variant="h6" className='firstName' sx={{ textTransform: "none" }}>User's Creation Date</Typography>
                                     {user.isEdit ?
@@ -312,20 +325,37 @@ export default function UserInfromation() {
                                             sx={{ textTransform: "none" }}>
                                             {user?.detail?.lastName}
                                         </Typography>}
-                                    <Typography className='firstName' sx={{ textTransform: "none" }}>Team</Typography>
+                                    <Typography className='firstName' sx={{ textTransform: "none" }}>Phone Number</Typography>
                                     {user.isEdit ?
-                                        <TextField className='inputField1'
-                                            error={!userFields?.department && isSubmit}
-                                            helperText={!userFields?.department && isSubmit ? "Team is required." : ""}
-                                            value={userFields?.department || ''}
+                                        <TextField inputProps={{ maxLength: 11 }}
+                                            error={!userFields?.phoneNumber && isSubmit}
+                                            helperText={!userFields?.phoneNumber && isSubmit ? "Phone Number is required." : ""}
+                                            value={userFields?.phoneNumber || ''}
                                             onChange={handleChange}
+                                            className='inputField1'
                                             variant='outlined' fullWidth
-                                            type='text'
-                                            name='department' /> :
+                                            type='number'
+                                            name='phoneNumber' /> :
                                         <Typography className='lastName'
                                             sx={{ textTransform: "none" }}>
-                                            {user?.detail?.department}
+                                            {user?.detail?.phoneNumber}
                                         </Typography>}
+                                    <Typography className='firstName' sx={{ textTransform: "none" }}>Role</Typography>
+                                    {user.isEdit ?
+                                        <TextField inputProps={{ maxLength: 11 }}
+                                            error={!userFields?.role && isSubmit}
+                                            helperText={!userFields?.role && isSubmit ? "Phone Number is required." : ""}
+                                            value={userFields?.role || ''}
+                                            onChange={handleChange}
+                                            className='inputField1'
+                                            variant='outlined' fullWidth
+                                            type='role'
+                                            name='role' /> :
+                                        <Typography className='lastName'
+                                            sx={{ textTransform: "none" }}>
+                                            {user?.detail?.role}
+                                        </Typography>}
+
                                     <Typography className='firstName' sx={{ textTransform: "none" }}>Status</Typography>
                                     {user.isEdit ? (
                                         <FormControl sx={{
@@ -347,7 +377,7 @@ export default function UserInfromation() {
                                             </Select>
                                         </FormControl>
                                     ) : (
-                                        <Typography className='lastName' sx={{ textTransform: "none" }}>
+                                        <Typography className='lastName' sx={{ fontSize: "14px", textTransform: "none" }}>
                                             {user?.detail?.status}
                                         </Typography>
                                     )}
