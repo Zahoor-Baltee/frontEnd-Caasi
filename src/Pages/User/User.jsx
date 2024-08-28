@@ -197,9 +197,6 @@ const User = () => {
                             marginLeft: "8px",
                             textTransform: "none"
                         }} onClick={handleFilter} variant="contained">Filters</Button>
-
-
-
                     </Grid>
                     {isFltShow ? <Grid container backgroundColor="#fff" justifyContent="space-between" sx={{ borderRadius: "10px" }} p={2} my={2} >
                         <Grid item xs={5.5} >

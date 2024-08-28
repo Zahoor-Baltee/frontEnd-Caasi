@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, IconButton, Dialog, DialogContent, Grid, Menu } from '@mui/material'
+import { Box, Button, IconButton, Dialog, DialogContent, Grid, Menu, TextField, CircularProgress } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem';
 import Typography from "@mui/material/Typography";
 import FormControl from '@mui/material/FormControl';
@@ -51,7 +51,6 @@ const Root = styled(Box)({
         display: "flex",
         fontWeight: "bold",
         color: "#0171BC"
-
     },
     margin: 0,
     padding: 0,
@@ -88,11 +87,13 @@ const ExpenseList = () => {
         filterList: [],
         detail: {}
     })
+    const [userFields, setUserFields] = useState({})
     const [isLoading, setIsLoading] = useState(false);
     const [open, setOpen] = React.useState(false);
-    const [age, setAge] = React.useState('');
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openMenu = Boolean(anchorEl);
+    const [isFltShow, setIsFltShow] = useState(false);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -187,9 +188,7 @@ const ExpenseList = () => {
                         onClose={handleCloseMenu}
                         MenuListProps={{
                             'aria-labelledby': 'basic-button'
-                        }}
-                    >
-
+                        }} >
                         <MenuItem onClick={handleCloseMenu}>
                             <Button sx={{
                                 backgroundColor: "#f0fff8",
@@ -205,7 +204,6 @@ const ExpenseList = () => {
                                 Approved
                             </Button>
                         </MenuItem>
-
                         <MenuItem onClick={handleCloseMenu}>
                             <Button sx={{
                                 backgroundColor: "#FEFFE5",
@@ -250,9 +248,6 @@ const ExpenseList = () => {
     useEffect(() => {
         getExpenseList()
     }, [])
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
 
 
     //Get user List
@@ -265,7 +260,6 @@ const ExpenseList = () => {
                 setExpense({ ...expense, list: res.data, filterList: res.data })
                 setIsLoading(false)
             } else {
-                // alert("failed")
                 setIsLoading(false)
             }
 
@@ -274,9 +268,6 @@ const ExpenseList = () => {
             setIsLoading(false)
         }
     }
-
-
-
     // navigate to Details
     const handleOpenDetail = (id) => {
         navigate("/expensereports", { state: { id: id } })
@@ -287,6 +278,23 @@ const ExpenseList = () => {
     const handleClose = () => {
         setOpen(false);
     };
+    const serchUser = () => {
+        const status = userFields?.status?.toLowerCase() || '';
+        const amount = userFields?.amount || '';
+        const date = userFields?.date?.toLowerCase() || '';
+        let filterData = expense?.list?.filter((expense) =>
+            (!status || expense?.status?.toLowerCase().includes(status)) &&
+            (!amount || expense?.amount.toString().includes(amount)) &&
+            (!date || expense?.date?.toLowerCase().includes(date))
+        );
+        setExpense({ ...expense, filterList: filterData })
+    }
+    const handleChange = (e) => {
+        setUserFields({ ...userFields, [e.target.name]: e.target.value })
+    }
+    const handleFilter = () => {
+        setIsFltShow(!isFltShow)
+    }
     return (
         <Root>
 
@@ -304,33 +312,64 @@ const ExpenseList = () => {
                                 variant="contained"
                             >Create Expense Report</Button>
 
-                            <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: "#fff", color: "#F8F8F8" }}>
-                                <Select
-                                    value={age}
-                                    size='small'
-                                    onChange={handleChange}
-                                    displayEmpty
-                                    inputProps={{ 'aria-label': 'Without label' }}
-                                >
-                                    <MenuItem value="">
-                                        <Typography sx={{ color: "#0171BC" }}>filters</Typography>
-                                    </MenuItem>
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
-                                </Select>
-                            </FormControl>
+                            <Button sx={{
+                                marginLeft: "8px",
+                                textTransform: "none"
+                            }} onClick={handleFilter} variant="contained">Filters</Button>
                         </Grid>
+                        {isFltShow ? <Grid container backgroundColor="#fff" justifyContent="space-between" sx={{ borderRadius: "10px" }} p={2} my={2} >
+                            <Grid item xs={5.5} >
+                                <Typography sx={{ textTransform: "none" }}>Status</Typography>
+                                <FormControl fullWidth className='inputField1'>
+                                    <Select
+                                        size='small'
+                                        value={userFields?.status || ''}
+                                        onChange={handleChange}
+                                        name='status'
+                                        displayEmpty
+                                    >
+                                        <MenuItem value=''>Select Status</MenuItem>
+                                        <MenuItem value='approved'>Approved</MenuItem>
+                                        <MenuItem value='pending'>Pending</MenuItem>
+                                        <MenuItem value='rejected'>Rejected</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <Typography >Employment Status</Typography>
+                                <TextField
+                                    size='small'
+                                    fullWidth
+                                    className='inputField1'
+                                    variant='outlined'
+                                    onChange={handleChange}
+                                    name='firstName' />
+                            </Grid>
+                            <Grid item xs={5.5} >
+                                <Typography sx={{ textTransform: "none" }}>Amount</Typography>
+                                <TextField className='inputField1' fullWidth size='small' type='number'
+                                    value={userFields?.amount || ''}
+                                    onChange={handleChange}
+                                    name='amount' />
+                                <Typography sx={{ textTransform: "none" }}>Date</Typography>
+                                <TextField className='inputField1'
+                                    fullWidth size='small' type='date'
+                                    value={userFields?.date || ''}
+                                    onChange={handleChange}
+                                    name='date' />
+                            </Grid>
+                            <Grid item xs={12} mt={2} textAlign="right"  >
+                                <Button startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""} onClick={serchUser} sx={{
+                                    height: "38px",
+                                    textTransform: "none"
+                                }} variant="contained">Search</Button>
+                            </Grid>
+                        </Grid> : ""}
 
                     </Grid>
                     <Box sx={{ height: 800, overflowY: "auto" }}>
-
-
                         <DataGrid
                             autoHeight
-
                             minHeight={40}
-                            rows={expense?.list || []}
+                            rows={expense?.filterList || []}
                             columns={columns}
                             getRowId={(e) => e._id}
                             loading={isLoading}
