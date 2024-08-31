@@ -21,7 +21,6 @@ export const Helpers = {
         let year = date.getFullYear();
 
         let newDate = `${year}-${month < 10 ? "0" : ""}${month}-${day < 10 ? "0" : ""}${day}`
-        console.log(newDate)
         return newDate
     }
 }

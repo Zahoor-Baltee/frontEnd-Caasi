@@ -28,10 +28,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import logo from '../Assets/cassimainlogo.png'
 import man from '../Assets/man.png'
 import Uae from '../Assets/uae.png'
-import Us from '../Assets/UsFlag.webp'
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import ShowChartOutlinedIcon from '@mui/icons-material/ShowChartOutlined';
+import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
@@ -50,7 +47,6 @@ const Root = styled(Box)({
     },
     "& .MuiBox-root": {
         padding: "0px",
-
     },
     "& .MuiToolbar-root": {
         minHeight: "0px",
@@ -115,7 +111,7 @@ function ResponsiveDrawer(props) {
         } else if (index === 4) {
             return <SettingsOutlinedIcon style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
         } else if (index === 5) {
-            return <SettingsOutlinedIcon style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
+            return <AnalyticsOutlinedIcon style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
         } else if (index === 6) {
             return <MdCalendarMonth style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
         }

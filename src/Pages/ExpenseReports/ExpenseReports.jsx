@@ -61,7 +61,6 @@ function ExpenseReports() {
             let res = await ExpenseService.getDetail(data)
             if (res.success) {
                 setReports(res.data)
-                console.log(res.data)
 
             } else {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: res.error });

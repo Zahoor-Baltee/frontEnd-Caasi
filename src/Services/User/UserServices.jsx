@@ -1,4 +1,4 @@
-import { ExecuteGet, ExecutePatch, ExecutePost, ExecuteDelete } from "../ApiServices";
+import { ExecuteGet, ExecutePatch, ExecutePost, getUsers } from "../ApiServices";
 
 export const UserServices = {
   async loginUser(data) {
@@ -23,6 +23,10 @@ export const UserServices = {
   },
   async logout(data) {
     let response = await ExecutePost(`users/logout`, data);
+    return response;
+  },
+  async getUserDropdown(data) {
+    let response = await ExecuteGet(`users/users-dropdown`, data);
     return response;
   },
 };

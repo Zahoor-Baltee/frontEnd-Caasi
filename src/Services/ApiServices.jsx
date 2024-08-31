@@ -73,9 +73,10 @@ const ExecuteDelete = async (url) => {
         throw error;
     }
 };
+
 export {
     ExecutePost,
     ExecuteGet,
     ExecutePatch,
-    ExecuteDelete
+    ExecuteDelete,
 }

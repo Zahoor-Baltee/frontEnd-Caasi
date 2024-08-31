@@ -344,7 +344,6 @@ export default function UserInfromation() {
             updatedDate: Helpers.dateFormater1(user.detail.updatedDate),
             createdDate: Helpers.dateFormater1(user.detail.createdDate),
         };
-        console.log(formattedUserFields)
         setUserFields(formattedUserFields);
     }, [user.isEdit])
     const handleEdit = async () => {

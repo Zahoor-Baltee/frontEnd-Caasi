@@ -1,12 +1,25 @@
 import React from 'react';
-import { IconButton, Typography, Grid, TextField, MenuItem, Box, Select, Button } from '@mui/material';
-import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import { Typography, Grid, MenuItem, Box, Select, } from '@mui/material';
 import { addMonths } from 'date-fns';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmployeeChange, onNavigate }) => {
+const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmployeeChange, onNavigate, userList }) => {
+    const months = [
+        { id: "01", name: "January" },
+        { id: "02", name: "February" },
+        { id: "03", name: "March" },
+        { id: "04", name: "April" },
+        { id: "05", name: "May" },
+        { id: "06", name: "June" },
+        { id: "07", name: "July" },
+        { id: "08", name: "August" },
+        { id: "09", name: "September" },
+        { id: "10", name: "October" },
+        { id: "11", name: "November" },
+        { id: "12", name: "December" }
+    ];
     const handleMonthChange = (event) => {
         const month = event.target.value;
         onMonthChange(month);
@@ -55,22 +68,23 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                 <Typography sx={{ textAlign: "center" }} variant="h6">{label()}</Typography>
             </Grid>
             <Grid item md={7} sx={{ display: "flex", justifyContent: "end", gap: "10px", alignItems: "center", marginBottom: "5px" }}>
-                {/* <Select
+                <Select
                     displayEmpty
                     fullWidth={true}
                     value={employee}
                     onChange={handleEmployeeChange}
-
                     variant="outlined"
                     margin="dense"
-                    sx={{ mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", marginRight: "0px !important", display: "flex", alignItems: "center", height: "50px" }}
+                    sx={{ mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", marginRight: "0px !important", "& .MuiSelect-select ": { display: "flex", alignItems: "center", gap: 1 }, height: "50px" }}
                 >
-                    <MenuItem value="">
+                    <MenuItem sx={{ display: "flex", alignItems: "center", gap: 2 }} value="">
                         <AccountCircleIcon />
-                        Select Employee
+                        <Typography>Select Employee</Typography>
                     </MenuItem>
-                    <MenuItem value="Employee 1">Employee 1</MenuItem>
-                    <MenuItem value="Employee 2">Employee 2</MenuItem>
+                    {userList?.map((el, ind) => (
+                        <MenuItem key={ind} value={el._id}>{el.firstName} {el.lastName}</MenuItem>
+                    ))}
+
                 </Select>
                 <Select
                     fullWidth={true}
@@ -80,17 +94,10 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                     margin="dense"
                     sx={{ mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", height: "50px" }}
                 >
-                    <MenuItem value="">Select Month</MenuItem>
-                    <MenuItem value="2024-05">May 2024</MenuItem>
-                    <MenuItem value="2024-06">June 2024</MenuItem>
-                </Select> */}
-                <Button sx={{ backgroundColor: "#2F80ED", textTransform: "none" }} variant="contained" size="large">
-                    <AccountCircleIcon sx={{ fontSize: "25px", marginRight: "5px" }} />
-                    <Typography>Select Employee</Typography>
-                </Button>
-                <Button sx={{ backgroundColor: "#2F80ED", textTransform: "none" }} variant="contained" size="large">
-                    Select Month
-                </Button>
+                    {months?.map((el, ind) => (
+                        <MenuItem key={ind} value={"2024-" + el.id}>{el.name}</MenuItem>
+                    ))}
+                </Select>
 
             </Grid>
         </Grid>

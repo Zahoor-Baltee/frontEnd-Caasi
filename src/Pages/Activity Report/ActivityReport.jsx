@@ -12,6 +12,7 @@ import { Helpers } from '../../Shell/Helper';
 import { ExpenseService } from '../../Services/Expense/ExpenseService';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { ActivityService } from '../../Services/Activity/ActivityServices';
 
 
 const Root = styled(Box)({
@@ -84,7 +85,7 @@ const Root = styled(Box)({
 
 });
 const ActivityReport = () => {
-    const [expense, setExpense] = useState({
+    const [activity, setActivity] = useState({
         list: [],
         filterList: [],
         detail: {}
@@ -104,12 +105,22 @@ const ActivityReport = () => {
 
     const columns = [
         {
-            field: 'userName',
-            headerName: 'Employee',
+            field: 'name',
+            headerName: 'Name',
             width: 200,
+            renderCell: (params) =>
+                <Typography
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "#0171BC"
+                    }}>
+                    {params.value} {params.row.surname}
+                </Typography>
         },
         {
-            field: 'contact',
+            field: 'contactNumber',
             headerName: 'Contact',
             width: 200,
             renderCell: (params) =>
@@ -239,7 +250,7 @@ const ActivityReport = () => {
 
     ];
     useEffect(() => {
-        getExpenseList()
+        getActivityReportList()
     }, [])
     const handleChange = (event) => {
         setAge(event.target.value);
@@ -248,18 +259,17 @@ const ActivityReport = () => {
 
     //Get user List
 
-    const getExpenseList = async () => {
+    const getActivityReportList = async () => {
         setIsLoading(true)
         try {
-            let res = await ExpenseService.getlist()
+            let res = await ActivityService.getlist()
             if (res.success) {
-                setExpense({ ...expense, list: res.data, filterList: res.data })
+                setActivity({ ...activity, list: res.data, filterList: res.data })
                 setIsLoading(false)
             } else {
                 // alert("failed")
                 setIsLoading(false)
             }
-
         } catch (error) {
             console.error(error)
             setIsLoading(false)
@@ -317,22 +327,12 @@ const ActivityReport = () => {
                     </Grid>
                     {/* --------------------Header Section Complete--------------- */}
                     <Box sx={{ height: 800, overflowY: "auto" }}>
-
-
                         <DataGrid
                             autoHeight
-
                             minHeight={40}
-                            rows={expense?.list || []}
+                            rows={activity?.list || []}
                             columns={columns}
                             getRowId={(e) => e._id}
-                            // initialState={{
-                            //     pagination: {
-                            //         paginationModel: {
-                            //             pageSize: 5,
-                            //         },
-                            //     },
-                            // }}
                             loading={isLoading}
                             pageSizeOptions={[5]}
                             disableColumnFilter
