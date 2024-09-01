@@ -62,9 +62,9 @@ const Root = styled(Box)({
         padding: "20px",
         backgroundColor: "#fafbfc",
         "& .mainBox": {
-            backgroundColor: "#F8F8F8",
-            borderRadius: "44px 44px 0px 0px ",
-            padding: "0px 40px 0px 40px"
+            backgroundColor: "#efecec",
+            borderRadius: "20px 20px 0px 0px ",
+            padding: "20px 40px"
         },
         "& .headerSection": {
             display: "flex",
@@ -156,23 +156,24 @@ const ActivityReport = () => {
             headerName: 'Status',
             // width: 200,
             flex: 1,
-            renderCell: (params) => (
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Button sx={{
-                        backgroundColor: params.value === "Pending" ? "#FEFFE5" : params.value === "Approved" ? "#f0fff8" : "#fff0f0",
-                        textTransform: "none",
-                        fontWeight: "bold",
-                        color: params.value === "Pending" ? "#FFBC10" : params.value === "Approved" ? "#18ab56" : "#eb5757",
-                        height: "40px",
-                        width: "100px",
-                        borderRadius: "5px",
-                        border: params.value === "Pending" ? "1px solid #FFBC10" : params.value === "Approved" ? "1px solid #18ab56" : "1px solid #eb5757",
+            // renderCell: (params) => (
+            //     <Typography></Typography>
+            //     // <Box sx={{ display: "flex", alignItems: "center" }}>
+            //     //     <Button sx={{
+            //     //         backgroundColor: params.value === "Pending" ? "#FEFFE5" : params.value === "Approved" ? "#f0fff8" : "#fff0f0",
+            //     //         textTransform: "none",
+            //     //         fontWeight: "bold",
+            //     //         color: params.value === "Pending" ? "#FFBC10" : params.value === "Approved" ? "#18ab56" : "#eb5757",
+            //     //         height: "40px",
+            //     //         width: "100px",
+            //     //         borderRadius: "5px",
+            //     //         border: params.value === "Pending" ? "1px solid #FFBC10" : params.value === "Approved" ? "1px solid #18ab56" : "1px solid #eb5757",
 
-                    }}>
-                        {params.value}
-                    </Button>
-                </Box>
-            )
+            //     //     }}>
+            //     //         {params.value}
+            //     //     </Button>
+            //     // </Box>
+            // )
         },
         {
             field: 'userId',

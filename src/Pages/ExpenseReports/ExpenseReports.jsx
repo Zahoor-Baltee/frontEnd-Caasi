@@ -72,8 +72,11 @@ function ExpenseReports() {
     let navigate = useNavigate();
 
     const handleClick = () => {
-        console.log('Navigating to /expense-list');
+        // if (state.from === "user") {
+        //     navigate('/userinformation');
+        // } else {
         navigate('/expense-list');
+        // }
     };
     return (
         <Root>

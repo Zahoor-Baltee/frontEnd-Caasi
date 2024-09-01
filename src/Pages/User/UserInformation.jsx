@@ -162,7 +162,7 @@ export default function UserInfromation() {
         setAnchorEl(event.currentTarget);
     };
     const handleOpenDetail = (id) => {
-        navigate("/expensereports", { state: { id: id } })
+        navigate("/expensereports", { state: { id: id, from: "user" } })
     }
     const handleCloseMenu = () => {
         setAnchorEl(null);

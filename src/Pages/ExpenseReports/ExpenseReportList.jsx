@@ -270,7 +270,7 @@ const ExpenseList = () => {
     }
     // navigate to Details
     const handleOpenDetail = (id) => {
-        navigate("/expensereports", { state: { id: id } })
+        navigate("/expensereports", { state: { id: id, from: "expense" } })
     }
     const openExpenseForm = () => {
         setOpen(true);

@@ -25,7 +25,8 @@ import { ActivityService } from '../../Services/Activity/ActivityServices';
 import AlertSnackbar from '../../Componenets/AlertSnackbar';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
-
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 const locales = {
     'en-US': enUS,
 };
@@ -153,8 +154,7 @@ const Root = styled(Grid)(({ theme }) => ({
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                border: "1px solid blue",
-                borderRadius: "5px",
+                border: "3px solid #088ADD",
                 padding: "10px 20px",
                 marginBottom: "10px",
                 "& .workText": {
@@ -298,7 +298,7 @@ const AddActivityReport = () => {
             const date = parseDate(curActivityDate);
             setActivities((prevActivities) =>
                 prevActivities.map(activity =>
-                    activity.date === curActivityDate ? { ...activity, status: value } : activity
+                    activity.date === curActivityDate ? { ...activity, status: value, type: type } : activity
                 )
             );
             const newEvent = {
@@ -380,6 +380,7 @@ const AddActivityReport = () => {
     let navigateUser = useNavigate();
     const handleSubmit = async () => {
         setIsLoading(true)
+
         let data = {
             clientId: AuthService.getUserid(),
             userId: employee,
@@ -404,9 +405,13 @@ const AddActivityReport = () => {
 
             } else {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
+                setIsLoading(false)
+
             }
         } catch (error) {
             console.log(error)
+            setIsLoading(false)
+
         }
     }
     return (
@@ -520,7 +525,27 @@ const AddActivityReport = () => {
                                             <ListItem>
                                                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                                                     <Typography style={{ color: "#0075BC" }}>{activity.date}</Typography>
-                                                    <Typography sx={{ color: "#727272" }}>{activity.status ? activity.status : "No report added"}</Typography>
+                                                    <Box sx={{ display: "flex", }}>
+                                                        {activity?.type ? <Typography sx={{ display: "flex", alignItems: 'center', color: activity.type === 'working day' ? '#008000' : activity.type === 'absence day' ? '#DC143C' : 'orange', }}>
+                                                            <FiberManualRecordIcon
+                                                                sx={{
+                                                                    fontSize: "16px",
+                                                                    marginRight: "5px",
+                                                                    color: activity.type === 'working day' ? '#008000' : activity.type === 'absence day' ? '#DC143C' : 'orange',
+                                                                }} />
+                                                            {activity.type}
+                                                        </Typography> : ""}
+                                                        {activity.status ? <Typography sx={{ display: "flex", alignItems: 'center', color: activity.type === 'working day' ? '#008000' : activity.type === 'absence day' ? '#DC143C' : 'orange', }}>
+                                                            <PlayArrowIcon
+                                                                sx={{
+                                                                    fontSize: "19px",
+                                                                    marginRight: "5px",
+                                                                    marginLeft: "5px",
+                                                                    color: activity.type === 'working day' ? '#008000' : activity.type === 'absence day' ? '#DC143C' : 'orange',
+                                                                }} />
+                                                            {activity.status}</Typography> :
+                                                            <Typography sx={{ color: "#727272" }}>No report added.</Typography>}
+                                                    </Box>
                                                 </Box>
                                                 <ListItemSecondaryAction>
                                                     <IconButton onClick={(event) => handleMenuOpen(event, activity.date, activity.status)} sx={{ padding: "5px", borderRadius: "50%", backgroundColor: !activity.status ? "#0075bc" : "crimson" }}>
@@ -674,7 +699,6 @@ const AddActivityReport = () => {
                                                         See details
                                                     </Typography>
                                                 </Box>
-
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <Grid container className='workdayList'  >
@@ -721,7 +745,7 @@ const AddActivityReport = () => {
                                         <Accordion className="accordion">
                                             <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ fontWeight: "bold", color: "#2086C5" }} />} className="accordionSummary">
                                                 <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between !important" }}>
-                                                    <Typography sx={{ fontWeight: "bold", color: "#2086C5" }} variant="h6">Absences {activityCount?.absentDays ? activityCount.absentDays : 0}</Typography>
+                                                    <Typography sx={{ fontWeight: "bold", color: "#2086C5" }} variant="h6">Absences: {activityCount?.absentDays ? activityCount.absentDays : 0}</Typography>
                                                     <Typography sx={{ fontWeight: "bold", color: "#2086C5" }} variant="h6">See Details</Typography>
                                                 </Box>
                                             </AccordionSummary>
@@ -769,7 +793,7 @@ const AddActivityReport = () => {
                                         <Accordion className="accordion">
                                             <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ fontWeight: "bold", color: "#2086C5" }} />} className="accordionSummary">
                                                 <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between !important" }}>
-                                                    <Typography sx={{ fontWeight: "bold", color: "#2086C5" }} variant="h6">Half days {activityCount?.halfDays ? activityCount.halfDays : 0}</Typography>
+                                                    <Typography sx={{ fontWeight: "bold", color: "#2086C5" }} variant="h6">Half days: {activityCount?.halfDays ? activityCount.halfDays : 0}</Typography>
                                                     <Typography sx={{ fontWeight: "bold", color: "#2086C5" }} variant="h6">See Details</Typography>
                                                 </Box>
                                             </AccordionSummary>
@@ -814,11 +838,15 @@ const AddActivityReport = () => {
                                         </Accordion>
                                     </Grid>
                                 </Grid>}
-                        <Grid container justifyContent="end">
-                            <Button startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""} onClick={handleSubmit} variant="contained" >
+                        {isSaved ? <Grid container justifyContent="end">
+                            <Button fullWidth sx={{ height: "60px" }} startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} /> : ""} onClick={handleSubmit} variant="contained" >
                                 Submit
                             </Button>
+                            {/* <Button onClick={handleSaveInfo} variant="contained" sx={{ marginTop: "10px", height: "60px" }}>
+                                Save
+                            </Button> */}
                         </Grid>
+                            : ''}
                     </Grid >
                 </Grid >
             </Box>
