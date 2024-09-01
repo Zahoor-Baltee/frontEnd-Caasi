@@ -109,7 +109,14 @@ function ExpenseReports() {
                                 {reports?.status}
                             </Typography>
                         </Button>
-                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "38px", width: "38px", backgroundColor: "#0A75BD", color: "#ffffff", borderRadius: "10px" }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center", height: "38px",
+                                width: "38px", backgroundColor: "#0A75BD",
+                                color: "#ffffff", borderRadius: "10px"
+                            }}>
                             <EditOutlinedIcon />
                         </Box>
                     </Box>
@@ -126,47 +133,41 @@ function ExpenseReports() {
                         <Box className='Transportation'>
                             <Button
                                 variant="contained"
-
                                 sx={{
                                     textAlign: "center",
                                     width: "800px",
                                     backgroundColor: reports?.status === "Rejected" ? '#DC3545' : "#0A75BD",
                                     textTransform: 'none',
-                                }}
-                            >
+                                }}>
                                 {reports?.category}
                             </Button>
-                            <Info sx={{ color: "#DC3545" }} />
+                            {reports?.status === "Rejected" ? <Info sx={{ color: "#DC3545" }} /> : reports?.status === "pending" ? <WatchLaterIcon sx={{ color: "#F38F19" }} /> : <CheckCircle sx={{ color: "#18AB56" }} />}
                         </Box>
                         <Box className='Transportation'>
-                            <Button
+                            { } <Button
                                 variant="contained"
-
                                 sx={{
                                     textAlign: "center",
                                     width: "800px",
                                     backgroundColor: '#0A75BD',
                                     textTransform: 'none',
-                                }}
-                            >
+                                }}>
                                 ${reports?.amount}
                             </Button>
-                            <CheckCircle sx={{ color: "#18AB56" }} />
+                            {reports?.status === "Rejected" ? <Info sx={{ color: "#DC3545" }} /> : reports?.status === "pending" ? <WatchLaterIcon sx={{ color: "#F38F19" }} /> : <CheckCircle sx={{ color: "#18AB56" }} />}
                         </Box>
                         <Box className='Transportation'>
                             <Button
                                 variant="contained"
-
                                 sx={{
                                     textAlign: "center",
                                     width: "800px",
                                     backgroundColor: '#0A75BD',
                                     textTransform: 'none',
-                                }}
-                            >
+                                }}>
                                 {Helpers.dateFormater(reports?.updateDate)}
                             </Button>
-                            <CheckCircle sx={{ color: "#18AB56" }} />
+                            {reports?.status === "Rejected" ? <Info sx={{ color: "#DC3545" }} /> : reports?.status === "pending" ? <WatchLaterIcon sx={{ color: "#F38F19" }} /> : <CheckCircle sx={{ color: "#18AB56" }} />}
                         </Box>
                     </Box>
                     <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
