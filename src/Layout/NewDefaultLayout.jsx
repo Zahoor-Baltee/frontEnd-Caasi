@@ -78,7 +78,7 @@ function ResponsiveDrawer(props) {
         { name: "Activity Report", url: "/activityreport" },
         { name: "Advanced Settings and Management", url: "/advancesetting" },
         { name: "Reports and Export", url: "/reportsandexport" },
-        { name: "Days of Absence", url: "/activityreport" },
+        { name: "Days of Absence", url: "/new-absence" },
     ]
     let navigate = useNavigate()
 

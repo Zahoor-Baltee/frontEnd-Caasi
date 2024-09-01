@@ -20,6 +20,7 @@ import Notification from "../Pages/Notification/Notifications";
 import Protected from "./Protected";
 import ActivityReport from "../Pages/Activity Report/ActivityReport";
 import AddActivity from "../Pages/Activity Report/AddActivity";
+import NewAbsence from "../Pages/DayOfAbsence/NewAbsence";
 
 const WithLayout = ({ component }) => {
   return <NewDefaultLayout><Protected>{component}</Protected></NewDefaultLayout>;
@@ -68,6 +69,10 @@ const Router = () => {
         <Route
           path="/add-activity"
           element={<WithLayout component={<AddActivity />} />}
+        />
+        <Route
+          path="/new-absence"
+          element={<WithLayout component={<NewAbsence />} />}
         />
         <Route
           path="/reportsandexport"

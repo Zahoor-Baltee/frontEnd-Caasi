@@ -3,9 +3,14 @@ import { Typography, Grid, MenuItem, Box, Select, } from '@mui/material';
 import { addMonths } from 'date-fns';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import styled from '@emotion/styled'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
-const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmployeeChange, onNavigate, userList }) => {
+const Root = styled(Grid)(({ theme }) => ({
+    "& .MuiSvgIcon-root": {
+        color: "#fff"
+    }
+}));
+const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmployeeChange, onNavigate, userList, from = 'act' }) => {
     const months = [
         { id: "01", name: "January" },
         { id: "02", name: "February" },
@@ -50,9 +55,9 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
     };
 
     return (
-        <Grid container alignItems="center" justifyContent="space-between" spacing={2} marginBottom={1} marginTop={1}>
+        <Root container alignItems="center" justifyContent="space-between" spacing={2} marginBottom={1} marginTop={1}>
             <Grid md={12}>
-                <Typography sx={{ fontWeight: "bold" }} variant="h5" textAlign={"center"}>Adding a new activity report</Typography>
+                {from === 'act' && <Typography sx={{ fontWeight: "bold" }} variant="h5" textAlign={"center"}>Adding a new activity report</Typography>}
             </Grid>
 
             <Grid md={2} item sx={{ display: 'flex', alignItems: "center", gap: 1 }}>
@@ -65,7 +70,7 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
             </Grid>
 
             <Grid item md={3}>
-                <Typography sx={{ textAlign: "center" }} variant="h6">{label()}</Typography>
+                <Typography sx={{ fontWeight: "600", fontSize: "24px", textAlign: "center" }} >{label()}</Typography>
             </Grid>
             <Grid item md={7} sx={{ display: "flex", justifyContent: "end", gap: "10px", alignItems: "center", marginBottom: "5px" }}>
                 <Select
@@ -75,7 +80,7 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                     onChange={handleEmployeeChange}
                     variant="outlined"
                     margin="dense"
-                    sx={{ mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", marginRight: "0px !important", "& .MuiSelect-select ": { display: "flex", alignItems: "center", gap: 1 }, height: "50px" }}
+                    sx={{ mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", marginRight: "0px !important", "& .MuiSelect-select": { display: "flex", alignItems: "center", gap: 1 }, height: "50px" }}
                 >
                     <MenuItem sx={{ display: "flex", alignItems: "center", gap: 2 }} value="">
                         <AccountCircleIcon />
@@ -86,21 +91,24 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                     ))}
 
                 </Select>
-                <Select
+                {from === 'act' && <Select
+
                     fullWidth={true}
                     value={selectedMonth}
                     onChange={handleMonthChange}
                     variant="outlined"
                     margin="dense"
-                    sx={{ mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", height: "50px" }}
+                    sx={{
+                        mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", height: "50px",
+                    }}
                 >
                     {months?.map((el, ind) => (
                         <MenuItem key={ind} value={"2024-" + el.id}>{el.name}</MenuItem>
                     ))}
-                </Select>
+                </Select>}
 
             </Grid>
-        </Grid>
+        </Root>
     );
 };
 
