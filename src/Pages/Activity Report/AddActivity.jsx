@@ -272,6 +272,12 @@ const AddActivityReport = () => {
         setComments(event.target.value);
     };
     const handleMenuOpen = (event, date, status) => {
+        debugger
+        const dates = parseDate(date);
+        if (status) {
+            handleRemoveEvent(dates, status)
+            return
+        }
         setCurActivityDate(date)
         setAnchorEl(event.currentTarget);
     };
@@ -291,25 +297,56 @@ const AddActivityReport = () => {
         };
         return new Date(year, months[month], day);
     };
+    // const handleSelect = (value, type) => {
+    //     setAnchorEl(false);
+    //     isAbsense.current = false
+    //     if (value && curActivityDate) {
+    //         const date = parseDate(curActivityDate);
+    //         setActivities((prevActivities) =>
+    //             prevActivities.map(activity =>
+    //                 activity.date === curActivityDate ? { ...activity, status: value, type: type } : activity
+    //             )
+    //         );
+    //         const newEvent = {
+    //             title: value,
+    //             workType: value,
+    //             date: date,
+    //             dayType: type
+    //         };
+    //         setEvents((prevEvents) => [...prevEvents, newEvent]);
+    //     }
+    // }
+
     const handleSelect = (value, type) => {
         setAnchorEl(false);
-        isAbsense.current = false
+        isAbsense.current = false;
         if (value && curActivityDate) {
             const date = parseDate(curActivityDate);
-            setActivities((prevActivities) =>
-                prevActivities.map(activity =>
-                    activity.date === curActivityDate ? { ...activity, status: value, type: type } : activity
-                )
-            );
-            const newEvent = {
-                title: value,
-                workType: value,
-                date: date,
-                dayType: type
-            };
-            setEvents((prevEvents) => [...prevEvents, newEvent]);
+
+            // Check if an event for the selected date already exists
+            const eventExists = events.some((event) => event.date.toISOString() === date.toISOString());
+
+            if (!eventExists) {
+                // Add new event if no event exists for the date
+                const newEvent = {
+                    title: value,
+                    workType: value,
+                    date: date,
+                    dayType: type
+                };
+                setEvents((prevEvents) => [...prevEvents, newEvent]);
+
+                // Update activities as well
+                setActivities((prevActivities) =>
+                    prevActivities.map(activity =>
+                        activity.date === curActivityDate ? { ...activity, status: value, type: type } : activity
+                    )
+                );
+            } else {
+                console.log('An event already exists for this date. No new event added.');
+            }
         }
-    }
+    };
 
     const handleMenuClose = (value) => {
         isAbsense.current = false
@@ -334,7 +371,6 @@ const AddActivityReport = () => {
     const handleSaveInfo = () => {
         setIsSaved(true)
         let counts = calculateDays(events)
-        console.log(counts)
         setActivityCount(counts)
     }
 
@@ -414,6 +450,22 @@ const AddActivityReport = () => {
 
         }
     }
+
+
+    const handleRemoveEvent = (eventToRemove, status) => {
+        // Remove from events state
+        setEvents((prevEvents) =>
+            prevEvents.filter((eve) => eve.date.toISOString() !== eventToRemove.toISOString())
+        );
+
+        // Remove from activities state
+        setActivities((prevActivities) =>
+            prevActivities.filter((activity) =>
+                !(new Date(activity.date).toISOString() === eventToRemove.toISOString() && activity.status === status)
+            )
+        );
+    };
+
     return (
         <Root>
             <Box className='mainContainer'>
@@ -433,6 +485,7 @@ const AddActivityReport = () => {
                                 defaultView="month"
                                 views={['month']}
                                 date={date}
+                                onSelectEvent={handleRemoveEvent}
                                 components={{
                                     toolbar: (props) => (
                                         <CustomToolbar
