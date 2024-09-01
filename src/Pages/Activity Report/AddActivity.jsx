@@ -23,6 +23,9 @@ import { UserServices } from '../../Services/User/UserServices';
 import AuthService from '../../Services/AuthServices';
 import { ActivityService } from '../../Services/Activity/ActivityServices';
 import AlertSnackbar from '../../Componenets/AlertSnackbar';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useNavigate } from 'react-router-dom';
+
 const locales = {
     'en-US': enUS,
 };
@@ -188,6 +191,7 @@ const AddActivityReport = () => {
         alertMessage: "",
         isAlertOpen: false,
     });
+    const [isLoading, setIsLoading] = useState(false);
     const isAbsense = useRef(false)
     const label = () => {
         if (selectedMonth && date) {
@@ -372,7 +376,10 @@ const AddActivityReport = () => {
     const handleChangeUser = (e) => {
         setFormFields({ ...formFields, [e.target.name]: e.target.value })
     }
+
+    let navigateUser = useNavigate();
     const handleSubmit = async () => {
+        setIsLoading(true)
         let data = {
             clientId: AuthService.getUserid(),
             userId: employee,
@@ -389,8 +396,12 @@ const AddActivityReport = () => {
         }
         try {
             let res = await ActivityService.createActivity(data)
+            setSubmitForm(true)
             if (res.success) {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
+                setIsLoading(false)
+                navigateUser('/activityreport')
+
             } else {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
             }
@@ -503,7 +514,7 @@ const AddActivityReport = () => {
                                             height: "70px",
                                             padding: "0 !important",
                                             borderRadius: "5px",
-                                            backgroundColor: "#d9d9d9",
+                                            backgroundColor: "#AFDEF1",
                                             marginBottom: "10px"
                                         }}>
                                             <ListItem>
@@ -804,7 +815,7 @@ const AddActivityReport = () => {
                                     </Grid>
                                 </Grid>}
                         <Grid container justifyContent="end">
-                            <Button onClick={handleSubmit} variant="contained" >
+                            <Button startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""} onClick={handleSubmit} variant="contained" >
                                 Submit
                             </Button>
                         </Grid>

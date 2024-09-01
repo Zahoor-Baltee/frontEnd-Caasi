@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, IconButton, Dialog, DialogContent, Grid, Menu } from '@mui/material'
+import { Box, Button, IconButton, Dialog, DialogContent, Grid, Menu, TextField, CircularProgress } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem';
 import Typography from "@mui/material/Typography";
 import FormControl from '@mui/material/FormControl';
@@ -92,9 +92,11 @@ const ActivityReport = () => {
     })
     const [isLoading, setIsLoading] = useState(false);
     const [open, setOpen] = React.useState(false);
-    const [age, setAge] = React.useState('');
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openMenu = Boolean(anchorEl);
+    const [isFltShow, setIsFltShow] = useState(false);
+    const [userFields, setUserFields] = useState({})
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -252,10 +254,6 @@ const ActivityReport = () => {
     useEffect(() => {
         getActivityReportList()
     }, [])
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
-
 
     //Get user List
 
@@ -288,6 +286,34 @@ const ActivityReport = () => {
     const handleClose = () => {
         setOpen(false);
     };
+    const handleFilter = () => {
+        setIsFltShow(!isFltShow)
+    }
+    const serchUser = () => {
+        const status = userFields?.status ? userFields.status.toLowerCase() : '';
+        const contact = userFields?.contact ? userFields.contact.toLowerCase() : '';
+        const date = userFields?.date ? userFields.date.toLowerCase() : '';
+        const name = userFields?.name ? userFields.name.toLowerCase() : '';
+
+        const filterData = activity.list.filter((activityItem) => {
+            const activityStatus = activityItem.status ? activityItem.status.toLowerCase() : '';
+            const activityContact = activityItem.contactNumber ? activityItem.contactNumber.toLowerCase() : '';
+            const activityDate = activityItem.dateOfSubmitted ? activityItem.dateOfSubmitted.toLowerCase() : '';
+            const activityName = activityItem.name ? activityItem.name.toLowerCase() : '';
+
+            return (
+                (!status || activityStatus.includes(status)) &&
+                (!contact || activityContact.includes(contact)) &&
+                (!date || activityDate.includes(date)) &&
+                (!name || activityName.includes(name))
+            );
+        });
+
+        setActivity({ ...activity, filterList: filterData });
+    };
+    const handleChange = (e) => {
+        setUserFields({ ...userFields, [e.target.name]: e.target.value });
+    };
     return (
         <Root>
 
@@ -305,24 +331,55 @@ const ActivityReport = () => {
                                 onClick={openAddActivityReport}
                                 variant="contained"
                             >Add Activity Report</Button>
-
-                            <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: "#fff", color: "#F8F8F8" }}>
-                                <Select
-                                    value={age}
-                                    size='small'
-                                    onChange={handleChange}
-                                    displayEmpty
-                                    inputProps={{ 'aria-label': 'Without label' }}
-                                >
-                                    <MenuItem value="">
-                                        <Typography sx={{ color: "#0171BC" }}>filters</Typography>
-                                    </MenuItem>
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
-                                </Select>
-                            </FormControl>
+                            <Button sx={{
+                                marginLeft: "8px",
+                                textTransform: "none"
+                            }} onClick={handleFilter} variant="contained">Filters</Button>
                         </Grid>
+                        {isFltShow ? <Grid container backgroundColor="#fff" justifyContent="space-between" sx={{ borderRadius: "10px" }} p={2} my={2} >
+                            <Grid item xs={5.5} >
+                                <Typography sx={{ textTransform: "none" }}>Status</Typography>
+                                <FormControl fullWidth className='inputField1'>
+                                    <Select
+                                        size='small'
+                                        value={userFields?.status || ''}
+                                        onChange={handleChange}
+                                        name='status'
+                                        displayEmpty
+                                    >
+                                        <MenuItem value=''>Select Status</MenuItem>
+                                        <MenuItem value='active'>Active</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <Typography >Name</Typography>
+                                <TextField
+                                    size='small'
+                                    fullWidth
+                                    className='inputField1'
+                                    variant='outlined'
+                                    onChange={handleChange}
+                                    name='name' />
+                            </Grid>
+                            <Grid item xs={5.5} >
+                                <Typography sx={{ textTransform: "none" }}>Contact</Typography>
+                                <TextField className='inputField1' fullWidth size='small' type='number'
+                                    value={userFields?.contact || ''}
+                                    onChange={handleChange}
+                                    name='contact' />
+                                <Typography sx={{ textTransform: "none" }}>Date</Typography>
+                                <TextField className='inputField1'
+                                    fullWidth size='small' type='date'
+                                    value={userFields?.date || ''}
+                                    onChange={handleChange}
+                                    name='date' />
+                            </Grid>
+                            <Grid item xs={12} mt={2} textAlign="right"  >
+                                <Button startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""} onClick={serchUser} sx={{
+                                    height: "38px",
+                                    textTransform: "none"
+                                }} variant="contained">Search</Button>
+                            </Grid>
+                        </Grid> : ""}
 
                     </Grid>
                     {/* --------------------Header Section Complete--------------- */}
@@ -330,7 +387,7 @@ const ActivityReport = () => {
                         <DataGrid
                             autoHeight
                             minHeight={40}
-                            rows={activity?.list || []}
+                            rows={activity.filterList}
                             columns={columns}
                             getRowId={(e) => e._id}
                             loading={isLoading}

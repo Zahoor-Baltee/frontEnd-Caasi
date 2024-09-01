@@ -122,7 +122,6 @@ const AddUser = () => {
             let res = await UserServices.creatUsers(data)
             if (res.success) {
                 // alert(res.message)
-
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                 setIsLoading(false)
                 setTimeout(() => {
