@@ -365,7 +365,7 @@ const ExpenseList = () => {
                         </Grid> : ""}
 
                     </Grid>
-                    <Box sx={{ height: 800, overflowY: "auto" }}>
+                    <Box sx={{ marginTop: isFltShow ? 0 : "12px", height: isFltShow ? 750 : 1000, overflowY: "auto" }}>
                         <DataGrid
                             autoHeight
                             minHeight={40}
