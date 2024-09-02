@@ -165,7 +165,8 @@ const Root = styled(Grid)(({ theme }) => ({
             },
             "& .icon": {
                 marginRight: "8px",
-                fontWeight: "bold", color: "#2086C5",
+                fontWeight: "bold",
+                color: "#2086C5",
             },
         }
     }
@@ -272,7 +273,6 @@ const AddActivityReport = () => {
         setComments(event.target.value);
     };
     const handleMenuOpen = (event, date, status) => {
-        debugger
         const dates = parseDate(date);
         if (status) {
             handleRemoveEvent(dates, status)
@@ -317,9 +317,40 @@ const AddActivityReport = () => {
     //     }
     // }
 
+    // const handleSelect = (value, type) => {
+    //     setAnchorEl(false);
+    //     isAbsense.current = false;
+    //     if (value && curActivityDate) {
+    //         const date = parseDate(curActivityDate);
+
+    //         // Check if an event for the selected date already exists
+    //         const eventExists = events.some((event) => event.date.toISOString() === date.toISOString());
+
+    //         if (!eventExists) {
+    //             // Add new event if no event exists for the date
+    //             const newEvent = {
+    //                 title: value,
+    //                 workType: value,
+    //                 date: date,
+    //                 dayType: type
+    //             };
+    //             setEvents((prevEvents) => [...prevEvents, newEvent]);
+
+    //             // Update activities as well
+    //             setActivities((prevActivities) =>
+    //                 prevActivities.map(activity =>
+    //                     activity.date === curActivityDate ? { ...activity, status: value, type: type } : activity
+    //                 )
+    //             );
+    //         } else {
+    //             console.log('An event already exists for this date. No new event added.');
+    //         }
+    //     }
+    // };
     const handleSelect = (value, type) => {
         setAnchorEl(false);
         isAbsense.current = false;
+
         if (value && curActivityDate) {
             const date = parseDate(curActivityDate);
 
@@ -332,22 +363,25 @@ const AddActivityReport = () => {
                     title: value,
                     workType: value,
                     date: date,
-                    dayType: type
+                    dayType: type,
                 };
                 setEvents((prevEvents) => [...prevEvents, newEvent]);
-
-                // Update activities as well
-                setActivities((prevActivities) =>
-                    prevActivities.map(activity =>
-                        activity.date === curActivityDate ? { ...activity, status: value, type: type } : activity
-                    )
-                );
             } else {
                 console.log('An event already exists for this date. No new event added.');
             }
+
+            // Update activities by removing only the activity for the current date
+            setActivities((prevActivities) =>
+                prevActivities.map(activity => {
+                    if (activity.date === curActivityDate) {
+                        // Update the status and type of the activity while preserving the date
+                        return { ...activity, status: value, type: type };
+                    }
+                    return activity; // Keep other activities unchanged
+                })
+            );
         }
     };
-
     const handleMenuClose = (value) => {
         isAbsense.current = false
         setAnchorEl(false);
@@ -390,13 +424,13 @@ const AddActivityReport = () => {
         };
 
         events.forEach(event => {
-            if (workingDaysTitles.includes(event.workType.toLowerCase().replace(/\s+/g, '')) && event.dayType === "working day") {
+            if (workingDaysTitles.includes(event.workType.toLowerCase().replace(/\s+/g, '')) && event.dayType === "Working day") {
                 workingDays++;
                 reasons.workingDays[event.workType.toLowerCase().replace(/\s+/g, '')] = (reasons.workingDays[event.workType.toLowerCase().replace(/\s+/g, '')] || 0) + 1;
-            } else if (halfDaysTitles.includes(event.workType.toLowerCase().replace(/\s+/g, '')) && event.dayType === "half day") {
+            } else if (halfDaysTitles.includes(event.workType.toLowerCase().replace(/\s+/g, '')) && event.dayType === "Half day") {
                 halfDays++;
                 reasons.halfDays[event.workType.toLowerCase().replace(/\s+/g, '')] = (reasons.halfDays[event.workType.toLowerCase().replace(/\s+/g, '')] || 0) + 1;
-            } else if (absentDaysTitles.includes(event.workType.toLowerCase().replace(/\s+/g, '')) && event.dayType === "absence day") {
+            } else if (absentDaysTitles.includes(event.workType.toLowerCase().replace(/\s+/g, '')) && event.dayType === "Absence") {
                 absentDays++;
                 reasons.absentDays[event.workType.toLowerCase().replace(/\s+/g, '')] = (reasons.absentDays[event.workType.toLowerCase().replace(/\s+/g, '')] || 0) + 1;
             }
@@ -504,9 +538,9 @@ const AddActivityReport = () => {
                                     let backgroundColor = '#3174ad'; // Default color
 
                                     // Dynamically set color based on event properties
-                                    if (event.dayType === "working day") {
+                                    if (event.dayType === "Working day") {
                                         if (event.workType === 'At office' || event.workType === 'Travel' || event.workType === 'Training' || event.workType === 'Remote Work') backgroundColor = 'green';
-                                    } else if (event.dayType === "absence day") {
+                                    } else if (event.dayType === "Absence") {
                                         if (event.workType === 'Vacation' || event.workType === 'Unpaid Leave' || event.workType === 'Medical Appointment' || event.workType === 'Illness') backgroundColor = 'red';
                                     } else {
                                         if (event.workType === 'Emergency' || event.workType === 'Illness' || event.workType === 'Injured' || event.workType === 'Appointments') backgroundColor = 'orange';
@@ -571,7 +605,7 @@ const AddActivityReport = () => {
                                         <List key={index} sx={{
                                             height: "70px",
                                             padding: "0 !important",
-                                            borderRadius: "5px",
+                                            // borderRadius: "5px",
                                             backgroundColor: "#AFDEF1",
                                             marginBottom: "10px"
                                         }}>
@@ -579,22 +613,22 @@ const AddActivityReport = () => {
                                                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                                                     <Typography style={{ color: "#0075BC" }}>{activity.date}</Typography>
                                                     <Box sx={{ display: "flex", }}>
-                                                        {activity?.type ? <Typography sx={{ display: "flex", alignItems: 'center', color: activity.type === 'working day' ? '#008000' : activity.type === 'absence day' ? '#DC143C' : 'orange', }}>
+                                                        {activity?.type ? <Typography sx={{ display: "flex", alignItems: 'center', color: activity.type === 'Working day' ? '#008000' : activity.type === 'Absence' ? '#DC143C' : 'orange', }}>
                                                             <FiberManualRecordIcon
                                                                 sx={{
                                                                     fontSize: "16px",
                                                                     marginRight: "5px",
-                                                                    color: activity.type === 'working day' ? '#008000' : activity.type === 'absence day' ? '#DC143C' : 'orange',
+                                                                    color: activity.type === 'Working day' ? '#008000' : activity.type === 'Absence' ? '#DC143C' : 'orange',
                                                                 }} />
                                                             {activity.type}
                                                         </Typography> : ""}
-                                                        {activity.status ? <Typography sx={{ display: "flex", alignItems: 'center', color: activity.type === 'working day' ? '#008000' : activity.type === 'absence day' ? '#DC143C' : 'orange', }}>
+                                                        {activity.status ? <Typography sx={{ display: "flex", alignItems: 'center', color: activity.type === 'Working day' ? '#008000' : activity.type === 'Absence' ? '#DC143C' : 'orange', }}>
                                                             <PlayArrowIcon
                                                                 sx={{
                                                                     fontSize: "19px",
                                                                     marginRight: "5px",
                                                                     marginLeft: "5px",
-                                                                    color: activity.type === 'working day' ? '#008000' : activity.type === 'absence day' ? '#DC143C' : 'orange',
+                                                                    color: activity.type === 'Working day' ? '#008000' : activity.type === 'Absence' ? '#DC143C' : 'orange',
                                                                 }} />
                                                             {activity.status}</Typography> :
                                                             <Typography sx={{ color: "#727272" }}>No report added.</Typography>}
@@ -619,7 +653,7 @@ const AddActivityReport = () => {
                                     </Button>
                                     {
 
-                                        isAbsense.current === "working day" ?
+                                        isAbsense.current === "Working day" ?
                                             <Menu
                                                 anchorEl={anchorEl}
                                                 open={Boolean(anchorEl)}
@@ -633,12 +667,12 @@ const AddActivityReport = () => {
                                                     },
                                                 }}
                                             >
-                                                <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleSelect("At office", "working day")}>At office</MenuItem>
-                                                <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleSelect("Remote Work", "working day")}>Remote Work</MenuItem>
-                                                <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleSelect("Training", "working day")}>Training</MenuItem>
-                                                <MenuItem onClick={() => handleSelect("Travel", "working day")}>Travel</MenuItem>
+                                                <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleSelect("At office", "Working day")}>At office</MenuItem>
+                                                <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleSelect("Remote Work", "Working day")}>Remote Work</MenuItem>
+                                                <MenuItem sx={{ borderBottom: "1px solid green" }} onClick={() => handleSelect("Training", "Working day")}>Training</MenuItem>
+                                                <MenuItem onClick={() => handleSelect("Travel", "Working day")}>Travel</MenuItem>
                                             </Menu>
-                                            : isAbsense.current === "absence day" ?
+                                            : isAbsense.current === "Absence" ?
 
                                                 <Menu
                                                     anchorEl={anchorEl}
@@ -653,12 +687,12 @@ const AddActivityReport = () => {
                                                         },
                                                     }}
                                                 >
-                                                    <MenuItem sx={{ borderBottom: "1px solid red" }} onClick={() => handleSelect("Illness", "absence day")}>Illness</MenuItem>
-                                                    <MenuItem sx={{ borderBottom: "1px solid red" }} onClick={() => handleSelect("Medical Appointment", "absence day")}>Medical Apiontment</MenuItem>
-                                                    <MenuItem sx={{ borderBottom: "1px solid red" }} onClick={() => handleSelect("Unpaid Leave", "absence day")}>Unpaid Leave</MenuItem>
-                                                    <MenuItem sx={{ borderBottom: "1px solid red" }} onClick={() => handleSelect("Vacation", "absence day")}>Vacation</MenuItem>
+                                                    <MenuItem sx={{ borderBottom: "1px solid red" }} onClick={() => handleSelect("Illness", "Absence")}>Illness</MenuItem>
+                                                    <MenuItem sx={{ borderBottom: "1px solid red" }} onClick={() => handleSelect("Medical Appointment", "Absence")}>Medical Apiontment</MenuItem>
+                                                    <MenuItem sx={{ borderBottom: "1px solid red" }} onClick={() => handleSelect("Unpaid Leave", "Absence")}>Unpaid Leave</MenuItem>
+                                                    <MenuItem sx={{ borderBottom: "1px solid red" }} onClick={() => handleSelect("Vacation", "Absence")}>Vacation</MenuItem>
                                                 </Menu>
-                                                : isAbsense.current === "half day" ?
+                                                : isAbsense.current === "Half day" ?
 
                                                     <Menu
                                                         anchorEl={anchorEl}
@@ -673,10 +707,10 @@ const AddActivityReport = () => {
                                                             },
                                                         }}
                                                     >
-                                                        <MenuItem sx={{ borderBottom: "1px solid orange" }} onClick={() => handleSelect("Appointments", "half day")}>Appointments</MenuItem>
-                                                        <MenuItem sx={{ borderBottom: "1px solid orange" }} onClick={() => handleSelect("Injured", "half day")}>Injured </MenuItem>
-                                                        <MenuItem sx={{ borderBottom: "1px solid orange" }} onClick={() => handleSelect("Illness", "half day")}>Illness</MenuItem>
-                                                        <MenuItem sx={{ borderBottom: "1px solid orange" }} onClick={() => handleSelect("Emergency", "half day")}>Emergency</MenuItem>
+                                                        <MenuItem sx={{ borderBottom: "1px solid orange" }} onClick={() => handleSelect("Appointments", "Half day")}>Appointments</MenuItem>
+                                                        <MenuItem sx={{ borderBottom: "1px solid orange" }} onClick={() => handleSelect("Injured", "Half day")}>Injured </MenuItem>
+                                                        <MenuItem sx={{ borderBottom: "1px solid orange" }} onClick={() => handleSelect("Illness", "Half day")}>Illness</MenuItem>
+                                                        <MenuItem sx={{ borderBottom: "1px solid orange" }} onClick={() => handleSelect("Emergency", "Half day")}>Emergency</MenuItem>
                                                     </Menu> :
 
                                                     <Menu sx={{ "& .MuiList-root": { backgroundColor: "#AFDEF1" } }}
@@ -691,19 +725,19 @@ const AddActivityReport = () => {
                                                                 m: 1, backgroundColor: "green", borderRadius: "50%", height: "50px", width: "50px", padding: "13px", color: "#fff", fontWeight: 600
                                                             },
                                                             m: 1, backgroundColor: "green", borderRadius: "50%", height: "50px", width: "50px", padding: "13px", color: "#fff", fontWeight: 600
-                                                        }} onClick={(e) => handlepenNew(e, "working day")}>WD</MenuItem>
+                                                        }} onClick={(e) => handlepenNew(e, "Working day")}>WD</MenuItem>
                                                         <MenuItem sx={{
                                                             "&:hover": {
                                                                 m: 1, backgroundColor: "crimson", borderRadius: "50%", height: "50px", width: "50px", padding: "13px", color: "#fff", fontWeight: 600
                                                             },
                                                             m: 1, backgroundColor: "crimson", borderRadius: "50%", height: "50px", width: "50px", padding: "13px", color: "#fff", fontWeight: 600
-                                                        }} onClick={(e) => handlepenNew(e, "absence day")}>AD</MenuItem>
+                                                        }} onClick={(e) => handlepenNew(e, "Absence")}>AD</MenuItem>
                                                         <MenuItem sx={{
                                                             "&:hover": {
                                                                 m: 1, backgroundColor: "orange", borderRadius: "50%", height: "50px", width: "50px", padding: "13px", color: "#fff", fontWeight: 600
                                                             },
                                                             m: 1, backgroundColor: "orange", borderRadius: "50%", height: "50px", width: "50px", padding: "13px", color: "#fff", fontWeight: 600
-                                                        }} onClick={(e) => handlepenNew(e, "half day")}>HD</MenuItem>
+                                                        }} onClick={(e) => handlepenNew(e, "Half day")}>HD</MenuItem>
                                                     </Menu>
                                     }
                                 </Box> :
