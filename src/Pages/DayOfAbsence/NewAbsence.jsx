@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Grid, TextField, Typography, MenuItem, Box, Select } from '@mui/material';
+import { Grid, TextField, Typography, MenuItem, Box, Select, FormControl } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import styled from '@emotion/styled'; // This is correct
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
@@ -37,6 +37,7 @@ const Root = styled(Grid)(({ theme }) => ({
     "& .MuiSvgIcon-root": {
         color: "#fff"
     },
+
     "& .mainContainer": {
         padding: "20px",
         backgroundColor: "#FAFBFC",
@@ -366,6 +367,11 @@ const NewAbsence = () => {
 
         }
     }
+    const [age, setAge] = React.useState('');
+
+    const handleChange = (event) => {
+        setAge(event.target.value);
+    };
     return (
         <Root>
             <Box className="mainContainer">
@@ -452,20 +458,117 @@ const NewAbsence = () => {
                             <Typography sx={{ color: "#52a9e1", fontWeight: "600" }} variant='h5'>Start Date</Typography>
                             <Box className="flexBox">
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="dateBox">
-                                        <Typography fontWeight="600" variant='h5'>28</Typography>
+                                    <Box className="">
+                                        {/* <Typography fontWeight="600" variant='h5'>28</Typography> */}
+                                        <Select
+                                            sx={{
+                                                // backgroundColor: "#52A9E1",
+                                                color: "#52a9e1",
+                                                variant: "h4",
+                                                "& .MuiSvgIcon-root": {
+                                                    display: "none",
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    borderRadius: "10px",
+                                                },
+                                                "& .MuiOutlinedInput-notchedOutline": {
+                                                    border: "4px solid #52a9e1 !important",
+                                                },
+                                                "& .MuiSelect-select": {
+                                                    padding: "15px !important",
+                                                    fontSize: "30px",
+                                                    fontWeight: "600",
+                                                    minHeight: "unset !important",
+                                                },
+                                            }}
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={age}
+                                            label="Age"
+                                            onChange={handleChange}
+                                        >
+                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
+                                                23
+                                            </MenuItem>
+                                            <MenuItem value={20}>34</MenuItem>
+                                            <MenuItem value={30}>1</MenuItem>
+                                        </Select>
                                     </Box>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }}  >DD</Typography>
                                 </Box>
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="dateBox fill">
-                                        <Typography fontWeight="600" variant='h5'>28</Typography>
+                                    <Box className="">
+                                        <Select
+                                            sx={{
+                                                backgroundColor: "#52A9E1",
+                                                color: "#fff",
+                                                variant: "h4",
+                                                "& .MuiSvgIcon-root": {
+                                                    display: "none",
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    borderRadius: "10px",
+                                                },
+                                                "& .MuiOutlinedInput-notchedOutline": {
+                                                    border: "none !important",
+                                                },
+                                                "& .MuiSelect-select": {
+                                                    padding: "15px !important",
+                                                    fontSize: "30px",
+                                                    fontWeight: "600",
+                                                    minHeight: "unset !important",
+                                                },
+                                            }}
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={age}
+                                            label="Age"
+                                            onChange={handleChange}
+                                        >
+                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
+                                                23
+                                            </MenuItem>
+                                            <MenuItem value={20}>34</MenuItem>
+                                            <MenuItem value={30}>1</MenuItem>
+                                        </Select>
                                     </Box>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }}>MM</Typography>
                                 </Box>
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="dateBox">
-                                        <Typography fontWeight="600" variant='h5'>2890</Typography>
+                                    <Box className="">
+                                        <Select
+                                            sx={{
+                                                backgroundColor: "#52A9E1",
+                                                color: "#fff",
+                                                variant: "h4",
+                                                "& .MuiSvgIcon-root": {
+                                                    display: "none",
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    borderRadius: "10px",
+                                                },
+                                                "& .MuiOutlinedInput-notchedOutline": {
+                                                    border: "none !important",
+                                                },
+                                                "& .MuiSelect-select": {
+                                                    padding: "15px !important",
+                                                    fontSize: "30px",
+                                                    fontWeight: "600",
+                                                    minHeight: "unset !important",
+                                                },
+                                            }}
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={age}
+                                            label="Age"
+                                            onChange={handleChange}
+                                        >
+                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
+                                                23
+                                            </MenuItem>
+                                            <MenuItem value={20}>34</MenuItem>
+                                            <MenuItem value={30}>1</MenuItem>
+                                        </Select>
                                     </Box>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }} >YYYY</Typography>
                                 </Box>
@@ -475,20 +578,116 @@ const NewAbsence = () => {
                             <Typography sx={{ color: "#52a9e1", fontWeight: "600" }} fontWeight="600" variant='h5'>End Date</Typography>
                             <Box className="flexBox">
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="dateBox">
-                                        <Typography fontWeight="600" variant='h5'>28</Typography>
+                                    <Box className="">
+                                        <Select
+                                            sx={{
+                                                backgroundColor: "#52A9E1",
+                                                color: "#fff",
+                                                variant: "h4",
+                                                "& .MuiSvgIcon-root": {
+                                                    display: "none",
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    borderRadius: "10px",
+                                                },
+                                                "& .MuiOutlinedInput-notchedOutline": {
+                                                    border: "none !important",
+                                                },
+                                                "& .MuiSelect-select": {
+                                                    padding: "15px !important",
+                                                    fontSize: "30px",
+                                                    fontWeight: "600",
+                                                    minHeight: "unset !important",
+                                                },
+                                            }}
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={age}
+                                            label="Age"
+                                            onChange={handleChange}
+                                        >
+                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
+                                                23
+                                            </MenuItem>
+                                            <MenuItem value={20}>34</MenuItem>
+                                            <MenuItem value={30}>1</MenuItem>
+                                        </Select>
                                     </Box>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }} >DD</Typography>
                                 </Box>
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="dateBox fill">
-                                        <Typography fontWeight="600" variant='h5'>28</Typography>
+                                    <Box className="">
+                                        <Select
+                                            sx={{
+                                                backgroundColor: "#52A9E1",
+                                                color: "#fff",
+                                                variant: "h4",
+                                                "& .MuiSvgIcon-root": {
+                                                    display: "none",
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    borderRadius: "10px",
+                                                },
+                                                "& .MuiOutlinedInput-notchedOutline": {
+                                                    border: "none !important",
+                                                },
+                                                "& .MuiSelect-select": {
+                                                    padding: "15px !important",
+                                                    fontSize: "30px",
+                                                    fontWeight: "600",
+                                                    minHeight: "unset !important",
+                                                },
+                                            }}
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={age}
+                                            label="Age"
+                                            onChange={handleChange}
+                                        >
+                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
+                                                23
+                                            </MenuItem>
+                                            <MenuItem value={20}>34</MenuItem>
+                                            <MenuItem value={30}>1</MenuItem>
+                                        </Select>
                                     </Box>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }} >MM</Typography>
                                 </Box>
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="dateBox">
-                                        <Typography fontWeight="600" variant='h5'>2890</Typography>
+                                    <Box className="">
+                                        <Select
+                                            sx={{
+                                                backgroundColor: "#52A9E1",
+                                                color: "#fff",
+                                                variant: "h4",
+                                                "& .MuiSvgIcon-root": {
+                                                    display: "none",
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    borderRadius: "10px",
+                                                },
+                                                "& .MuiOutlinedInput-notchedOutline": {
+                                                    border: "none !important",
+                                                },
+                                                "& .MuiSelect-select": {
+                                                    padding: "15px !important",
+                                                    fontSize: "30px",
+                                                    fontWeight: "600",
+                                                    minHeight: "unset !important",
+                                                },
+                                            }}
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={age}
+                                            label="Age"
+                                            onChange={handleChange}
+                                        >
+                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
+                                                23
+                                            </MenuItem>
+                                            <MenuItem value={20}>34</MenuItem>
+                                            <MenuItem value={30}>1</MenuItem>
+                                        </Select>
                                     </Box>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }} >YYYY</Typography>
                                 </Box>
