@@ -469,7 +469,7 @@ const NewAbsence = () => {
                                                     display: "none",
                                                 },
                                                 "& .MuiOutlinedInput-root": {
-                                                    borderRadius: "10px",
+                                                    borderRadius: "10px", // Apply the border radius to the input root
                                                 },
                                                 "& .MuiOutlinedInput-notchedOutline": {
                                                     border: "4px solid #52a9e1 !important",
@@ -481,10 +481,7 @@ const NewAbsence = () => {
                                                     minHeight: "unset !important",
                                                 },
                                             }}
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
                                             value={age}
-                                            label="Age"
                                             onChange={handleChange}
                                         >
                                             <MenuItem sx={{ paddingRight: "0px" }} value={10}>
@@ -519,10 +516,8 @@ const NewAbsence = () => {
                                                     minHeight: "unset !important",
                                                 },
                                             }}
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
+
                                             value={age}
-                                            label="Age"
                                             onChange={handleChange}
                                         >
                                             <MenuItem sx={{ paddingRight: "0px" }} value={10}>
@@ -557,10 +552,8 @@ const NewAbsence = () => {
                                                     minHeight: "unset !important",
                                                 },
                                             }}
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
+
                                             value={age}
-                                            label="Age"
                                             onChange={handleChange}
                                         >
                                             <MenuItem sx={{ paddingRight: "0px" }} value={10}>
@@ -600,10 +593,8 @@ const NewAbsence = () => {
                                                     minHeight: "unset !important",
                                                 },
                                             }}
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
+
                                             value={age}
-                                            label="Age"
                                             onChange={handleChange}
                                         >
                                             <MenuItem sx={{ paddingRight: "0px" }} value={10}>
@@ -638,10 +629,8 @@ const NewAbsence = () => {
                                                     minHeight: "unset !important",
                                                 },
                                             }}
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
+
                                             value={age}
-                                            label="Age"
                                             onChange={handleChange}
                                         >
                                             <MenuItem sx={{ paddingRight: "0px" }} value={10}>
@@ -676,10 +665,8 @@ const NewAbsence = () => {
                                                     minHeight: "unset !important",
                                                 },
                                             }}
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
+
                                             value={age}
-                                            label="Age"
                                             onChange={handleChange}
                                         >
                                             <MenuItem sx={{ paddingRight: "0px" }} value={10}>
