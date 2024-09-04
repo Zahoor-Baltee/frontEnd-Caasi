@@ -175,6 +175,8 @@ const ExpenseReportForm = ({ open, setOpen }) => {
                         },
                     }}
                     displayEmpty
+                    MenuProps={{ PaperProps: { sx: { maxHeight: 260 } } }}
+
                     onChange={handleChange}
                 >
                     <MenuItem value="">Select User</MenuItem>

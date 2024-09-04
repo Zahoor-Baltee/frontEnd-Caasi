@@ -80,6 +80,7 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                     onChange={handleEmployeeChange}
                     variant="outlined"
                     margin="dense"
+                    MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
                     sx={{ mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", marginRight: "0px !important", "& .MuiSelect-select": { display: "flex", alignItems: "center", gap: 1 }, height: "50px" }}
                 >
                     <MenuItem sx={{ display: "flex", alignItems: "center", gap: 2 }} value="">

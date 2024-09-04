@@ -156,24 +156,11 @@ const ActivityReport = () => {
             headerName: 'Status',
             // width: 200,
             flex: 1,
-            // renderCell: (params) => (
-            //     <Typography></Typography>
-            //     // <Box sx={{ display: "flex", alignItems: "center" }}>
-            //     //     <Button sx={{
-            //     //         backgroundColor: params.value === "Pending" ? "#FEFFE5" : params.value === "Approved" ? "#f0fff8" : "#fff0f0",
-            //     //         textTransform: "none",
-            //     //         fontWeight: "bold",
-            //     //         color: params.value === "Pending" ? "#FFBC10" : params.value === "Approved" ? "#18ab56" : "#eb5757",
-            //     //         height: "40px",
-            //     //         width: "100px",
-            //     //         borderRadius: "5px",
-            //     //         border: params.value === "Pending" ? "1px solid #FFBC10" : params.value === "Approved" ? "1px solid #18ab56" : "1px solid #eb5757",
-
-            //     //     }}>
-            //     //         {params.value}
-            //     //     </Button>
-            //     // </Box>
-            // )
+            renderCell: (params) => (
+                <Typography sx={{}}>
+                    {params.value}
+                </Typography>
+            )
         },
         {
             field: 'userId',

@@ -37,7 +37,6 @@ const Root = styled(Grid)(({ theme }) => ({
     "& .MuiSvgIcon-root": {
         color: "#fff"
     },
-
     "& .mainContainer": {
         padding: "20px",
         backgroundColor: "#FAFBFC",
@@ -127,23 +126,26 @@ const Root = styled(Grid)(({ theme }) => ({
 
 const NewAbsence = () => {
     const [comments, setComments] = useState('');
-    const [anchorEl, setAnchorEl] = useState(false);
     const [selectedMonth, setSelectedMonth] = useState('');
     const [employee, setEmployee] = useState('');
     const [date, setDate] = useState();
     const [events, setEvents] = useState([]);
-    const [visibleItems, setVisibleItems] = useState(10);
-    const [curActivityDate, setCurActivityDate] = useState('')
-    const [isSaved, setIsSaved] = useState(false)
-    const [submitForm, setSubmitForm] = useState(false)
     const [formFields, setFormFields] = useState({})
     const [selectedUser, setSelectedUser] = useState({})
-    const [activityCount, setActivityCount] = useState({})
+    const [selectedMonthForDays, setSelectedMonthForDays] = useState((new Date().getMonth() + 1).toString().padStart(2, '0')); // Default to January
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [selectedDays, setSelectedDays] = useState((new Date().getDate()).toString().padStart(2, '0'));
+    const [selectedMonthForDaysE, setSelectedMonthForDaysE] = useState((new Date().getMonth() + 1).toString().padStart(2, '0')); // Default to January
+    const [selectedYearE, setSelectedYearE] = useState(new Date().getFullYear());
+    const [selectedDaysE, setSelectedDaysE] = useState((new Date().getDate()).toString().padStart(2, '0'));
+    const [daysInMonth, setDaysInMonth] = useState([]);
+
     const [alert, setAlert] = useState({
         alertColor: "primary",
         alertMessage: "",
         isAlertOpen: false,
     });
+    const months = ['01', "02", '03', "04", '05', "06", '07', "08", '09', "10", '11', "12"]
     const [isLoading, setIsLoading] = useState(false);
     const isAbsense = useRef(false)
     const label = () => {
@@ -154,6 +156,7 @@ const NewAbsence = () => {
         }
     };
     const [activities, setActivities] = useState([]);
+    const [yearList, setYearList] = useState([]);
     const [userList, setUserList] = useState([])
 
     useEffect(() => {
@@ -175,6 +178,13 @@ const NewAbsence = () => {
 
         setSelectedMonth(`${currentYear}-${currentMonth}`);
     }, [])
+
+    // Update days when month or year changes
+    useEffect(() => {
+        const days = calculateDaysInMonth(selectedMonthForDays, selectedYear);
+        setDaysInMonth(days);
+        setYearList(generateNext10Years())
+    }, [selectedMonthForDays, selectedYear]);
     React.useEffect(() => {
         if (selectedMonth) {
             setDate(startOfMonth(parseISO(selectedMonth)));
@@ -218,22 +228,43 @@ const NewAbsence = () => {
             ])
         }
     }, [date])
-    const handleShowMore = () => {
-        setVisibleItems((prev) => prev + 10)
+    // Function to calculate days in a month
+    const calculateDaysInMonth = (month, year) => {
+        const days = new Date(year, month, 0).getDate(); // Gets the number of days in the given month and year
+        return Array.from({ length: days }, (_, i) => (i + 1).toString().padStart(2, "0")); // Creates an array from 1 to 'days'
     };
+    const generateNext10Years = () => {
+        const currentYear = new Date().getFullYear(); // Get the current year
+        const years = Array.from({ length: 10 }, (_, i) => currentYear + i); // Generate an array of the next 10 years
+        return years;
+    };
+
+    const calculateDaysBetweenDates = (startDateStr, endDateStr) => {
+        // Convert date strings to Date objects (assuming format is DD-MM-YYYY)
+        const [selectedDays, selectedMonthForDays, selectedYear] = startDateStr.split("-").map(Number);
+        const [selectedDaysE, selectedMonthForDaysE, selectedYearE] = endDateStr.split("-").map(Number);
+
+        // Create Date objects
+        const startDate = new Date(selectedYear, selectedMonthForDays - 1, selectedDays); // Months are 0-indexed
+        const endDate = new Date(selectedYearE, selectedMonthForDaysE - 1, selectedDaysE);
+
+        // Calculate the difference in milliseconds
+        const diffInMilliseconds = endDate - startDate;
+
+        // Convert milliseconds to days
+        const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+
+        return diffInDays;
+    };
+
+    const startDate = `${selectedDays}-${selectedMonthForDays}-${selectedYear}`; // Declare your start date
+    const endDate = `${selectedDaysE}-${selectedMonthForDaysE}-${selectedYearE}`;   // Declare your end date
+    const numberOfDays = calculateDaysBetweenDates(startDate, endDate);
+
+
     const handleCommentsChange = (event) => {
         setComments(event.target.value);
     };
-    const handleMenuOpen = (event, date, status) => {
-        setCurActivityDate(date)
-        setAnchorEl(event.currentTarget);
-    };
-    const handlepenNew = (event, PopName,) => {
-        isAbsense.current = PopName
-        setAnchorEl(event.currentTarget);
-    };
-
-
 
     // Date Formate
     const parseDate = (dateStr) => {
@@ -243,31 +274,6 @@ const NewAbsence = () => {
             July: 6, August: 7, September: 8, October: 9, November: 10, December: 11
         };
         return new Date(year, months[month], day);
-    };
-    const handleSelect = (value, type) => {
-        setAnchorEl(false);
-        isAbsense.current = false
-        if (value && curActivityDate) {
-            const date = parseDate(curActivityDate);
-            setActivities((prevActivities) =>
-                prevActivities.map(activity =>
-                    activity.date === curActivityDate ? { ...activity, status: value, type: type } : activity
-                )
-            );
-            const newEvent = {
-                title: value,
-                workType: value,
-                date: date,
-                dayType: type
-            };
-            setEvents((prevEvents) => [...prevEvents, newEvent]);
-        }
-    }
-
-    const handleMenuClose = (value) => {
-        isAbsense.current = false
-        setAnchorEl(false);
-
     };
 
     const handleMonthChange = (newMonth) => {
@@ -283,95 +289,8 @@ const NewAbsence = () => {
         }
     };
 
-
-    const handleSaveInfo = () => {
-        setIsSaved(true)
-        let counts = calculateDays(events)
-        console.log(counts)
-        setActivityCount(counts)
-    }
-
-    const calculateDays = (events) => {
-        const workingDaysTitles = ["remotework", "travel", "atoffice", "training"];
-        const halfDaysTitles = ["appointments", "injured", "illness", "emergency"];
-        const absentDaysTitles = ["illness", "medicalappointment", "unpaidleave", "vacation"];
-
-        let workingDays = 0;
-        let halfDays = 0;
-        let absentDays = 0;
-
-        let reasons = {
-            workingDays: {},
-            halfDays: {},
-            absentDays: {},
-        };
-
-        events.forEach(event => {
-            if (workingDaysTitles.includes(event.workType.toLowerCase().replace(/\s+/g, '')) && event.dayType === "working day") {
-                workingDays++;
-                reasons.workingDays[event.workType.toLowerCase().replace(/\s+/g, '')] = (reasons.workingDays[event.workType.toLowerCase().replace(/\s+/g, '')] || 0) + 1;
-            } else if (halfDaysTitles.includes(event.workType.toLowerCase().replace(/\s+/g, '')) && event.dayType === "half day") {
-                halfDays++;
-                reasons.halfDays[event.workType.toLowerCase().replace(/\s+/g, '')] = (reasons.halfDays[event.workType.toLowerCase().replace(/\s+/g, '')] || 0) + 1;
-            } else if (absentDaysTitles.includes(event.workType.toLowerCase().replace(/\s+/g, '')) && event.dayType === "absence day") {
-                absentDays++;
-                reasons.absentDays[event.workType.toLowerCase().replace(/\s+/g, '')] = (reasons.absentDays[event.workType.toLowerCase().replace(/\s+/g, '')] || 0) + 1;
-            }
-        });
-
-        return {
-            workingDays,
-            halfDays,
-            absentDays,
-            reasons,
-        };
-    };
-    const handleChangeUser = (e) => {
-        setFormFields({ ...formFields, [e.target.name]: e.target.value })
-    }
-
     let navigateUser = useNavigate();
-    const handleSubmit = async () => {
-        setIsLoading(true)
 
-        let data = {
-            clientId: AuthService.getUserid(),
-            userId: employee,
-            dateOfSubmitted: formFields.dateOfSubmission,
-            name: selectedUser.firstName,
-            surname: selectedUser.lastName,
-            email: selectedUser.email,
-            contactNumber: selectedUser.phoneNumber,
-            status: "active",
-            selectMonthDropdowns: [selectedMonth],
-            comments: comments,
-            attachments: '',
-            days: events,
-        }
-        try {
-            let res = await ActivityService.createActivity(data)
-            setSubmitForm(true)
-            if (res.success) {
-                setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
-                setIsLoading(false)
-                navigateUser('/activityreport')
-
-            } else {
-                setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
-                setIsLoading(false)
-
-            }
-        } catch (error) {
-            console.log(error)
-            setIsLoading(false)
-
-        }
-    }
-    const [age, setAge] = React.useState('');
-
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
     return (
         <Root>
             <Box className="mainContainer">
@@ -458,111 +377,132 @@ const NewAbsence = () => {
                             <Typography sx={{ color: "#52a9e1", fontWeight: "600" }} variant='h5'>Start Date</Typography>
                             <Box className="flexBox">
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="">
-                                        {/* <Typography fontWeight="600" variant='h5'>28</Typography> */}
-                                        <Select
-                                            sx={{
-                                                // backgroundColor: "#52A9E1",
-                                                color: "#52a9e1",
-                                                variant: "h4",
-                                                "& .MuiSvgIcon-root": {
-                                                    display: "none",
-                                                },
-                                                "& .MuiOutlinedInput-root": {
-                                                    borderRadius: "10px", // Apply the border radius to the input root
-                                                },
-                                                "& .MuiOutlinedInput-notchedOutline": {
-                                                    border: "4px solid #52a9e1 !important",
-                                                },
-                                                "& .MuiSelect-select": {
-                                                    padding: "15px !important",
-                                                    fontSize: "30px",
-                                                    fontWeight: "600",
-                                                    minHeight: "unset !important",
-                                                },
-                                            }}
-                                            value={age}
-                                            onChange={handleChange}
-                                        >
-                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
-                                                23
-                                            </MenuItem>
-                                            <MenuItem value={20}>34</MenuItem>
-                                            <MenuItem value={30}>1</MenuItem>
-                                        </Select>
-                                    </Box>
+                                    <Select
+                                        sx={{
+                                            // backgroundColor: "#52A9E1",
+                                            color: "#52a9e1",
+                                            variant: "h4",
+                                            "& .MuiSvgIcon-root": {
+                                                display: "none",
+                                            },
+                                            "& .MuiOutlinedInput-root": {
+                                                borderRadius: "10px", // Apply the border radius to the input root
+                                            },
+                                            "& .MuiOutlinedInput-notchedOutline": {
+                                                border: "4px solid #52a9e1 !important",
+                                            },
+                                            "& .MuiSelect-select": {
+                                                padding: "15px !important",
+                                                fontSize: "30px",
+                                                fontWeight: "600",
+                                                minHeight: "unset !important",
+                                            },
+                                        }}
+                                        MenuProps={{
+                                            PaperProps: {
+                                                sx: {
+                                                    maxHeight: 250,
+                                                    textAlign: "center",
+                                                    '&::-webkit-scrollbar': {
+                                                        display: 'none', // Hide the scrollbar
+                                                    },
+                                                    overflowY: 'auto' // Prevent scrolling
+                                                }
+                                            }
+                                        }}
+                                        value={selectedDays}
+                                        onChange={(e) => { setSelectedDays(e.target.value) }}                                        >
+                                        {daysInMonth.map((el, index) => (
+                                            <MenuItem sx={{ "& .MuiButtonBase-root": { justifyContent: "center" } }} key={index} value={el}>{el}</MenuItem>
+                                        ))}
+                                    </Select>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }}  >DD</Typography>
                                 </Box>
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="">
-                                        <Select
-                                            sx={{
-                                                backgroundColor: "#52A9E1",
-                                                color: "#fff",
-                                                variant: "h4",
-                                                "& .MuiSvgIcon-root": {
-                                                    display: "none",
-                                                },
-                                                "& .MuiOutlinedInput-root": {
-                                                    borderRadius: "10px",
-                                                },
-                                                "& .MuiOutlinedInput-notchedOutline": {
-                                                    border: "none !important",
-                                                },
-                                                "& .MuiSelect-select": {
-                                                    padding: "15px !important",
-                                                    fontSize: "30px",
-                                                    fontWeight: "600",
-                                                    minHeight: "unset !important",
-                                                },
-                                            }}
+                                    <Select
+                                        sx={{
+                                            backgroundColor: "#52A9E1",
+                                            color: "#fff",
+                                            variant: "h4",
+                                            "& .MuiSvgIcon-root": {
+                                                display: "none",
+                                            },
+                                            "& .MuiOutlinedInput-root": {
+                                                borderRadius: "10px",
+                                            },
+                                            "& .MuiOutlinedInput-notchedOutline": {
+                                                border: "none !important",
+                                            },
+                                            "& .MuiSelect-select": {
+                                                padding: "15px !important",
+                                                fontSize: "30px",
+                                                fontWeight: "600",
+                                                minHeight: "unset !important",
+                                            },
+                                        }}
+                                        MenuProps={{
+                                            PaperProps: {
+                                                sx: {
+                                                    maxHeight: 250,
+                                                    textAlign: "center",
+                                                    '&::-webkit-scrollbar': {
+                                                        display: 'none', // Hide the scrollbar
+                                                    },
+                                                    overflowY: 'auto' // Prevent scrolling
+                                                }
+                                            }
+                                        }}
+                                        value={selectedMonthForDays}
+                                        onChange={(e) => { setSelectedMonthForDays(e.target.value) }}
+                                    >
 
-                                            value={age}
-                                            onChange={handleChange}
-                                        >
-                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
-                                                23
-                                            </MenuItem>
-                                            <MenuItem value={20}>34</MenuItem>
-                                            <MenuItem value={30}>1</MenuItem>
-                                        </Select>
-                                    </Box>
+                                        {months.map((el, index) => (
+                                            <MenuItem key={index} value={el}>{el}</MenuItem>
+                                        ))}
+                                    </Select>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }}>MM</Typography>
                                 </Box>
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="">
-                                        <Select
-                                            sx={{
-                                                backgroundColor: "#52A9E1",
-                                                color: "#fff",
-                                                variant: "h4",
-                                                "& .MuiSvgIcon-root": {
-                                                    display: "none",
-                                                },
-                                                "& .MuiOutlinedInput-root": {
-                                                    borderRadius: "10px",
-                                                },
-                                                "& .MuiOutlinedInput-notchedOutline": {
-                                                    border: "none !important",
-                                                },
-                                                "& .MuiSelect-select": {
-                                                    padding: "15px !important",
-                                                    fontSize: "30px",
-                                                    fontWeight: "600",
-                                                    minHeight: "unset !important",
-                                                },
-                                            }}
+                                    <Select
+                                        sx={{
+                                            color: "#52a9e1",
+                                            variant: "h4",
+                                            "& .MuiSvgIcon-root": {
+                                                display: "none",
+                                            },
+                                            "& .MuiOutlinedInput-root": {
+                                                borderRadius: "10px",
+                                            },
+                                            "& .MuiOutlinedInput-notchedOutline": {
+                                                border: "4px solid #52a9e1 !important",
+                                            },
+                                            "& .MuiSelect-select": {
+                                                padding: "15px !important",
+                                                fontSize: "30px",
+                                                fontWeight: "600",
+                                                minHeight: "unset !important",
+                                            },
+                                        }}
+                                        MenuProps={{
+                                            PaperProps: {
+                                                sx: {
+                                                    maxHeight: 250,
+                                                    textAlign: "center",
+                                                    '&::-webkit-scrollbar': {
+                                                        display: 'none', // Hide the scrollbar
+                                                    },
+                                                    overflowY: 'auto' // Prevent scrolling
+                                                }
+                                            }
+                                        }}
+                                        value={selectedYear}
+                                        onChange={(e) => { setSelectedYear(e.target.value) }}
+                                    >
 
-                                            value={age}
-                                            onChange={handleChange}
-                                        >
-                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
-                                                23
-                                            </MenuItem>
-                                            <MenuItem value={20}>34</MenuItem>
-                                            <MenuItem value={30}>1</MenuItem>
-                                        </Select>
-                                    </Box>
+                                        {yearList.map((el, index) => (
+                                            <MenuItem key={index} value={el}>{el}</MenuItem>
+                                        ))}
+                                    </Select>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }} >YYYY</Typography>
                                 </Box>
                             </Box>
@@ -571,111 +511,132 @@ const NewAbsence = () => {
                             <Typography sx={{ color: "#52a9e1", fontWeight: "600" }} fontWeight="600" variant='h5'>End Date</Typography>
                             <Box className="flexBox">
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="">
-                                        <Select
-                                            sx={{
-                                                backgroundColor: "#52A9E1",
-                                                color: "#fff",
-                                                variant: "h4",
-                                                "& .MuiSvgIcon-root": {
-                                                    display: "none",
-                                                },
-                                                "& .MuiOutlinedInput-root": {
-                                                    borderRadius: "10px",
-                                                },
-                                                "& .MuiOutlinedInput-notchedOutline": {
-                                                    border: "none !important",
-                                                },
-                                                "& .MuiSelect-select": {
-                                                    padding: "15px !important",
-                                                    fontSize: "30px",
-                                                    fontWeight: "600",
-                                                    minHeight: "unset !important",
-                                                },
-                                            }}
+                                    <Select
+                                        sx={{
+                                            color: "#52A9E1",
+                                            variant: "h4",
+                                            "& .MuiSvgIcon-root": {
+                                                display: "none",
+                                            },
+                                            "& .MuiOutlinedInput-root": {
+                                                borderRadius: "10px",
+                                            },
+                                            "& .MuiOutlinedInput-notchedOutline": {
+                                                border: "4px solid #52a9e1 !important",
+                                            },
+                                            "& .MuiSelect-select": {
+                                                padding: "15px !important",
+                                                fontSize: "30px",
+                                                fontWeight: "600",
+                                                minHeight: "unset !important",
+                                            },
 
-                                            value={age}
-                                            onChange={handleChange}
-                                        >
-                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
-                                                23
-                                            </MenuItem>
-                                            <MenuItem value={20}>34</MenuItem>
-                                            <MenuItem value={30}>1</MenuItem>
-                                        </Select>
-                                    </Box>
+                                        }}
+                                        MenuProps={{
+                                            PaperProps: {
+                                                sx: {
+                                                    maxHeight: 250,
+                                                    textAlign: "center",
+                                                    '&::-webkit-scrollbar': {
+                                                        display: 'none', // Hide the scrollbar
+                                                    },
+                                                    overflowY: 'auto' // Prevent scrolling
+                                                }
+                                            }
+                                        }}
+                                        value={selectedDaysE}
+                                        onChange={(e) => { setSelectedDaysE(e.target.value) }}
+                                    >
+                                        {daysInMonth.map((el, index) => (
+                                            <MenuItem key={index} value={el}>{el}</MenuItem>
+                                        ))}
+                                    </Select>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }} >DD</Typography>
                                 </Box>
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="">
-                                        <Select
-                                            sx={{
-                                                backgroundColor: "#52A9E1",
-                                                color: "#fff",
-                                                variant: "h4",
-                                                "& .MuiSvgIcon-root": {
-                                                    display: "none",
-                                                },
-                                                "& .MuiOutlinedInput-root": {
-                                                    borderRadius: "10px",
-                                                },
-                                                "& .MuiOutlinedInput-notchedOutline": {
-                                                    border: "none !important",
-                                                },
-                                                "& .MuiSelect-select": {
-                                                    padding: "15px !important",
-                                                    fontSize: "30px",
-                                                    fontWeight: "600",
-                                                    minHeight: "unset !important",
-                                                },
-                                            }}
+                                    <Select
+                                        sx={{
+                                            backgroundColor: "#52A9E1",
+                                            color: "#fff",
+                                            variant: "h4",
+                                            "& .MuiSvgIcon-root": {
+                                                display: "none",
+                                            },
+                                            "& .MuiOutlinedInput-root": {
+                                                borderRadius: "10px",
+                                            },
+                                            "& .MuiOutlinedInput-notchedOutline": {
+                                                border: "none !important",
+                                            },
+                                            "& .MuiSelect-select": {
+                                                padding: "15px !important",
+                                                fontSize: "30px",
+                                                fontWeight: "600",
+                                                minHeight: "unset !important",
+                                            },
+                                        }}
+                                        MenuProps={{
+                                            PaperProps: {
+                                                sx: {
+                                                    maxHeight: 250,
+                                                    textAlign: "center",
+                                                    '&::-webkit-scrollbar': {
+                                                        display: 'none', // Hide the scrollbar
+                                                    },
+                                                    overflowY: 'auto' // Prevent scrolling
+                                                }
+                                            }
+                                        }}
+                                        value={selectedMonthForDaysE}
+                                        onChange={(e) => { setSelectedMonthForDaysE(e.target.value) }}
+                                    >
 
-                                            value={age}
-                                            onChange={handleChange}
-                                        >
-                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
-                                                23
-                                            </MenuItem>
-                                            <MenuItem value={20}>34</MenuItem>
-                                            <MenuItem value={30}>1</MenuItem>
-                                        </Select>
-                                    </Box>
+                                        {months.map((el, index) => (
+                                            <MenuItem key={index} value={el}>{el}</MenuItem>
+                                        ))}
+                                    </Select>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }} >MM</Typography>
                                 </Box>
                                 <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                                    <Box className="">
-                                        <Select
-                                            sx={{
-                                                backgroundColor: "#52A9E1",
-                                                color: "#fff",
-                                                variant: "h4",
-                                                "& .MuiSvgIcon-root": {
-                                                    display: "none",
-                                                },
-                                                "& .MuiOutlinedInput-root": {
-                                                    borderRadius: "10px",
-                                                },
-                                                "& .MuiOutlinedInput-notchedOutline": {
-                                                    border: "none !important",
-                                                },
-                                                "& .MuiSelect-select": {
-                                                    padding: "15px !important",
-                                                    fontSize: "30px",
-                                                    fontWeight: "600",
-                                                    minHeight: "unset !important",
-                                                },
-                                            }}
-
-                                            value={age}
-                                            onChange={handleChange}
-                                        >
-                                            <MenuItem sx={{ paddingRight: "0px" }} value={10}>
-                                                23
-                                            </MenuItem>
-                                            <MenuItem value={20}>34</MenuItem>
-                                            <MenuItem value={30}>1</MenuItem>
-                                        </Select>
-                                    </Box>
+                                    <Select
+                                        sx={{
+                                            color: "#52A9E1",
+                                            variant: "h4",
+                                            "& .MuiSvgIcon-root": {
+                                                display: "none",
+                                            },
+                                            "& .MuiOutlinedInput-root": {
+                                                borderRadius: "10px",
+                                            },
+                                            "& .MuiOutlinedInput-notchedOutline": {
+                                                border: "4px solid #52a9e1 !important",
+                                            },
+                                            "& .MuiSelect-select": {
+                                                padding: "15px !important",
+                                                fontSize: "30px",
+                                                fontWeight: "600",
+                                                minHeight: "unset !important",
+                                            },
+                                        }}
+                                        MenuProps={{
+                                            PaperProps: {
+                                                sx: {
+                                                    maxHeight: 250,
+                                                    textAlign: "center",
+                                                    '&::-webkit-scrollbar': {
+                                                        display: 'none', // Hide the scrollbar
+                                                    },
+                                                    overflowY: 'auto', // Prevent scrolling
+                                                }
+                                            },
+                                        }}
+                                        value={selectedYearE}
+                                        onChange={(e) => { setSelectedYearE(e.target.value) }}
+                                    >
+                                        {yearList.map((el, index) => (
+                                            <MenuItem key={index} value={el}>{el}</MenuItem>
+                                        ))}
+                                    </Select>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }} >YYYY</Typography>
                                 </Box>
                             </Box>
@@ -686,13 +647,13 @@ const NewAbsence = () => {
                             }} fontWeight="600" variant='h5'>Total Days</Typography>
                             < Box className="flexBox" >
                                 <Box>
-                                    <Box style={{ borderRadius: "10px", backgroundColor: "#ACD9F2", padding: "5px 10px", }}>
+                                    <Box style={{ borderRadius: "10px", backgroundColor: "#CFE9F7", padding: "5px 10px", }}>
                                         <MdOutlineCalendarMonth style={{ fontSize: "35px", color: "#088ADD" }} />
                                     </Box>
                                 </Box>
                                 <Box>
-                                    <Box style={{ borderRadius: "10px", backgroundColor: "#ACD9F2", padding: "10px 16px", }}>
-                                        <Typography fontWeight="600" variant='h5'>28</Typography>
+                                    <Box style={{ borderRadius: "10px", backgroundColor: "#CFE9F7", color: '#fff', padding: "10px 16px", }}>
+                                        <Typography sx={{}} fontWeight="600" variant='h5'>{numberOfDays}</Typography>
                                     </Box>
                                 </Box>
 
