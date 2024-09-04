@@ -139,6 +139,8 @@ const NewAbsence = () => {
     const [selectedYearE, setSelectedYearE] = useState(new Date().getFullYear());
     const [selectedDaysE, setSelectedDaysE] = useState((new Date().getDate()).toString().padStart(2, '0'));
     const [daysInMonth, setDaysInMonth] = useState([]);
+    const [numberOfDays, setNumberOfDays] = useState([]);
+
 
     const [alert, setAlert] = useState({
         alertColor: "primary",
@@ -228,6 +230,12 @@ const NewAbsence = () => {
             ])
         }
     }, [date])
+    useEffect(() => {
+        const startDate = `${selectedDays}-${selectedMonthForDays}-${selectedYear}`; // Declare your start date
+        const endDate = `${selectedDaysE}-${selectedMonthForDaysE}-${selectedYearE}`;   // Declare your end date
+        const resnumberOfDays = calculateDaysBetweenDates(startDate, endDate);
+        setNumberOfDays(resnumberOfDays);
+    }, [selectedDays, selectedYear, selectedMonthForDays, selectedDaysE, selectedYearE, selectedMonthForDaysE])
     // Function to calculate days in a month
     const calculateDaysInMonth = (month, year) => {
         const days = new Date(year, month, 0).getDate(); // Gets the number of days in the given month and year
@@ -247,7 +255,10 @@ const NewAbsence = () => {
         // Create Date objects
         const startDate = new Date(selectedYear, selectedMonthForDays - 1, selectedDays); // Months are 0-indexed
         const endDate = new Date(selectedYearE, selectedMonthForDaysE - 1, selectedDaysE);
-
+        debugger
+        if (startDate > endDate) {
+            return 0
+        }
         // Calculate the difference in milliseconds
         const diffInMilliseconds = endDate - startDate;
 
@@ -257,9 +268,8 @@ const NewAbsence = () => {
         return diffInDays;
     };
 
-    const startDate = `${selectedDays}-${selectedMonthForDays}-${selectedYear}`; // Declare your start date
-    const endDate = `${selectedDaysE}-${selectedMonthForDaysE}-${selectedYearE}`;   // Declare your end date
-    const numberOfDays = calculateDaysBetweenDates(startDate, endDate);
+
+
 
 
     const handleCommentsChange = (event) => {
