@@ -73,7 +73,7 @@ const Root = styled(Grid)(({ theme }) => ({
             backgroundColor: "#0075bc",
             border: "1px solid #0075bc",
             borderRadius: "10px",
-            width: "80%",
+            width: "96%",
             "& .headerSec": {
                 display: "flex",
                 justifyContent: "space-between",

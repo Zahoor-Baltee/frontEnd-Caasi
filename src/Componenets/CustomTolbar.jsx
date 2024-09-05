@@ -73,11 +73,10 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                 <Typography sx={{ fontWeight: "600", fontSize: "24px", textAlign: "center" }} >{label()}</Typography>
             </Grid>
             <Grid item md={7} sx={{ display: "flex", justifyContent: "end", gap: "10px", alignItems: "center", marginBottom: "5px" }}>
-                <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", backgroundColor: "#2F80ED" }}>
+                {/* <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#2F80ED" }}>
                     <AccountCircleIcon sx={{
                         "& .MuiSvgIcon-root": {
-                            color: "gray !important",
-                            fontSize: 30,
+                            color: "gray !important"
                         }
                     }} />
                     <Select
@@ -88,18 +87,7 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                         variant="outlined"
                         margin="dense"
                         MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
-                        sx={{
-                            mx: 1, width: 300,
-                            color: "#fff", backgroundColor: "#2f80ed",
-                            marginRight: "0px !important",
-                            "& .MuiSelect-select":
-                                { display: "flex", alignItems: "center", gap: 1 },
-                            height: "50px",
-                            border: "none", // Removes the border
-                            "& fieldset": {
-                                border: "none", // Removes the border when the Select is in outlined variant
-                            }
-                        }}
+                        sx={{ mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", marginRight: "0px !important", "& .MuiSelect-select": { display: "flex", alignItems: "center", gap: 1 }, height: "50px" }}
                     >
                         <MenuItem sx={{ display: "flex", alignItems: "center", gap: 2 }} value="">
                             <Typography>Select Employee</Typography>
@@ -109,7 +97,64 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                         ))}
 
                     </Select>
-                </Box>
+                </Box> */}
+                <Select
+                    displayEmpty
+                    fullWidth={true}
+                    value={employee}
+                    onChange={handleEmployeeChange}
+                    variant="outlined"
+                    margin="dense"
+                    MenuProps={{
+                        PaperProps: {
+                            sx: {
+                                maxHeight: 250,
+                                textAlign: "center",
+                                '&::-webkit-scrollbar': {
+                                    display: 'none', // Hide the scrollbar
+                                },
+                                overflowY: 'auto' // Prevent scrolling
+                            }
+                        }
+                    }}
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        padding: "8px 5px", // Padding inside the button
+                        borderRadius: "5px", // Rounded corners
+                        backgroundColor: "#2F80ED", // Button background color
+                        color: "#fff", // Text color
+                        fontWeight: 500, // Adjust text weight
+                        fontSize: "16px", // Adjust font size
+                        height: "50px",
+                        width: "300px", // Auto width to fit content
+                        border: "none", // Removes the border
+                        "& .MuiSelect-select": {
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                        },
+                        "& fieldset": {
+                            border: "none", // Removes the border when the Select is in outlined variant
+                        },
+                        "&:hover": {
+                            backgroundColor: "#1c5fb8", // Hover color
+                        },
+                    }}
+                    IconComponent={null} // Remove the dropdown icon
+                >
+                    <MenuItem sx={{ display: "flex", alignItems: "center", }} value="">
+                        <AccountCircleIcon sx={{ fontSize: 24, marginRight: "5px" }} /> {/* Adjust icon size */}
+                        <Typography>Select Employee</Typography>
+                    </MenuItem>
+                    {userList?.map((el, ind) => (
+                        <MenuItem key={ind} value={el._id}>
+                            <AccountCircleIcon sx={{ fontSize: 24, marginRight: "8px" }} /> {/* Icon for each employee */}
+                            {el.firstName} {el.lastName}
+                        </MenuItem>
+                    ))}
+                </Select>
                 {from === 'act' && <Select
 
                     fullWidth={true}

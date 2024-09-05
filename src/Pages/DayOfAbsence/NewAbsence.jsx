@@ -61,6 +61,12 @@ const Root = styled(Grid)(({ theme }) => ({
                 padding: "6px 12px",
 
             },
+            "& .startDateEndDate": {
+                display: 'flex',
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center", gap: "8px"
+            }
         },
         "& .CalendarContainer": {
             width: "100%"
@@ -383,7 +389,7 @@ const NewAbsence = () => {
                         <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                             <Typography sx={{ color: "#52a9e1", fontWeight: "600" }} variant='h5'>Start Date</Typography>
                             <Box className="flexBox">
-                                <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
+                                <Box className='startDateEndDate'>
                                     <Select
                                         sx={{
                                             // backgroundColor: "#52A9E1",
@@ -425,7 +431,7 @@ const NewAbsence = () => {
                                     </Select>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }}  >DD</Typography>
                                 </Box>
-                                <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
+                                <Box className='startDateEndDate'>
                                     <Select
                                         sx={{
                                             backgroundColor: "#52A9E1",
@@ -469,7 +475,7 @@ const NewAbsence = () => {
                                     </Select>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }}>MM</Typography>
                                 </Box>
-                                <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
+                                <Box className='startDateEndDate'>
                                     <Select
                                         sx={{
                                             color: "#52a9e1",
@@ -517,7 +523,7 @@ const NewAbsence = () => {
                         <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                             <Typography sx={{ color: "#52a9e1", fontWeight: "600" }} fontWeight="600" variant='h5'>End Date</Typography>
                             <Box className="flexBox">
-                                <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
+                                <Box className='startDateEndDate'>
                                     <Select
                                         sx={{
                                             color: "#52A9E1",
@@ -560,7 +566,7 @@ const NewAbsence = () => {
                                     </Select>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }} >DD</Typography>
                                 </Box>
-                                <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
+                                <Box className='startDateEndDate'>
                                     <Select
                                         sx={{
                                             backgroundColor: "#52A9E1",
@@ -604,7 +610,7 @@ const NewAbsence = () => {
                                     </Select>
                                     <Typography sx={{ color: "#52A9E1", fontSize: "14px", fontWeight: "600" }} >MM</Typography>
                                 </Box>
-                                <Box style={{ display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "8px" }}>
+                                <Box className='startDateEndDate'>
                                     <Select
                                         sx={{
                                             color: "#52A9E1",
@@ -707,11 +713,11 @@ const NewAbsence = () => {
                                 </Box>
                             </Box>
                             <Box justifyContent="center" sx={{ display: "flex", gap: 1 }}>
-                                <Box sx={{}}>
-                                    <ContentPasteIcon style={{ padding: "5px", fontSize: 60, textAlign: "center" }} />
+                                <Box >
+                                    <ContentPasteIcon style={{ color: "#fff", padding: "5px", fontSize: 60, textAlign: "center" }} />
                                 </Box>
-                                <Box sx={{}}>
-                                    <TextSnippetIcon style={{ padding: "5px", fontSize: 60, textAlign: "center" }} />
+                                <Box >
+                                    <TextSnippetIcon style={{ color: "#fff", padding: "5px", fontSize: 60, textAlign: "center" }} />
                                 </Box>
                             </Box>
                         </Box>
