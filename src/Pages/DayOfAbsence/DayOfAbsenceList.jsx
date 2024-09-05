@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, IconButton, Dialog, DialogContent, Grid, Menu, TextField, CircularProgress } from '@mui/material'
+import { Box, Button, IconButton, Grid, Menu, TextField, CircularProgress } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem';
 import Typography from "@mui/material/Typography";
 import FormControl from '@mui/material/FormControl';
@@ -9,13 +9,17 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 import { Helpers } from '../../Shell/Helper';
-import { ExpenseService } from '../../Services/Expense/ExpenseService';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { ActivityService } from '../../Services/Activity/ActivityServices';
 
 
 const Root = styled(Box)({
+    // "& .MuiTypography-root": {
+    //     display: "flex",
+    //     justifyContent: "center",
+    //     alignItems: "center"
+    // },
     "& .userImage": {
         borderRadius: "50px"
     },
@@ -58,7 +62,6 @@ const Root = styled(Box)({
     margin: 0,
     padding: 0,
     "& .mainContainer": {
-
         padding: "20px",
         backgroundColor: "#fafbfc",
         "& .mainBox": {
@@ -84,7 +87,7 @@ const Root = styled(Box)({
     }
 
 });
-const ActivityReport = () => {
+const DayOfAbsenceList = () => {
     const [activity, setActivity] = useState({
         list: [],
         filterList: [],
@@ -266,8 +269,8 @@ const ActivityReport = () => {
     const handleOpenDetail = (id) => {
         navigate("/expensereports", { state: { id: id } })
     }
-    const openAddActivityReport = () => {
-        navigate("/add-activity")
+    const openAddDayOfAbsence = () => {
+        navigate("/new-absence")
     }
     const handleClose = () => {
         setOpen(false);
@@ -314,9 +317,9 @@ const ActivityReport = () => {
                                 height: "38px",
                                 textTransform: "none"
                             }}
-                                onClick={openAddActivityReport}
+                                onClick={openAddDayOfAbsence}
                                 variant="contained"
-                            >Add Activity Report</Button>
+                            >Add Absence</Button>
                             <Button sx={{
                                 marginLeft: "8px",
                                 textTransform: "none"
@@ -395,4 +398,4 @@ const ActivityReport = () => {
 }
 
 
-export default ActivityReport
+export default DayOfAbsenceList

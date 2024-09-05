@@ -381,7 +381,12 @@ const NewAbsence = () => {
                             variant="outlined"
                             margin="dense"
                             value='a'
-                            sx={{ mx: 1, width: 300, color: "#fff", backgroundColor: "#D53631", height: "50px" }} >
+                            sx={{
+                                mx: 1, width: 300, color: "#fff", backgroundColor: "#D53631", height: "50px",
+                                "& fieldset": {
+                                    border: "none", // Removes the border when the Select is in outlined variant
+                                },
+                            }} >
                             <MenuItem value='a' >New Absence</MenuItem>
                             <MenuItem >asydfy</MenuItem>
                             <MenuItem >asydfy</MenuItem>
@@ -655,9 +660,7 @@ const NewAbsence = () => {
                             </Box>
                         </Box>
                         <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                            <Typography sx={{
-                                color: "#52a9e1", fontWeight: "600"
-                            }} fontWeight="600" variant='h5'>Total Days</Typography>
+                            <Typography sx={{ color: "#52a9e1", fontWeight: "600" }} variant='h5'>Total Days</Typography>
                             < Box className="flexBox" >
                                 <Box>
                                     <Box style={{ borderRadius: "10px", backgroundColor: "#CFE9F7", padding: "5px 10px", }}>
@@ -666,7 +669,7 @@ const NewAbsence = () => {
                                 </Box>
                                 <Box>
                                     <Box style={{ borderRadius: "10px", backgroundColor: "#CFE9F7", color: '#fff', padding: "10px 16px", }}>
-                                        <Typography sx={{}} fontWeight="600" variant='h5'>{numberOfDays}</Typography>
+                                        <Typography fontWeight="600" variant='h5'>{numberOfDays}</Typography>
                                     </Box>
                                 </Box>
 
