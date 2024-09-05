@@ -337,6 +337,7 @@ const ActivityReport = () => {
                                     >
                                         <MenuItem value=''>Select Status</MenuItem>
                                         <MenuItem value='active'>Active</MenuItem>
+                                        <MenuItem value='inactive'>InActive</MenuItem>
                                     </Select>
                                 </FormControl>
                                 <Typography >Name</Typography>

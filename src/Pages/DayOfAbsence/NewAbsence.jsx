@@ -14,8 +14,6 @@ import CustomToolbar from '../../Componenets/CustomTolbar';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import { UserServices } from '../../Services/User/UserServices';
-import AuthService from '../../Services/AuthServices';
-import { ActivityService } from '../../Services/Activity/ActivityServices';
 import AlertSnackbar from '../../Componenets/AlertSnackbar';
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineCalendarMonth } from "react-icons/md";
@@ -34,9 +32,9 @@ const localizer = dateFnsLocalizer({
 
 
 const Root = styled(Grid)(({ theme }) => ({
-    "& .MuiSvgIcon-root": {
-        color: "#fff"
-    },
+    // "& .MuiSvgIcon-root": {
+    //     color: "#fff"
+    // },
     "& .mainContainer": {
         padding: "20px",
         backgroundColor: "#FAFBFC",
@@ -255,7 +253,6 @@ const NewAbsence = () => {
         // Create Date objects
         const startDate = new Date(selectedYear, selectedMonthForDays - 1, selectedDays); // Months are 0-indexed
         const endDate = new Date(selectedYearE, selectedMonthForDaysE - 1, selectedDaysE);
-        debugger
         if (startDate > endDate) {
             return 0
         }

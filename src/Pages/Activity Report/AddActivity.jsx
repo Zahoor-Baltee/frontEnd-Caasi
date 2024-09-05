@@ -50,7 +50,7 @@ const Root = styled(Grid)(({ theme }) => ({
         padding: "30px",
         "& .gridpo": {
             "& .CalendarContainer": {
-                width: "80%",
+                width: "100%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
