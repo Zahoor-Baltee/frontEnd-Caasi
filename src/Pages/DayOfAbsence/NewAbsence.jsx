@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Grid, TextField, Typography, MenuItem, Box, Select, FormControl } from '@mui/material';
+import { Grid, TextField, Typography, MenuItem, Box, Select, FormControl, Button, CircularProgress } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import styled from '@emotion/styled'; // This is correct
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
@@ -17,6 +17,8 @@ import { UserServices } from '../../Services/User/UserServices';
 import AlertSnackbar from '../../Componenets/AlertSnackbar';
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineCalendarMonth } from "react-icons/md";
+import AuthService from '../../Services/AuthServices';
+import { AbsenceServices } from '../../Services/Absence/AbsenceServices';
 
 const locales = {
     'en-US': enUS,
@@ -144,6 +146,10 @@ const NewAbsence = () => {
     const [selectedDaysE, setSelectedDaysE] = useState((new Date().getDate()).toString().padStart(2, '0'));
     const [daysInMonth, setDaysInMonth] = useState([]);
     const [numberOfDays, setNumberOfDays] = useState([]);
+    const [endDateForEvent, setEndDateForEvent] = useState(null);
+    const [startDateForEvent, setStartDateForEvent] = useState(null);
+    const [selectedAbsence, setSelectedAbsence] = useState(null);
+    const [submitForm, setSubmitForm] = useState(false)
 
 
     const [alert, setAlert] = useState({
@@ -151,6 +157,7 @@ const NewAbsence = () => {
         alertMessage: "",
         isAlertOpen: false,
     });
+    const absentDaysTitles = ["Illness", "Medical Appointment", "Unpaid Leave", "Vacation"]
     const months = ['01', "02", '03', "04", '05', "06", '07', "08", '09', "10", '11', "12"]
     const [isLoading, setIsLoading] = useState(false);
     const isAbsense = useRef(false)
@@ -235,8 +242,10 @@ const NewAbsence = () => {
         }
     }, [date])
     useEffect(() => {
-        const startDate = `${selectedDays}-${selectedMonthForDays}-${selectedYear}`; // Declare your start date
-        const endDate = `${selectedDaysE}-${selectedMonthForDaysE}-${selectedYearE}`;   // Declare your end date
+        const startDate = `${selectedMonthForDays}-${selectedDays}-${selectedYear}`; // Declare your start date
+        const endDate = `${selectedMonthForDaysE}-${selectedDaysE}-${selectedYearE}`;
+        setStartDateForEvent(startDate)   // Declare your end date
+        setEndDateForEvent(endDate)   // Declare your end date
         const resnumberOfDays = calculateDaysBetweenDates(startDate, endDate);
         setNumberOfDays(resnumberOfDays);
     }, [selectedDays, selectedYear, selectedMonthForDays, selectedDaysE, selectedYearE, selectedMonthForDaysE])
@@ -253,12 +262,12 @@ const NewAbsence = () => {
 
     const calculateDaysBetweenDates = (startDateStr, endDateStr) => {
         // Convert date strings to Date objects (assuming format is DD-MM-YYYY)
-        const [selectedDays, selectedMonthForDays, selectedYear] = startDateStr.split("-").map(Number);
-        const [selectedDaysE, selectedMonthForDaysE, selectedYearE] = endDateStr.split("-").map(Number);
+        const [selectedMonthForDays, selectedDays, selectedYear] = startDateStr.split("-").map(Number);
+        const [selectedMonthForDaysE, selectedDaysE, selectedYearE] = endDateStr.split("-").map(Number);
 
         // Create Date objects
-        const startDate = new Date(selectedYear, selectedMonthForDays - 1, selectedDays); // Months are 0-indexed
-        const endDate = new Date(selectedYearE, selectedMonthForDaysE - 1, selectedDaysE);
+        const startDate = new Date(selectedMonthForDays - 1, selectedYear, selectedDays); // Months are 0-indexed
+        const endDate = new Date(selectedMonthForDaysE - 1, selectedYearE, selectedDaysE);
         if (startDate > endDate) {
             return 0
         }
@@ -271,8 +280,35 @@ const NewAbsence = () => {
         return diffInDays;
     };
 
+    useEffect(() => {
+        if (startDateForEvent || endDateForEvent) {
+            addAbsentDates(startDateForEvent, endDateForEvent)
+        }
 
+    }, [startDateForEvent, endDateForEvent])
+    //===================
+    const addAbsentDates = (startDate, endDate) => {
+        if (startDate && endDate) {
+            let newEvents = [];
+            let currentDate = new Date(startDate);
+            let currentEndDate = new Date(endDate);
+            while (currentDate <= currentEndDate) {
+                const dayOfWeek = currentDate.getDay();
+                if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                    newEvents.push({
+                        date: new Date(currentDate), // Ensure a new Date object is pushed
+                        workType: selectedAbsence,
+                        title: selectedAbsence, // Optional: to show a title on the event
+                    });
+                }
+                currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+            }
 
+            setEvents([...events, ...newEvents]);
+        }
+    };
+
+    //===================
 
 
     const handleCommentsChange = (event) => {
@@ -281,12 +317,12 @@ const NewAbsence = () => {
 
     // Date Formate
     const parseDate = (dateStr) => {
-        const [day, month, year] = dateStr.split(' ');
-        const months = {
-            January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
-            July: 6, August: 7, September: 8, October: 9, November: 10, December: 11
-        };
-        return new Date(year, months[month], day);
+        const [day, month, year] = dateStr.split("-");
+        // const months = {
+        //     January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
+        //     July: 6, August: 7, September: 8, October: 9, November: 10, December: 11
+        // };
+        return new Date(year, month, day);
     };
 
     const handleMonthChange = (newMonth) => {
@@ -301,8 +337,60 @@ const NewAbsence = () => {
             setSelectedUser(selectedEmpolyee[0])
         }
     };
-
+    const disableWeekends = (date) => {
+        const day = date.getDay();
+        if (day === 0 || day === 6) {
+            return {
+                className: 'disabled-day',
+                style: {
+                    backgroundColor: '#f0f0f0',
+                    pointerEvents: 'none',
+                    color: '#ccc',
+                },
+            };
+        }
+        return {};
+    };
     let navigateUser = useNavigate();
+
+    const handleSubmit = async () => {
+        setIsLoading(true)
+        let data = {
+            clientId: AuthService.getUserid(),
+            userId: employee,
+            dateOfSubmitted: formFields.dateOfSubmission,
+            name: selectedUser.firstName,
+            surname: selectedUser.lastName,
+            email: selectedUser.email,
+            contactNumber: selectedUser.phoneNumber,
+            // status: "active",
+            selectMonthDropdowns: selectedMonth,
+            startDate: startDateForEvent,
+            endDate: endDateForEvent,
+            totalDays: numberOfDays,
+            comments: comments,
+            attachments: '',
+            days: events,
+            dayOfAbsence: numberOfDays
+        }
+        try {
+            let res = await AbsenceServices.createAbsence(data)
+            setSubmitForm(true)
+            if (res.success) {
+                setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
+                setIsLoading(false)
+                // navigateUser('/day-absencelist')
+
+            } else {
+                setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
+                setIsLoading(false)
+            }
+        } catch (error) {
+            console.log(error)
+            setIsLoading(false)
+        }
+    }
+
 
     return (
         <Root>
@@ -326,6 +414,7 @@ const NewAbsence = () => {
                                 defaultView="month"
                                 views={["month"]}
                                 date={date}
+                                dayPropGetter={disableWeekends}
                                 components={{
                                     toolbar: (props) => (
                                         <CustomToolbar
@@ -343,32 +432,7 @@ const NewAbsence = () => {
                                 }}
                                 eventPropGetter={(event) => {
                                     let backgroundColor = "#3174ad"; // Default color
-
-                                    if (event.dayType === "working day") {
-                                        if (
-                                            event.workType === "At office" ||
-                                            event.workType === "Travel" ||
-                                            event.workType === "Training" ||
-                                            event.workType === "Remote Work"
-                                        )
-                                            backgroundColor = "green";
-                                    } else if (event.dayType === "absence day") {
-                                        if (
-                                            event.workType === "Vacation" ||
-                                            event.workType === "Unpaid Leave" ||
-                                            event.workType === "Medical Appointment" ||
-                                            event.workType === "Illness"
-                                        )
-                                            backgroundColor = "red";
-                                    } else {
-                                        if (
-                                            event.workType === "Emergency" ||
-                                            event.workType === "Illness" ||
-                                            event.workType === "Injured" ||
-                                            event.workType === "Appointments"
-                                        )
-                                            backgroundColor = "orange";
-                                    }
+                                    if (event.workType === 'Vacation' || event.workType === 'Unpaid Leave' || event.workType === 'Medical Appointment' || event.workType === 'Illness') backgroundColor = 'red';
                                     return { style: { backgroundColor } };
                                 }}
                             />
@@ -380,16 +444,19 @@ const NewAbsence = () => {
                             fullWidth={true}
                             variant="outlined"
                             margin="dense"
-                            value='a'
+                            value={selectedAbsence}
+                            onChange={(e) => { setSelectedAbsence(e.target.value) }}
                             sx={{
                                 mx: 1, width: 300, color: "#fff", backgroundColor: "#D53631", height: "50px",
                                 "& fieldset": {
                                     border: "none", // Removes the border when the Select is in outlined variant
                                 },
                             }} >
-                            <MenuItem value='a' >New Absence</MenuItem>
-                            <MenuItem >asydfy</MenuItem>
-                            <MenuItem >asydfy</MenuItem>
+                            <MenuItem value={"null"} >New Absence</MenuItem>
+                            {absentDaysTitles.map((el, index) => (
+                                <MenuItem key={index} value={el} >{el}</MenuItem>
+                            ))}
+
                         </Select>
                         <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                             <Typography sx={{ color: "#52a9e1", fontWeight: "600" }} variant='h5'>Start Date</Typography>
@@ -722,8 +789,13 @@ const NewAbsence = () => {
                                 <Box >
                                     <TextSnippetIcon style={{ color: "#fff", padding: "5px", fontSize: 60, textAlign: "center" }} />
                                 </Box>
+
                             </Box>
+
                         </Box>
+                        <Button sx={{ height: "60px" }} startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} /> : ""} onClick={handleSubmit} variant="contained" >
+                            Submit
+                        </Button>
                     </Grid>
 
 

@@ -163,7 +163,9 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                     variant="outlined"
                     margin="dense"
                     sx={{
-                        mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", height: "50px",
+                        mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", height: "50px", "& fieldset": {
+                            border: "none", // Removes the border when the Select is in outlined variant
+                        },
                     }}
                 >
                     {months?.map((el, ind) => (
