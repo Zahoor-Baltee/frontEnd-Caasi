@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Grid, TextField, Typography, MenuItem, Box, Select, FormControl, Button, CircularProgress } from '@mui/material';
+import { Grid, TextField, Typography, MenuItem, Box, Select, Button, CircularProgress } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import styled from '@emotion/styled'; // This is correct
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
@@ -168,7 +168,7 @@ const NewAbsence = () => {
             return `${month} ${year}`;
         }
     };
-    const [activities, setActivities] = useState([]);
+    const [absences, setAbsences] = useState([]);
     const [yearList, setYearList] = useState([]);
     const [userList, setUserList] = useState([])
 
@@ -206,7 +206,7 @@ const NewAbsence = () => {
     React.useEffect(() => {
         if (date) {
 
-            setActivities([
+            setAbsences([
                 // { date: `31 ${label()}`, status: '' },
                 { date: `30 ${label()}`, status: '' },
                 { date: `29 ${label()}`, status: '' },
@@ -379,7 +379,7 @@ const NewAbsence = () => {
             if (res.success) {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                 setIsLoading(false)
-                // navigateUser('/day-absencelist')
+                navigateUser('/day-absencelist')
 
             } else {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });

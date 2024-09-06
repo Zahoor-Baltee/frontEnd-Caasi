@@ -6,7 +6,7 @@ export const AbsenceServices = {
         return response;
     },
     async getlist() {
-        let response = await ExecuteGet("absence/list");
+        let response = await ExecuteGet("absences/list");
         return response;
     },
 };

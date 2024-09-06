@@ -11,7 +11,7 @@ import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 import { Helpers } from '../../Shell/Helper';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { ActivityService } from '../../Services/Activity/ActivityServices';
+import { AbsenceServices } from '../../Services/Absence/AbsenceServices';
 
 
 const Root = styled(Box)({
@@ -88,7 +88,7 @@ const Root = styled(Box)({
 
 });
 const DayOfAbsenceList = () => {
-    const [activity, setActivity] = useState({
+    const [absence, setAbsence] = useState({
         list: [],
         filterList: [],
         detail: {}
@@ -140,8 +140,8 @@ const DayOfAbsenceList = () => {
                 </Typography>
         },
         {
-            field: 'dateOfSubmitted',
-            headerName: 'Date',
+            field: 'dayOfAbsence',
+            headerName: 'Day Of Absence',
             width: 200,
             renderCell: (params) =>
                 <Typography
@@ -151,7 +151,7 @@ const DayOfAbsenceList = () => {
                         alignItems: "center",
                         color: "#828282"
                     }}>
-                    {Helpers.dateFormater(params.value)}
+                    {params.value}
                 </Typography>
         },
         {
@@ -160,7 +160,12 @@ const DayOfAbsenceList = () => {
             // width: 200,
             flex: 1,
             renderCell: (params) => (
-                <Typography sx={{}}>
+                <Typography sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "#828282"
+                }}>
                     {params.value}
                 </Typography>
             )
@@ -243,17 +248,17 @@ const DayOfAbsenceList = () => {
 
     ];
     useEffect(() => {
-        getActivityReportList()
+        getDaysOFAbsenceList()
     }, [])
 
     //Get user List
 
-    const getActivityReportList = async () => {
+    const getDaysOFAbsenceList = async () => {
         setIsLoading(true)
         try {
-            let res = await ActivityService.getlist()
+            let res = await AbsenceServices.getlist()
             if (res.success) {
-                setActivity({ ...activity, list: res.data, filterList: res.data })
+                setAbsence({ ...absence, list: res.data, filterList: res.data })
                 setIsLoading(false)
             } else {
                 // alert("failed")
@@ -267,7 +272,7 @@ const DayOfAbsenceList = () => {
 
     // navigate to Details
     const handleOpenDetail = (id) => {
-        navigate("/expensereports", { state: { id: id } })
+        // navigate("/expensereports", { state: { id: id } })
     }
     const openAddDayOfAbsence = () => {
         navigate("/new-absence")
@@ -284,21 +289,21 @@ const DayOfAbsenceList = () => {
         const date = userFields?.date ? userFields.date.toLowerCase() : '';
         const name = userFields?.name ? userFields.name.toLowerCase() : '';
 
-        const filterData = activity.list.filter((activityItem) => {
-            const activityStatus = activityItem.status ? activityItem.status.toLowerCase() : '';
-            const activityContact = activityItem.contactNumber ? activityItem.contactNumber.toLowerCase() : '';
-            const activityDate = activityItem.dateOfSubmitted ? activityItem.dateOfSubmitted.toLowerCase() : '';
-            const activityName = activityItem.name ? activityItem.name.toLowerCase() : '';
+        const filterData = absence.list.filter((absenceItem) => {
+            const absenceStatus = absenceItem.status ? absenceItem.status.toLowerCase() : '';
+            const absenceContact = absenceItem.contactNumber ? absenceItem.contactNumber.toLowerCase() : '';
+            const absenceDate = absenceItem.dateOfSubmitted ? absenceItem.dateOfSubmitted.toLowerCase() : '';
+            const absenceName = absenceItem.name ? absenceItem.name.toLowerCase() : '';
 
             return (
-                (!status || activityStatus.includes(status)) &&
-                (!contact || activityContact.includes(contact)) &&
-                (!date || activityDate.includes(date)) &&
-                (!name || activityName.includes(name))
+                (!status || absenceStatus.includes(status)) &&
+                (!contact || absenceContact.includes(contact)) &&
+                (!date || absenceDate.includes(date)) &&
+                (!name || absenceName.includes(name))
             );
         });
 
-        setActivity({ ...activity, filterList: filterData });
+        setAbsence({ ...absence, filterList: filterData });
     };
     const handleChange = (e) => {
         setUserFields({ ...userFields, [e.target.name]: e.target.value });
@@ -377,7 +382,7 @@ const DayOfAbsenceList = () => {
                         <DataGrid
                             autoHeight
                             minHeight={40}
-                            rows={activity.filterList}
+                            rows={absence.filterList}
                             columns={columns}
                             getRowId={(e) => e._id}
                             loading={isLoading}

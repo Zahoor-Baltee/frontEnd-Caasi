@@ -14,5 +14,4 @@ export const ActivityService = {
         let response = await ExecuteGet(`expense/${data.id}/datail`);
         return response;
     },
-
 };

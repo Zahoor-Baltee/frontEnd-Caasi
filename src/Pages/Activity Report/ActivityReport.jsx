@@ -157,7 +157,12 @@ const ActivityReport = () => {
             // width: 200,
             flex: 1,
             renderCell: (params) => (
-                <Typography sx={{}}>
+                <Typography sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "#828282"
+                }}>
                     {params.value}
                 </Typography>
             )
