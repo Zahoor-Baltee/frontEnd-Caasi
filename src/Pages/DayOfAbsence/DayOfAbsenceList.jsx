@@ -121,28 +121,43 @@ const DayOfAbsenceList = () => {
                         alignItems: "center",
                         color: "#0171BC"
                     }}>
-                    {params.value} {params.row.surname}
+                    {params.value} {params.row.lastName}
                 </Typography>
         },
         {
-            field: 'contactNumber',
+            field: 'email',
             headerName: 'Contact',
             width: 200,
-            renderCell: (params) =>
-                <Typography
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        color: "#0171BC"
-                    }}>
-                    {params.value}
-                </Typography>
+            renderCell: (params) => (
+                <Box sx={{ display: "flex", justifyContent: "start", flexDirection: "column", alignItems: "start" }}>
+                    <Typography
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: "#828282",
+                        }}
+                    >
+                        {params.value}
+                    </Typography>
+                    <Typography
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: "#828282",
+                        }}
+                    >
+                        {params.row.phone}
+                    </Typography>
+                </Box>
+            ),
         },
+
         {
-            field: 'dayOfAbsence',
+            field: 'startDate',
             headerName: 'Day Of Absence',
-            width: 200,
+            width: 320,
             renderCell: (params) =>
                 <Typography
                     sx={{
@@ -151,7 +166,7 @@ const DayOfAbsenceList = () => {
                         alignItems: "center",
                         color: "#828282"
                     }}>
-                    {params.value}
+                    {Helpers.dateFormater(params.value)} to {Helpers.dateFormater(params.row.endDate)}
                 </Typography>
         },
         {

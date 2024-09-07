@@ -122,19 +122,33 @@ const ActivityReport = () => {
                 </Typography>
         },
         {
-            field: 'contactNumber',
+            field: 'email',
             headerName: 'Contact',
             width: 200,
-            renderCell: (params) =>
-                <Typography
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        color: "#0171BC"
-                    }}>
-                    {params.value}
-                </Typography>
+            renderCell: (params) => (
+                <Box sx={{ display: "flex", justifyContent: "start", flexDirection: "column", alignItems: "start" }}>
+                    <Typography
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: "#828282",
+                        }}
+                    >
+                        {params.value}
+                    </Typography>
+                    <Typography
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: "#828282",
+                        }}
+                    >
+                        {params.row.phone}
+                    </Typography>
+                </Box>
+            ),
         },
         {
             field: 'dateOfSubmitted',

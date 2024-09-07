@@ -1,19 +1,17 @@
-import { Box, TextField, InputAdornment, styled, Divider, Button } from '@mui/material'
-import React from 'react'
+import { Box, styled, } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import Typography from "@mui/material/Typography";
-import SearchIcon from '@mui/icons-material/Search';
 import ChartImg from '../../Assets/chart.jpg';
-import clientGraph from '../../Assets/clientGraph.png';
-import activityGraph from '../../Assets/activityGraph.png';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import TickPlacementBars from '../../Componenets/Chart';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ArrowRightAltRoundedIcon from '@mui/icons-material/ArrowRightAltRounded';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import { DashboardService } from '../../Services/Dashboard/DashboardServices';
+import AuthService from '../../Services/AuthServices';
+import { Helpers } from '../../Shell/Helper';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -136,45 +134,33 @@ const Root = styled(Box)({
 
 });
 const NewDashboard = () => {
+    const [dashboard, setDashboard] = useState({
+        activityByMonth: []
+    })
+    useEffect(() => {
+        getActivitByMonth()
+    }, [])
+    const getActivitByMonth = async () => {
+        let currentdate = Helpers.getCurrentDate()
+        try {
+            let data = {
+                userId: AuthService.getUserid(),
+                month: currentdate.month,
+                year: currentdate.year
+            }
+            let res = DashboardService.getActivityReportsByMonth(data)
+            if (res.success) {
+                setDashboard({ ...dashboard, activityByMonth: res.data })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <Root>
             <Box className="mainContainer">
-                {/* --------------------Header Section--------------- */}
-                {/* <Box className="headerSection">
-                    <Box>
-                        <Typography sx={{
-                            fontWeight: 700,
-                            fontSize: "14px",
-                            letterSpacing: "-2%",
-                            color: "#ABABAC"
-                        }}>Hi User,</Typography>
-                        <Typography sx={{ color: "#27A9E0", fontWeight: "600", fontSize: "34px", lineHeight: "42px", }}>Welcome to Caasi!</Typography>
-                    </Box>
-                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-
-                        <TextField
-                            sx={{
-                                "& fieldset": { border: 'none' },
-                            }}
-                            className='inputField'
-                            placeholder='Search'
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-
-                    </Box>
-                </Box> */}
-                {/* --------------------First Section--------------- */}
                 <Box sx={{ display: "flex", flexDirection: "column", gap: "30px" }}>
-
-                    {/* --------------------First Section Complete--------------- */}
                     {/* --------------------Second Section Start--------------- */}
-
                     <Box sx={{ flexGrow: 1 }}>
                         <Grid container spacing={3}>
                             <Grid item xs={6}>
@@ -189,7 +175,7 @@ const NewDashboard = () => {
                                                         lineHeight: "24px",
                                                         letterSpacing: "-2%",
                                                         color: "#A3AED0"
-                                                    }}>expense reports per day</Typography>
+                                                    }}>Expense reports per day</Typography>
                                                 </Box>
                                                 <Box>
                                                     <Typography sx={{
@@ -239,7 +225,7 @@ const NewDashboard = () => {
                                             fontWeight: 500,
                                             fontSize: "14px",
                                             color: "#B3B3B3"
-                                        }}>Number os Employees</Typography>
+                                        }}>Number of Employees</Typography>
                                         <Typography sx={{
                                             fontSize: "24px",
                                             fontWeight: 600,
@@ -274,15 +260,15 @@ const NewDashboard = () => {
                             </Grid>
                             <Grid item xs={3} container flexDirection={"column"} rowGap={3}>
                                 <Box className="newClients">
-                                    <Box sx={{ height: "56px", width: "56px", borderRadius: "50%", backgroundColor: "#0171BB", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                    {/* <Box sx={{ height: "56px", width: "56px", borderRadius: "50%", backgroundColor: "#0171BB", display: "flex", justifyContent: "center", alignItems: "center" }}>
                                         <PeopleAltIcon sx={{ color: "#ffffff" }} />
-                                    </Box>
+                                    </Box> */}
                                     <Box className="">
                                         <Typography sx={{
                                             fontWeight: 500,
                                             fontSize: "14px",
                                             color: "#B3B3B3"
-                                        }}>number of approved</Typography>
+                                        }}>Number of approved activity reports</Typography>
                                         <Typography sx={{
                                             fontSize: "24px",
                                             fontWeight: 600,
@@ -344,125 +330,7 @@ const NewDashboard = () => {
                     {/* --------------------Third Section Start--------------- */}
                     <Box sx={{ flexGrow: 1 }}>
                         <Grid container spacing={3}>
-                            <Grid item xs={3}>
-                                <Box className='absenceRequests'>
-                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                                        <Box>
-                                            <Typography sx={{
-                                                fontWeight: 500,
-                                                fontSize: "14px",
-                                                lineHeight: "24px",
-                                                letteSpacing: "-2%",
-                                                color: "#A3AED0",
-                                                // marginBottom: "5px"
-                                            }}>Month of June</Typography>
-                                        </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Box>
-                                                <Typography sx={{
-                                                    fontWeight: 700,
-                                                    fontSize: "18px",
-                                                    lineHeight: "28px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#1B2559",
-                                                }}>Pending Absence Requests</Typography>
-                                            </Box>
-                                            <Box>
-                                                <Typography sx={{
-                                                    fontWeight: 700,
-                                                    fontSize: "18px",
-                                                    lineHeight: "28px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#0171bc",
-                                                }}>38</Typography>
-                                            </Box>
 
-                                        </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Box>
-                                                <Typography sx={{
-                                                    fontWeight: 700,
-                                                    fontSize: "14px",
-                                                    lineHeight: "28px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#1B2559",
-                                                }}>Carlos Fonte</Typography>
-                                                <Typography sx={{
-                                                    fontWeight: 500,
-                                                    fontSize: "12px",
-                                                    lineHeight: "20px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#A3AED0",
-                                                }}>12 May 2024</Typography>
-
-                                            </Box>
-                                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                                                <ArrowRightIcon sx={{ fontSize: "24px", color: "red" }} />
-                                                <Typography sx={{ fontWeight: "bold", fontSize: "14px", color: "red" }}>illness</Typography>
-                                            </Box>
-
-                                        </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Box>
-                                                <Typography sx={{
-                                                    fontWeight: 700,
-                                                    fontSize: "14px",
-                                                    lineHeight: "28px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#1B2559",
-                                                }}>Carlos Fonte</Typography>
-                                                <Typography sx={{
-                                                    fontWeight: 500,
-                                                    fontSize: "12px",
-                                                    lineHeight: "20px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#A3AED0",
-                                                }}>12 May 2024</Typography>
-
-                                            </Box>
-                                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                                                <ArrowRightIcon sx={{ fontSize: "24px", color: "red" }} />
-                                                <Typography sx={{ fontWeight: "bold", fontSize: "14px", color: "red" }}>illness</Typography>
-                                            </Box>
-
-                                        </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Box>
-                                                <Typography sx={{
-                                                    fontWeight: 700,
-                                                    fontSize: "14px",
-                                                    lineHeight: "28px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#1B2559",
-                                                }}>Carlos Fonte</Typography>
-                                                <Typography sx={{
-                                                    fontWeight: 500,
-                                                    fontSize: "12px",
-                                                    lineHeight: "20px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#A3AED0",
-                                                }}>12 May 2024</Typography>
-
-                                            </Box>
-                                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                                                <ArrowRightIcon sx={{ fontSize: "24px", color: "red" }} />
-                                                <Typography sx={{ fontWeight: "bold", fontSize: "14px", color: "red" }}>illness</Typography>
-                                            </Box>
-
-                                        </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: "5px" }}>
-                                            <Typography sx={{
-                                                fontWeight: 700,
-                                                fontSize: "16px",
-                                                lineHeight: "28px",
-                                                letteSpacing: "-2%",
-                                                color: "#0171BC"
-                                            }}>View all</Typography>
-                                            <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
-                                        </Box>
-                                    </Box>
-                                </Box>
-                            </Grid>
                             <Grid item xs={3}>
                                 <Box className='absenceRequests'>
                                     <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
@@ -663,6 +531,125 @@ const NewDashboard = () => {
 
                                             </Box>
 
+
+                                        </Box>
+                                        <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: "5px" }}>
+                                            <Typography sx={{
+                                                fontWeight: 700,
+                                                fontSize: "16px",
+                                                lineHeight: "28px",
+                                                letteSpacing: "-2%",
+                                                color: "#0171BC"
+                                            }}>View all</Typography>
+                                            <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Box className='absenceRequests'>
+                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                                        <Box>
+                                            <Typography sx={{
+                                                fontWeight: 500,
+                                                fontSize: "14px",
+                                                lineHeight: "24px",
+                                                letteSpacing: "-2%",
+                                                color: "#A3AED0",
+                                                // marginBottom: "5px"
+                                            }}>Month of June</Typography>
+                                        </Box>
+                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                                            <Box>
+                                                <Typography sx={{
+                                                    fontWeight: 700,
+                                                    fontSize: "18px",
+                                                    lineHeight: "28px",
+                                                    letteSpacing: "-2%",
+                                                    color: "#1B2559",
+                                                }}>Pending Absence Requests</Typography>
+                                            </Box>
+                                            <Box>
+                                                <Typography sx={{
+                                                    fontWeight: 700,
+                                                    fontSize: "18px",
+                                                    lineHeight: "28px",
+                                                    letteSpacing: "-2%",
+                                                    color: "#0171bc",
+                                                }}>38</Typography>
+                                            </Box>
+
+                                        </Box>
+                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                                            <Box>
+                                                <Typography sx={{
+                                                    fontWeight: 700,
+                                                    fontSize: "14px",
+                                                    lineHeight: "28px",
+                                                    letteSpacing: "-2%",
+                                                    color: "#1B2559",
+                                                }}>Carlos Fonte</Typography>
+                                                <Typography sx={{
+                                                    fontWeight: 500,
+                                                    fontSize: "12px",
+                                                    lineHeight: "20px",
+                                                    letteSpacing: "-2%",
+                                                    color: "#A3AED0",
+                                                }}>12 May 2024</Typography>
+
+                                            </Box>
+                                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                <ArrowRightIcon sx={{ fontSize: "24px", color: "red" }} />
+                                                <Typography sx={{ fontWeight: "bold", fontSize: "14px", color: "red" }}>illness</Typography>
+                                            </Box>
+
+                                        </Box>
+                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                                            <Box>
+                                                <Typography sx={{
+                                                    fontWeight: 700,
+                                                    fontSize: "14px",
+                                                    lineHeight: "28px",
+                                                    letteSpacing: "-2%",
+                                                    color: "#1B2559",
+                                                }}>Carlos Fonte</Typography>
+                                                <Typography sx={{
+                                                    fontWeight: 500,
+                                                    fontSize: "12px",
+                                                    lineHeight: "20px",
+                                                    letteSpacing: "-2%",
+                                                    color: "#A3AED0",
+                                                }}>12 May 2024</Typography>
+
+                                            </Box>
+                                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                <ArrowRightIcon sx={{ fontSize: "24px", color: "red" }} />
+                                                <Typography sx={{ fontWeight: "bold", fontSize: "14px", color: "red" }}>illness</Typography>
+                                            </Box>
+
+                                        </Box>
+                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                                            <Box>
+                                                <Typography sx={{
+                                                    fontWeight: 700,
+                                                    fontSize: "14px",
+                                                    lineHeight: "28px",
+                                                    letteSpacing: "-2%",
+                                                    color: "#1B2559",
+                                                }}>Carlos Fonte</Typography>
+                                                <Typography sx={{
+                                                    fontWeight: 500,
+                                                    fontSize: "12px",
+                                                    lineHeight: "20px",
+                                                    letteSpacing: "-2%",
+                                                    color: "#A3AED0",
+                                                }}>12 May 2024</Typography>
+
+                                            </Box>
+                                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                <ArrowRightIcon sx={{ fontSize: "24px", color: "red" }} />
+                                                <Typography sx={{ fontWeight: "bold", fontSize: "14px", color: "red" }}>illness</Typography>
+                                            </Box>
 
                                         </Box>
                                         <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: "5px" }}>

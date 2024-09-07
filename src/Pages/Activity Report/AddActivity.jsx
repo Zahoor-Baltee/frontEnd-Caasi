@@ -471,8 +471,9 @@ const AddActivityReport = () => {
             if (res.success) {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                 setIsLoading(false)
-                navigateUser('/activityreport')
-
+                setTimeout(() => {
+                    navigateUser("/activityreport")
+                }, 2000)
             } else {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                 setIsLoading(false)

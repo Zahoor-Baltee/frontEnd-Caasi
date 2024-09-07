@@ -67,11 +67,11 @@ const Root = styled(Box)({
 const Login = () => {
   const [data, setData] = useState({});
   const [condition, setCondition] = useState(false);
-  const [alert, setAlert] = useState({
-    alertColor: "primary",
-    alertMessage: "",
-    isAlertOpen: false,
-  });
+  // const [alert, setAlert] = useState({
+  //   alertColor: "primary",
+  //   alertMessage: "",
+  //   isAlertOpen: false,
+  // });
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -85,13 +85,13 @@ const Login = () => {
       setIsLoading(true)
       let res = await UserServices.loginUser(data);
       if (res.success) {
-        setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
+        // setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
         AuthService.logIn(res.data.user, res.data.accessToken)
         setTimeout(() => {
           navigate("/dashboard")
         }, 2000)
       } else {
-        setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: res.message });
+        // setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: res.message });
         setIsLoading(false)
 
       }
@@ -207,7 +207,7 @@ const Login = () => {
           </Button>
         </Box>
         <Box>
-          <AlertSnackbar alert={alert} setAlert={setAlert} />
+          {/* <AlertSnackbar alert={alert} setAlert={setAlert} /> */}
         </Box>
       </Box>
     </Root>

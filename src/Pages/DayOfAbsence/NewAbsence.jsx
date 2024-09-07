@@ -148,7 +148,6 @@ const NewAbsence = () => {
     const [numberOfDays, setNumberOfDays] = useState([]);
     const [endDateForEvent, setEndDateForEvent] = useState(null);
     const [startDateForEvent, setStartDateForEvent] = useState(null);
-    const [selectedAbsence, setSelectedAbsence] = useState(null);
     const [submitForm, setSubmitForm] = useState(false)
 
 
@@ -161,6 +160,8 @@ const NewAbsence = () => {
     const months = ['01', "02", '03', "04", '05', "06", '07', "08", '09', "10", '11', "12"]
     const [isLoading, setIsLoading] = useState(false);
     const isAbsense = useRef(false)
+    const [selectedAbsence, setSelectedAbsence] = useState(absentDaysTitles.length > 0 ? absentDaysTitles[0] : "null");
+
     const label = () => {
         if (selectedMonth && date) {
             const month = date.toLocaleString('default', { month: 'long' });
@@ -360,9 +361,9 @@ const NewAbsence = () => {
             userId: employee,
             dateOfSubmitted: formFields.dateOfSubmission,
             name: selectedUser.firstName,
-            surname: selectedUser.lastName,
+            lastName: selectedUser.lastName,
             email: selectedUser.email,
-            contactNumber: selectedUser.phoneNumber,
+            phone: selectedUser.phoneNumber,
             // status: "active",
             selectMonthDropdowns: selectedMonth,
             startDate: startDateForEvent,
@@ -379,8 +380,9 @@ const NewAbsence = () => {
             if (res.success) {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                 setIsLoading(false)
-                navigateUser('/day-absencelist')
-
+                setTimeout(() => {
+                    navigateUser("/day-absencelist")
+                }, 2000)
             } else {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                 setIsLoading(false)
@@ -445,19 +447,20 @@ const NewAbsence = () => {
                             variant="outlined"
                             margin="dense"
                             value={selectedAbsence}
-                            onChange={(e) => { setSelectedAbsence(e.target.value) }}
+                            onChange={(e) => setSelectedAbsence(e.target.value)}
                             sx={{
                                 mx: 1, width: 300, color: "#fff", backgroundColor: "#D53631", height: "50px",
                                 "& fieldset": {
-                                    border: "none", // Removes the border when the Select is in outlined variant
+                                    border: "none",
                                 },
-                            }} >
-                            <MenuItem value={"null"} >New Absence</MenuItem>
+                            }}
+                        >
+                            {/* <MenuItem value={"null"}>New Absence</MenuItem> */}
                             {absentDaysTitles.map((el, index) => (
-                                <MenuItem key={index} value={el} >{el}</MenuItem>
+                                <MenuItem key={index} value={el}>{el}</MenuItem>
                             ))}
-
                         </Select>
+
                         <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                             <Typography sx={{ color: "#52a9e1", fontWeight: "600" }} variant='h5'>Start Date</Typography>
                             <Box className="flexBox">
@@ -773,7 +776,7 @@ const NewAbsence = () => {
                             </Box>
                         </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid container gap='10px' justifyContent='end' item xs={6}>
                         {/* Attachment Section */}
                         <Box className="CommentSec">
                             <Box className="headerSec">
@@ -793,7 +796,7 @@ const NewAbsence = () => {
                             </Box>
 
                         </Box>
-                        <Button sx={{ height: "60px" }} startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} /> : ""} onClick={handleSubmit} variant="contained" >
+                        <Button sx={{ width: '95%', height: "60px" }} startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} /> : ""} onClick={handleSubmit} variant="contained" >
                             Submit
                         </Button>
                     </Grid>

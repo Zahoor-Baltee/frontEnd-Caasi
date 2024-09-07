@@ -73,31 +73,7 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                 <Typography sx={{ fontWeight: "600", fontSize: "24px", textAlign: "center" }} >{label()}</Typography>
             </Grid>
             <Grid item md={7} sx={{ display: "flex", justifyContent: "end", gap: "10px", alignItems: "center", marginBottom: "5px" }}>
-                {/* <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#2F80ED" }}>
-                    <AccountCircleIcon sx={{
-                        "& .MuiSvgIcon-root": {
-                            color: "gray !important"
-                        }
-                    }} />
-                    <Select
-                        displayEmpty
-                        fullWidth={true}
-                        value={employee}
-                        onChange={handleEmployeeChange}
-                        variant="outlined"
-                        margin="dense"
-                        MenuProps={{ PaperProps: { sx: { maxHeight: 250 } } }}
-                        sx={{ mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", marginRight: "0px !important", "& .MuiSelect-select": { display: "flex", alignItems: "center", gap: 1 }, height: "50px" }}
-                    >
-                        <MenuItem sx={{ display: "flex", alignItems: "center", gap: 2 }} value="">
-                            <Typography>Select Employee</Typography>
-                        </MenuItem>
-                        {userList?.map((el, ind) => (
-                            <MenuItem key={ind} value={el._id}>{el.firstName} {el.lastName}</MenuItem>
-                        ))}
 
-                    </Select>
-                </Box> */}
                 <Select
                     displayEmpty
                     fullWidth={true}
