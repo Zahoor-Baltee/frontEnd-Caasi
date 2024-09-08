@@ -9,13 +9,11 @@ import { TbEdit } from "react-icons/tb";
 import styled from '@mui/system/styled';
 import userImage from '../../Assets/man.png'
 import CircularProgress from "@mui/material/CircularProgress"
-
 import { DataGrid } from '@mui/x-data-grid';
-
 import { UserServices } from '../../Services/User/UserServices';
 import { useNavigate } from 'react-router-dom';
-import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 import SubmitLoader from '../../Componenets/SubmitLoader';
+import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 
 
 
@@ -200,21 +198,7 @@ const User = () => {
                     </Grid>
                     {isFltShow ? <Grid container backgroundColor="#fff" justifyContent="space-between" sx={{ borderRadius: "10px" }} p={2} my={2} >
                         <Grid item xs={5.5} >
-                            <Typography sx={{ textTransform: "none" }}>Status</Typography>
-                            <FormControl fullWidth className='inputField1'>
-                                <Select
-                                    size='small'
-                                    value={userFields?.status || ''}
-                                    onChange={handleChange}
-                                    name='status'
-                                    displayEmpty
-                                >
-                                    <MenuItem value=''>Select Status</MenuItem>
-                                    <MenuItem value='active'>Active</MenuItem>
-                                    <MenuItem value='inactive'>InActive</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <Typography >Employment Status</Typography>
+                            <Typography >Name</Typography>
                             <TextField
                                 size='small'
                                 fullWidth
@@ -222,9 +206,14 @@ const User = () => {
                                 variant='outlined'
                                 onChange={handleChange}
                                 name='firstName' />
+                            <Typography sx={{ textTransform: "none" }}>Email</Typography>
+                            <TextField className='inputField1' fullWidth size='small' type='text'
+                                value={userFields?.email || ''}
+                                onChange={handleChange}
+                                name='email' />
                         </Grid>
                         <Grid item xs={5.5} >
-                            <Typography sx={{ textTransform: "none" }}>Team</Typography>
+                            <Typography sx={{ textTransform: "none" }}>Department</Typography>
                             <TextField className='inputField1' fullWidth size='small' type='text'
                                 value={userFields?.department || ''}
                                 onChange={handleChange}
@@ -251,13 +240,17 @@ const User = () => {
                             columns={columns}
                             getRowId={(e) => e._id}
                             loading={isLoading}
-                            pageSizeOptions={[5]}
                             disableColumnFilter
                             disableColumnMenu
                             checkboxSelection
-                            hideFooterPagination
+                            initialState={{
+                                ...user.initialState,
+                                pagination: { paginationModel: { pageSize: 5 } },
+                            }}
+                            pageSizeOptions={[5, 10, 25]}
+                            // hideFooterPagination
                             slots={{
-                                NoRowsOverlay: CustomNoRowsOverlay,
+                                noRowsOverlay: CustomNoRowsOverlay,  // Ensure to use the correct casing
                             }}
                         />
                     </Grid>

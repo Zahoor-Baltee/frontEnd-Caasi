@@ -7,11 +7,11 @@ import Select from '@mui/material/Select';
 import styled from '@mui/system/styled';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
-import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 import { Helpers } from '../../Shell/Helper';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { AbsenceServices } from '../../Services/Absence/AbsenceServices';
+import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 
 
 const Root = styled(Box)({
@@ -290,7 +290,7 @@ const DayOfAbsenceList = () => {
         // navigate("/expensereports", { state: { id: id } })
     }
     const openAddDayOfAbsence = () => {
-        navigate("/new-absence")
+        navigate("/absence-add")
     }
     const handleClose = () => {
         setOpen(false);
@@ -347,6 +347,14 @@ const DayOfAbsenceList = () => {
                         </Grid>
                         {isFltShow ? <Grid container backgroundColor="#fff" justifyContent="space-between" sx={{ borderRadius: "10px" }} p={2} my={2} >
                             <Grid item xs={5.5} >
+                                <Typography >Name</Typography>
+                                <TextField
+                                    size='small'
+                                    fullWidth
+                                    className='inputField1'
+                                    variant='outlined'
+                                    onChange={handleChange}
+                                    name='name' />
                                 <Typography sx={{ textTransform: "none" }}>Status</Typography>
                                 <FormControl fullWidth className='inputField1'>
                                     <Select
@@ -361,14 +369,7 @@ const DayOfAbsenceList = () => {
                                         <MenuItem value='inactive'>InActive</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <Typography >Name</Typography>
-                                <TextField
-                                    size='small'
-                                    fullWidth
-                                    className='inputField1'
-                                    variant='outlined'
-                                    onChange={handleChange}
-                                    name='name' />
+
                             </Grid>
                             <Grid item xs={5.5} >
                                 <Typography sx={{ textTransform: "none" }}>Contact</Typography>
@@ -401,13 +402,16 @@ const DayOfAbsenceList = () => {
                             columns={columns}
                             getRowId={(e) => e._id}
                             loading={isLoading}
-                            pageSizeOptions={[5]}
                             disableColumnFilter
                             disableColumnMenu
                             checkboxSelection
-                            hideFooterPagination
+                            initialState={{
+                                ...absence.initialState,
+                                pagination: { paginationModel: { pageSize: 5 } },
+                            }}
+                            pageSizeOptions={[5, 10, 25]}
                             slots={{
-                                NoRowsOverlay: CustomNoRowsOverlay,
+                                noRowsOverlay: CustomNoRowsOverlay,  // Ensure to use the correct casing
                             }}
                         />
                     </Box>

@@ -34,9 +34,9 @@ const localizer = dateFnsLocalizer({
 
 
 const Root = styled(Grid)(({ theme }) => ({
-    // "& .MuiSvgIcon-root": {
-    //     color: "#fff"
-    // },
+    "& .MuiSvgIcon-root": {
+        color: "#fff"
+    },
     "& .mainContainer": {
         padding: "20px",
         backgroundColor: "#FAFBFC",

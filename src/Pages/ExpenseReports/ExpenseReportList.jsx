@@ -10,12 +10,12 @@ import styled from '@mui/system/styled';
 import { DataGrid } from '@mui/x-data-grid';
 import { Visibility } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 import ExpenseReportForm from './AddExpenseReport';
 import { Helpers } from '../../Shell/Helper';
 import { ExpenseService } from '../../Services/Expense/ExpenseService';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 
 
 const Root = styled(Box)({
@@ -90,6 +90,7 @@ const ExpenseList = () => {
     const [userFields, setUserFields] = useState({})
     const [isLoading, setIsLoading] = useState(false);
     const [open, setOpen] = React.useState(false);
+    const [isChange, setIsChange] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openMenu = Boolean(anchorEl);
     const [isFltShow, setIsFltShow] = useState(false);
@@ -105,7 +106,7 @@ const ExpenseList = () => {
     const columns = [
         {
             field: 'userName',
-            headerName: 'Employee',
+            headerName: 'Employe',
             width: 200,
         },
         {
@@ -248,6 +249,9 @@ const ExpenseList = () => {
     useEffect(() => {
         getExpenseList()
     }, [])
+    useEffect(() => {
+        getExpenseList()
+    }, [isChange])
 
 
     //Get user List
@@ -319,6 +323,29 @@ const ExpenseList = () => {
                         </Grid>
                         {isFltShow ? <Grid container backgroundColor="#fff" justifyContent="space-between" sx={{ borderRadius: "10px" }} p={2} my={2} >
                             <Grid item xs={5.5} >
+                                <Typography >Employe</Typography>
+                                <TextField
+                                    size='small'
+                                    fullWidth
+                                    className='inputField1'
+                                    variant='outlined'
+                                    onChange={handleChange}
+                                    name='firstName' />
+                                <Typography sx={{ textTransform: "none" }}>Date</Typography>
+                                <TextField className='inputField1'
+                                    fullWidth size='small' type='date'
+                                    value={userFields?.date || ''}
+                                    onChange={handleChange}
+                                    name='date' />
+
+
+                            </Grid>
+                            <Grid item xs={5.5} >
+                                <Typography sx={{ textTransform: "none" }}>Amount</Typography>
+                                <TextField className='inputField1' fullWidth size='small' type='number'
+                                    value={userFields?.amount || ''}
+                                    onChange={handleChange}
+                                    name='amount' />
                                 <Typography sx={{ textTransform: "none" }}>Status</Typography>
                                 <FormControl fullWidth className='inputField1'>
                                     <Select
@@ -334,27 +361,7 @@ const ExpenseList = () => {
                                         <MenuItem value='rejected'>Rejected</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <Typography >Employment Status</Typography>
-                                <TextField
-                                    size='small'
-                                    fullWidth
-                                    className='inputField1'
-                                    variant='outlined'
-                                    onChange={handleChange}
-                                    name='firstName' />
-                            </Grid>
-                            <Grid item xs={5.5} >
-                                <Typography sx={{ textTransform: "none" }}>Amount</Typography>
-                                <TextField className='inputField1' fullWidth size='small' type='number'
-                                    value={userFields?.amount || ''}
-                                    onChange={handleChange}
-                                    name='amount' />
-                                <Typography sx={{ textTransform: "none" }}>Date</Typography>
-                                <TextField className='inputField1'
-                                    fullWidth size='small' type='date'
-                                    value={userFields?.date || ''}
-                                    onChange={handleChange}
-                                    name='date' />
+
                             </Grid>
                             <Grid item xs={12} mt={2} textAlign="right"  >
                                 <Button startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""} onClick={serchUser} sx={{
@@ -373,13 +380,15 @@ const ExpenseList = () => {
                             columns={columns}
                             getRowId={(e) => e._id}
                             loading={isLoading}
-                            pageSizeOptions={[5]}
                             disableColumnFilter
                             disableColumnMenu
                             checkboxSelection
-                            hideFooterPagination
-                            slots={{
-                                NoRowsOverlay: CustomNoRowsOverlay,
+                            initialState={{
+                                ...expense.initialState,
+                                pagination: { paginationModel: { pageSize: 5 } },
+                            }}
+                            pageSizeOptions={[5, 10, 25]} slots={{
+                                noRowsOverlay: CustomNoRowsOverlay,  // Ensure to use the correct casing
                             }}
                         />
                     </Box>
@@ -408,7 +417,7 @@ const ExpenseList = () => {
                         padding: '16px',
                         overflow: 'visible',
                     }} >
-                    <ExpenseReportForm open={open} setOpen={setOpen} />
+                    <ExpenseReportForm isChange={isChange} setIsChange={setIsChange} open={open} setOpen={setOpen} />
                 </DialogContent>
             </Dialog>
 

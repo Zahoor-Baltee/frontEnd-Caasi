@@ -38,7 +38,7 @@ const Root = styled(Box)({
     }
 });
 
-const ExpenseReportForm = ({ open, setOpen }) => {
+const ExpenseReportForm = ({ open, setOpen, isChange, setIsChange }) => {
     const [formFields, setFormFields] = useState({
         userName: "",
         category: ""
@@ -126,9 +126,8 @@ const ExpenseReportForm = ({ open, setOpen }) => {
             let res = await ExpenseService.createExpense(data)
             if (res.success) {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
-                setTimeout(() => {
-                    setOpen(false);
-                }, 3000)
+                setOpen(false);
+                setIsChange(!isChange)
             } else {
 
             }

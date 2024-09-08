@@ -1,12 +1,14 @@
 import { GridOverlay } from '@mui/x-data-grid';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
-export default function CustomNoRowsOverlay() {
+function CustomNoRowsOverlay() {
     return (
         <GridOverlay>
-            <Box sx={{ mt: 1 }}>
-                <Typography variant="h6">No Data Found</Typography>
-            </Box>
+            <Typography variant="body1" color="textSecondary" sx={{ mt: 1 }}>
+                No data found
+            </Typography>
         </GridOverlay>
     );
 }
+
+export default CustomNoRowsOverlay;

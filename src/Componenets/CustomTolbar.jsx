@@ -121,12 +121,12 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                     IconComponent={null} // Remove the dropdown icon
                 >
                     <MenuItem sx={{ display: "flex", alignItems: "center", }} value="">
-                        <AccountCircleIcon sx={{ fontSize: 24, marginRight: "5px" }} /> {/* Adjust icon size */}
-                        <Typography>Select Employee</Typography>
+                        {/* Adjust icon size */}
+                        <Typography >Select Employee</Typography>
                     </MenuItem>
                     {userList?.map((el, ind) => (
                         <MenuItem key={ind} value={el._id}>
-                            <AccountCircleIcon sx={{ fontSize: 24, marginRight: "8px" }} /> {/* Icon for each employee */}
+                            {/* <AccountCircleIcon sx={{ fontSize: 24, marginRight: "8px" }} /> */}
                             {el.firstName} {el.lastName}
                         </MenuItem>
                     ))}

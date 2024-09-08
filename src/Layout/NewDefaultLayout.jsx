@@ -74,16 +74,19 @@ function ResponsiveDrawer(props) {
     const menuList = [
         { name: "Dashboard", url: "/dashboard" },
         { name: "User", url: "/user" },
-        { name: "Expense Report", url: "/expense-list" },
-        { name: "Activity Report", url: "/activityreport" },
+        { name: "Expense Report", url: "/expense" },
+        { name: "Activity Report", url: "/activity" },
         { name: "Advanced Settings and Management", url: "/advancesetting" },
         { name: "Reports and Export", url: "/reportsandexport" },
-        { name: "Days of Absence", url: "/day-absencelist" },
+        { name: "Days of Absence", url: "/absence" },
     ]
     let navigate = useNavigate()
 
 
     let userName = AuthService.getUserName() || "Jhon";
+    React.useEffect(() => {
+    }, [])
+    let path = document.location.pathname
 
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -101,19 +104,19 @@ function ResponsiveDrawer(props) {
     };
     const getIconByIndex = (index, url) => {
         if (index === 0) {
-            return <MdPieChart style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
+            return <MdPieChart style={{ fontSize: "28px", color: path.includes(url) ? "#fff" : "", }} />
         } else if (index === 1) {
-            return <HiUserGroup style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
+            return <HiUserGroup style={{ fontSize: "28px", color: path.includes(url) ? "#fff" : "", }} />
         } else if (index === 2) {
-            return <MdCalendarMonth style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
+            return <MdCalendarMonth style={{ fontSize: "28px", color: path.includes(url) ? "#fff" : "", }} />
         } else if (index === 3) {
-            return <MdOutlineEditCalendar style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
+            return <MdOutlineEditCalendar style={{ fontSize: "28px", color: path.includes(url) ? "#fff" : "", }} />
         } else if (index === 4) {
-            return <SettingsOutlinedIcon style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
+            return <SettingsOutlinedIcon style={{ fontSize: "28px", color: path.includes(url) ? "#fff" : "", }} />
         } else if (index === 5) {
-            return <AnalyticsOutlinedIcon style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
+            return <AnalyticsOutlinedIcon style={{ fontSize: "28px", color: path.includes(url) ? "#fff" : "", }} />
         } else if (index === 6) {
-            return <MdCalendarMonth style={{ fontSize: "28px", color: routes === url ? "#fff" : "", }} />
+            return <MdCalendarMonth style={{ fontSize: "28px", color: path.includes(url) ? "#fff" : "", }} />
         }
 
     }
@@ -131,7 +134,12 @@ function ResponsiveDrawer(props) {
                 <List>
                     {menuList.map((e, index) => (
                         <ListItem key={e.name} onClick={() => handleRoutes(e.url)} disablePadding>
-                            <ListItemButton sx={{ backgroundColor: routes === e.url ? "#0171BC" : "", color: routes === e.url ? "#fff" : "", margin: 1, borderRadius: "10px", '&:hover': { backgroundColor: routes === e.url ? "#0171BC" : "", } }}>
+                            <ListItemButton sx={{
+                                backgroundColor: path.includes(e.url) ? "#0171BC" : "", color: path.includes(e.url) ? "#fff" : "", margin: 1, borderRadius: "10px",
+                                '&:hover': {
+                                    backgroundColor: path.includes(e.url) ? "#0171BC" : "",
+                                }
+                            }}>
                                 <ListItemIcon>
                                     {getIconByIndex(index, e.url)}
                                 </ListItemIcon>

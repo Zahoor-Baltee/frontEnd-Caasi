@@ -22,6 +22,7 @@ import ActivityReport from "../Pages/Activity Report/ActivityReport";
 import AddActivity from "../Pages/Activity Report/AddActivity";
 import NewAbsence from "../Pages/DayOfAbsence/NewAbsence";
 import DayOfAbsenceList from "../Pages/DayOfAbsence/DayOfAbsenceList";
+import NotFound from "../Componenets/NotFound";
 
 const WithLayout = ({ component }) => {
   return <NewDefaultLayout><Protected>{component}</Protected></NewDefaultLayout>;
@@ -56,7 +57,7 @@ const Router = () => {
           element={<WithLayout component={<ExpenseReportTable />} />}
         />
         <Route
-          path="/expense-list"
+          path="/expense"
           element={<WithLayout component={<ExpenseList />} />}
         />
         <Route
@@ -64,19 +65,19 @@ const Router = () => {
           element={<WithLayout component={<ExpenseReports />} />}
         />
         <Route
-          path="/activityreport"
+          path="/activity"
           element={<WithLayout component={<ActivityReport />} />}
         />
         <Route
-          path="/add-activity"
+          path="/activity-add"
           element={<WithLayout component={<AddActivity />} />}
         />
         <Route
-          path="/day-absencelist"
+          path="/absence"
           element={<WithLayout component={<DayOfAbsenceList />} />}
         />
         <Route
-          path="/new-absence"
+          path="/absence-add"
           element={<WithLayout component={<NewAbsence />} />}
         />
         <Route
@@ -97,6 +98,7 @@ const Router = () => {
         <Route path="/productlist" element={<WithLayout component="" />} />
         <Route path="/dashboardusinggrid" element={<DashboardUsingGrid />} />
         <Route path="/chart" element={<TickPlacementBars />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

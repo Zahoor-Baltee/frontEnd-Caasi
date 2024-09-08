@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, IconButton, Dialog, DialogContent, Grid, Menu, TextField, CircularProgress } from '@mui/material'
+import { Box, Button, IconButton, Grid, Menu, TextField, CircularProgress } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem';
 import Typography from "@mui/material/Typography";
 import FormControl from '@mui/material/FormControl';
@@ -7,12 +7,11 @@ import Select from '@mui/material/Select';
 import styled from '@mui/system/styled';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
-import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 import { Helpers } from '../../Shell/Helper';
-import { ExpenseService } from '../../Services/Expense/ExpenseService';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { ActivityService } from '../../Services/Activity/ActivityServices';
+import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 
 
 const Root = styled(Box)({
@@ -122,7 +121,7 @@ const ActivityReport = () => {
                 </Typography>
         },
         {
-            field: 'email',
+            field: 'contactNumber',
             headerName: 'Contact',
             width: 200,
             renderCell: (params) => (
@@ -135,7 +134,7 @@ const ActivityReport = () => {
                             color: "#828282",
                         }}
                     >
-                        {params.value}
+                        {params.row.email}
                     </Typography>
                     <Typography
                         sx={{
@@ -145,7 +144,7 @@ const ActivityReport = () => {
                             color: "#828282",
                         }}
                     >
-                        {params.row.phone}
+                        {params.value}
                     </Typography>
                 </Box>
             ),
@@ -286,7 +285,7 @@ const ActivityReport = () => {
         navigate("/expensereports", { state: { id: id } })
     }
     const openAddActivityReport = () => {
-        navigate("/add-activity")
+        navigate("/activity-add")
     }
     const handleClose = () => {
         setOpen(false);
@@ -343,6 +342,14 @@ const ActivityReport = () => {
                         </Grid>
                         {isFltShow ? <Grid container backgroundColor="#fff" justifyContent="space-between" sx={{ borderRadius: "10px" }} p={2} my={2} >
                             <Grid item xs={5.5} >
+                                <Typography >Name</Typography>
+                                <TextField
+                                    size='small'
+                                    fullWidth
+                                    className='inputField1'
+                                    variant='outlined'
+                                    onChange={handleChange}
+                                    name='name' />
                                 <Typography sx={{ textTransform: "none" }}>Status</Typography>
                                 <FormControl fullWidth className='inputField1'>
                                     <Select
@@ -357,16 +364,10 @@ const ActivityReport = () => {
                                         <MenuItem value='inactive'>InActive</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <Typography >Name</Typography>
-                                <TextField
-                                    size='small'
-                                    fullWidth
-                                    className='inputField1'
-                                    variant='outlined'
-                                    onChange={handleChange}
-                                    name='name' />
+
                             </Grid>
                             <Grid item xs={5.5} >
+
                                 <Typography sx={{ textTransform: "none" }}>Contact</Typography>
                                 <TextField className='inputField1' fullWidth size='small' type='number'
                                     value={userFields?.contact || ''}
@@ -378,6 +379,7 @@ const ActivityReport = () => {
                                     value={userFields?.date || ''}
                                     onChange={handleChange}
                                     name='date' />
+
                             </Grid>
                             <Grid item xs={12} mt={2} textAlign="right"  >
                                 <Button startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""} onClick={serchUser} sx={{
@@ -397,15 +399,19 @@ const ActivityReport = () => {
                             columns={columns}
                             getRowId={(e) => e._id}
                             loading={isLoading}
-                            pageSizeOptions={[5]}
                             disableColumnFilter
                             disableColumnMenu
                             checkboxSelection
-                            hideFooterPagination
+                            initialState={{
+                                ...activity.initialState,
+                                pagination: { paginationModel: { pageSize: 5 } },
+                            }}
+                            pageSizeOptions={[5, 10, 25]}
                             slots={{
-                                NoRowsOverlay: CustomNoRowsOverlay,
+                                noRowsOverlay: CustomNoRowsOverlay,  // Ensure to use the correct casing
                             }}
                         />
+
                     </Box>
                 </Box>
             </Box>

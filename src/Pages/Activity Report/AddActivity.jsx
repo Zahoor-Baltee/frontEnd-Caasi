@@ -493,12 +493,16 @@ const AddActivityReport = () => {
             prevEvents.filter((eve) => eve.date.toISOString() !== eventToRemove.toISOString())
         );
 
-        // Remove from activities state
+        // // Remove from activities state
+
         setActivities((prevActivities) =>
-            prevActivities.filter((activity) =>
-                !(new Date(activity.date).toISOString() === eventToRemove.toISOString() && activity.status === status)
+            prevActivities.map((activity) =>
+                new Date(activity.date).toISOString() === eventToRemove.toISOString() && activity.status === status
+                    ? { ...activity, status: null } // or any other value you want to set for the status
+                    : activity
             )
         );
+
     };
 
     return (
@@ -614,7 +618,7 @@ const AddActivityReport = () => {
                                                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                                                     <Typography style={{ color: "#0075BC" }}>{activity.date}</Typography>
                                                     <Box sx={{ display: "flex", }}>
-                                                        {activity?.type ? <Typography sx={{ display: "flex", alignItems: 'center', color: activity.type === 'Working day' ? '#008000' : activity.type === 'Absence' ? '#DC143C' : 'orange', }}>
+                                                        {activity?.status && activity?.type ? <Typography sx={{ display: "flex", alignItems: 'center', color: activity.type === 'Working day' ? '#008000' : activity.type === 'Absence' ? '#DC143C' : 'orange', }}>
                                                             <FiberManualRecordIcon
                                                                 sx={{
                                                                     fontSize: "16px",
