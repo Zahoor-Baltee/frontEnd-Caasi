@@ -75,7 +75,7 @@ function ExpenseReports() {
         // if (state.from === "user") {
         //     navigate('/userinformation');
         // } else {
-        navigate('/expense-list');
+        navigate('/expense');
         // }
     };
     return (

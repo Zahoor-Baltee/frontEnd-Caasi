@@ -4,7 +4,7 @@ import { styled } from "@mui/system";
 import MarkunreadIcon from '@mui/icons-material/Markunread';
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
 import forgotPassword from '../Assets/forgotPassword.jpeg'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Root = styled(Box)({
     margin: 0,
@@ -53,14 +53,14 @@ const Root = styled(Box)({
 const ForgotPassword = () => {
     const [data, setData] = useState({});
     const [condition, setCondition] = useState(false);
-
+    const navigate = useNavigate()
     const handleChange = (event) => {
         setData((pre) => ({ ...pre, [event.target.name]: event.target.value }));
     };
 
-    const handleLogIn = () => {
+    const handleSentEmail = () => {
         setCondition(true);
-        console.log(data);
+        navigate('/confirmation')
 
     };
 
@@ -108,7 +108,7 @@ const ForgotPassword = () => {
                                     }}
                                 />
                             </Box>
-                            <Button size="large" variant="contained" fullWidth onClick={handleLogIn}>
+                            <Button size="large" variant="contained" fullWidth onClick={handleSentEmail}>
                                 Submit
                             </Button>
 
@@ -118,7 +118,7 @@ const ForgotPassword = () => {
                 </Box>
                 <Box>
                     <Link
-                        href=""
+                        to={'/'}
                         style={{
                             textDecoration: 'none',
                             color: 'primary', // Inherit color from parent

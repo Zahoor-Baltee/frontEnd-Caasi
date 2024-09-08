@@ -132,22 +132,61 @@ const CustomToolbar = ({ date, onMonthChange, selectedMonth, employee, onEmploye
                     ))}
                 </Select>
                 {from === 'act' && <Select
-
+                    displayEmpty
                     fullWidth={true}
                     value={selectedMonth}
                     onChange={handleMonthChange}
                     variant="outlined"
                     margin="dense"
+                    MenuProps={{
+                        PaperProps: {
+                            sx: {
+                                maxHeight: 250,
+                                textAlign: "center",
+                                '&::-webkit-scrollbar': {
+                                    display: 'none', // Hide the scrollbar
+                                },
+                                overflowY: 'auto', // Prevent scrolling
+                            }
+                        }
+                    }}
                     sx={{
-                        mx: 1, width: 300, color: "#fff", backgroundColor: "#2f80ed", height: "50px", "& fieldset": {
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        padding: "8px 5px", // Padding inside the button
+                        borderRadius: "5px", // Rounded corners
+                        backgroundColor: "#2F80ED", // Button background color
+                        color: "#fff", // Text color
+                        fontWeight: 500, // Adjust text weight
+                        fontSize: "16px", // Adjust font size
+                        height: "50px",
+                        width: "300px", // Fixed width to fit content
+                        border: "none", // Removes the border
+                        "& .MuiSelect-select": {
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                        },
+                        "& fieldset": {
                             border: "none", // Removes the border when the Select is in outlined variant
                         },
+                        "&:hover": {
+                            backgroundColor: "#1c5fb8", // Hover color
+                        },
                     }}
+                    IconComponent={null} // Remove the dropdown icon
                 >
+                    {/* <MenuItem value="">
+                        <Typography>Select Month</Typography>
+                    </MenuItem> */}
                     {months?.map((el, ind) => (
-                        <MenuItem key={ind} value={"2024-" + el.id}>{el.name}</MenuItem>
+                        <MenuItem key={ind} value={`2024-${el.id}`}>
+                            {el.name}
+                        </MenuItem>
                     ))}
-                </Select>}
+                </Select>
+                }
 
             </Grid>
         </Root>

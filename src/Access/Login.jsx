@@ -5,11 +5,10 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
-import Link from "@mui/material/Link";
 import logo1 from "../Assets/cassilogo.png";
 import logo from "../Assets/Caasi-croped-logo.png";
 import { UserServices } from "../Services/User/UserServices";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthService from "../Services/AuthServices";
 import AlertSnackbar from "../Componenets/AlertSnackbar";
 
@@ -185,13 +184,15 @@ const Login = () => {
             />
           </Box>
           <Link
-            href=""
-            sx={{
+            to={'/forgotpassword'}
+            style={{
               textDecoration: "none",
+              marginBottom: "5px",
               color: "primary",
               textAlign: "end",
               marginBottom: 2,
               fontWeight: "bolder",
+              cursor: "pointer"
             }}
           >
             <Typography variant="body2">Forget Password?</Typography>

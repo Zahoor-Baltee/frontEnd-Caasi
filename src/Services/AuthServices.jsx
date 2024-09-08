@@ -8,7 +8,7 @@ const AuthService = {
         return localStorage.getItem(token) !== null
     },
     logOut() {
-        localStorage.clear();
+        localStorage.removeItem(token);
         window.location.href = "/"
     },
     logIn(data, authtoken) {

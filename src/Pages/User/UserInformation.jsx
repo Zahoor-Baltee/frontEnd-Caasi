@@ -20,11 +20,13 @@ import { Helpers } from '../../Shell/Helper';
 import AuthService from '../../Services/AuthServices';
 import AlertSnackbar from '../../Componenets/AlertSnackbar';
 import { DataGrid } from '@mui/x-data-grid';
-import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 import { Visibility } from '@mui/icons-material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { ExpenseService } from '../../Services/Expense/ExpenseService';
+import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
+import { ActivityService } from '../../Services/Activity/ActivityServices';
+import { AbsenceServices } from '../../Services/Absence/AbsenceServices';
 
 
 const Root = styled(Box)(({ theme }) => ({
@@ -150,24 +152,32 @@ export default function UserInfromation() {
         detail: {},
         isEdit: false
     })
-    const [expense, setExpense] = useState({
-        list: [],
-        filterList: [],
-        detail: {}
+    const [detail, setDetail] = useState({
+        absence: [],
+        activity: [],
+        expense: []
     })
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openMenu = Boolean(anchorEl);
+    const [isSubmit, setIsSubmit] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectedReport, setSelectedReport] = useState('expense')
+    let { state } = useLocation()
+    useEffect(() => {
+        if (state?.id) {
+            getUserDetail()
+        }
+    }, [state])
+    useEffect(() => {
+        const formattedUserFields = {
+            ...user.detail,
+            updatedDate: Helpers.dateFormater1(user.detail.updatedDate),
+            createdDate: Helpers.dateFormater1(user.detail.createdDate),
+        };
+        setUserFields(formattedUserFields);
+    }, [user.isEdit])
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleOpenDetail = (id) => {
-        navigate("/expensereports", { state: { id: id, from: "user" } })
-    }
-    const handleCloseMenu = () => {
-        setAnchorEl(null);
-    };
-    const columns = [
+    const expenceColumns = [
         {
             field: 'userName',
             headerName: 'Employee',
@@ -310,15 +320,332 @@ export default function UserInfromation() {
         },
 
     ];
+    const activityColumns = [
+        {
+            field: 'name',
+            headerName: 'Name',
+            width: 200,
+            renderCell: (params) =>
+                <Typography
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "#0171BC"
+                    }}>
+                    {params.value} {params.row.surname}
+                </Typography>
+        },
+        {
+            field: 'contactNumber',
+            headerName: 'Contact',
+            width: 200,
+            renderCell: (params) => (
+                <Box sx={{ display: "flex", justifyContent: "start", flexDirection: "column", alignItems: "start" }}>
+                    <Typography
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: "#828282",
+                        }}
+                    >
+                        {params.row.email}
+                    </Typography>
+                    <Typography
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: "#828282",
+                        }}
+                    >
+                        {params.value}
+                    </Typography>
+                </Box>
+            ),
+        },
+        {
+            field: 'dateOfSubmitted',
+            headerName: 'Date',
+            width: 200,
+            renderCell: (params) =>
+                <Typography
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "#828282"
+                    }}>
+                    {Helpers.dateFormater(params.value)}
+                </Typography>
+        },
+        {
+            field: 'status',
+            headerName: 'Status',
+            // width: 200,
+            flex: 1,
+            renderCell: (params) => (
+                <Typography sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "#828282"
+                }}>
+                    {params.value}
+                </Typography>
+            )
+        },
+        {
+            field: 'userId',
+            headerName: 'Actions',
+            width: 150,
+            renderCell: (params) => (
+                <>
+                    <IconButton>
+                        <MoreVertIcon onClick={handleClick} />
+                    </IconButton>
+                    <Menu
+                        sx={{ "& .MuiPaper-root ": { boxShadow: "#aba4a43d 0px 3px 8px" } }}
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={openMenu}
+                        onClose={handleCloseMenu}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#f0fff8",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#18ab56",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #18ab56",
+
+                            }}>
+                                Approved
+                            </Button>
+                        </MenuItem>
+
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#FEFFE5",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#FFBC10",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #FFBC10",
+
+                            }}>
+                                Pending
+                            </Button>
+                        </MenuItem>
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#fff0f0",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#eb5757",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #eb5757",
+
+                            }}>
+                                Rejected
+                            </Button>
+                        </MenuItem>
+                    </Menu>
+                    <IconButton>
+                        <KeyboardArrowDownIcon onClick={() => handleOpenDetail(params.value)} />
+                    </IconButton>
+
+                </>
+
+            )
+        },
+
+    ];
+    const absenceColumns = [
+        {
+            field: 'name',
+            headerName: 'Name',
+            width: 200,
+            renderCell: (params) =>
+                <Typography
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "#0171BC"
+                    }}>
+                    {params.value} {params.row.lastName}
+                </Typography>
+        },
+        {
+            field: 'email',
+            headerName: 'Contact',
+            width: 200,
+            renderCell: (params) => (
+                <Box sx={{ display: "flex", justifyContent: "start", flexDirection: "column", alignItems: "start" }}>
+                    <Typography
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: "#828282",
+                        }}
+                    >
+                        {params.value}
+                    </Typography>
+                    <Typography
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: "#828282",
+                        }}
+                    >
+                        {params.row.phone}
+                    </Typography>
+                </Box>
+            ),
+        },
+
+        {
+            field: 'startDate',
+            headerName: 'Day Of Absence',
+            width: 320,
+            renderCell: (params) =>
+                <Typography
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "#828282"
+                    }}>
+                    {Helpers.dateFormater(params.value)} to {Helpers.dateFormater(params.row.endDate)}
+                </Typography>
+        },
+        {
+            field: 'status',
+            headerName: 'Status',
+            // width: 200,
+            flex: 1,
+            renderCell: (params) => (
+                <Typography sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "#828282"
+                }}>
+                    {params.value}
+                </Typography>
+            )
+        },
+        {
+            field: 'userId',
+            headerName: 'Actions',
+            width: 150,
+            renderCell: (params) => (
+                <>
+                    <IconButton>
+                        <MoreVertIcon onClick={handleClick} />
+                    </IconButton>
+                    <Menu
+                        sx={{ "& .MuiPaper-root ": { boxShadow: "#aba4a43d 0px 3px 8px" } }}
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={openMenu}
+                        onClose={handleCloseMenu}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#f0fff8",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#18ab56",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #18ab56",
+
+                            }}>
+                                Approved
+                            </Button>
+                        </MenuItem>
+
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#FEFFE5",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#FFBC10",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #FFBC10",
+
+                            }}>
+                                Pending
+                            </Button>
+                        </MenuItem>
+                        <MenuItem onClick={handleCloseMenu}>
+                            <Button sx={{
+                                backgroundColor: "#fff0f0",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                color: "#eb5757",
+                                height: "40px",
+                                width: "100px",
+                                borderRadius: "5px",
+                                border: "1px solid #eb5757",
+
+                            }}>
+                                Rejected
+                            </Button>
+                        </MenuItem>
+                    </Menu>
+                    <IconButton>
+                        <KeyboardArrowDownIcon onClick={() => handleOpenDetail(params.value)} />
+                    </IconButton>
+
+                </>
+
+            )
+        },
+
+    ];
     useEffect(() => {
         getExpenseList()
     }, [])
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleOpenDetail = (id) => {
+        navigate("/expensereports", { state: { id: id, from: "user" } })
+    }
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
     const getExpenseList = async () => {
         setIsLoading(true)
         try {
             let res = await ExpenseService.getlist()
             if (res.success) {
-                setExpense({ ...expense, list: res.data, filterList: res.data })
+                setDetail({ ...detail, expense: res.data })
                 setIsLoading(false)
             } else {
                 setIsLoading(false)
@@ -329,23 +656,39 @@ export default function UserInfromation() {
             setIsLoading(false)
         }
     }
-    const [isSubmit, setIsSubmit] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const getActivityList = async () => {
+        setIsLoading(true)
+        try {
+            let res = await ActivityService.getlist()
+            if (res.success) {
+                setDetail({ ...detail, activity: res.data })
+                setIsLoading(false)
+            } else {
+                setIsLoading(false)
+            }
 
-    let { state } = useLocation()
-    useEffect(() => {
-        if (state?.id) {
-            getUserDetail()
+        } catch (error) {
+            console.error(error)
+            setIsLoading(false)
         }
-    }, [state])
-    useEffect(() => {
-        const formattedUserFields = {
-            ...user.detail,
-            updatedDate: Helpers.dateFormater1(user.detail.updatedDate),
-            createdDate: Helpers.dateFormater1(user.detail.createdDate),
-        };
-        setUserFields(formattedUserFields);
-    }, [user.isEdit])
+    }
+    const getAbsenceList = async () => {
+        setIsLoading(true)
+        try {
+            let res = await AbsenceServices.getlist()
+            if (res.success) {
+                setDetail({ ...detail, absence: res.data })
+                setIsLoading(false)
+            } else {
+                setIsLoading(false)
+            }
+
+        } catch (error) {
+            console.error(error)
+            setIsLoading(false)
+        }
+    }
+
     const handleEdit = async () => {
         if (user.isEdit) {
             setIsLoading(true)
@@ -408,7 +751,17 @@ export default function UserInfromation() {
         setUserFields({ ...userFields, [name]: value });
     };
 
+    const handleGetList = (report) => {
+        setSelectedReport(report)
+        if ("absence" === report) {
+            getAbsenceList()
+        } else if ('activity' === report) {
+            getActivityList()
+        } else {
+            getExpenseList()
+        }
 
+    }
 
 
     return (
@@ -582,15 +935,15 @@ export default function UserInfromation() {
                             </Box>
                         </Box>
                         <Box className="userCardButtons">
-                            <Button className='Buttonpo' variant="contained">
+                            <Button onClick={() => handleGetList('expense')} className='Buttonpo' variant="contained">
                                 <img width='20px' src={expenseReportIcon} alt="Expense Report Icon" />
                                 <span>Expense Report</span>
                             </Button>
-                            <Button className='Buttonpo' variant="contained">
+                            <Button onClick={() => handleGetList("activity")} className='Buttonpo' variant="contained">
                                 <img width='20px' src={activityReport} alt="Activity Report Icon" />
                                 <span>Activity Report</span>
                             </Button>
-                            <Button className='Buttonpo' variant="contained">
+                            <Button onClick={() => handleGetList("absence")} className='Buttonpo' variant="contained">
                                 <img width='20px' src={userAbsense} alt="User Absence Icon" />
                                 <span>User Absences</span>
                             </Button>
@@ -600,17 +953,16 @@ export default function UserInfromation() {
                         <DataGrid
                             autoHeight
                             minHeight={40}
-                            rows={expense?.filterList || []}
-                            columns={columns}
+                            rows={selectedReport === "absence" ? detail?.absence : selectedReport === "activity" ? detail?.activity : detail?.expense}
+                            columns={selectedReport === "absence" ? absenceColumns : selectedReport === "activity" ? activityColumns : expenceColumns}
                             getRowId={(e) => e._id}
                             loading={isLoading}
                             pageSizeOptions={[5]}
                             disableColumnFilter
                             disableColumnMenu
                             checkboxSelection
-                            hideFooterPagination
                             slots={{
-                                NoRowsOverlay: CustomNoRowsOverlay,
+                                noRowsOverlay: CustomNoRowsOverlay,  // Ensure to use the correct casing
                             }}
                         />
                     </Box>
