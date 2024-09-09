@@ -160,7 +160,7 @@ const NewAbsence = () => {
     const months = ['01', "02", '03', "04", '05', "06", '07', "08", '09', "10", '11', "12"]
     const [isLoading, setIsLoading] = useState(false);
     const isAbsense = useRef(false)
-    const [selectedAbsence, setSelectedAbsence] = useState(absentDaysTitles.length > 0 ? absentDaysTitles[0] : "null");
+    const [selectedAbsence, setSelectedAbsence] = useState("Illness");
 
     const label = () => {
         if (selectedMonth && date) {
@@ -372,7 +372,7 @@ const NewAbsence = () => {
             comments: comments,
             attachments: '',
             days: events,
-            dayOfAbsence: numberOfDays
+            reasonOfAbsence: selectedAbsence
         }
         try {
             let res = await AbsenceServices.createAbsence(data)

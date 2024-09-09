@@ -107,7 +107,7 @@ const AddUser = () => {
 
     const createUser = async () => {
         setIsSubmit(true)
-        console.log(userFields)
+        // console.log(userFields)
         if (!userFields?.firstName || !userFields?.lastName || !userFields?.email || !userFields?.department || !userFields?.phoneNumber || !userFields?.status || !userFields?.createdDate || !userFields?.updatedDate) {
             return
         }

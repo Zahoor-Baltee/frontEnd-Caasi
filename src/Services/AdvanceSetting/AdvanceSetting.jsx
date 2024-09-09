@@ -1,8 +1,8 @@
 import { ExecuteGet, ExecutePost } from "../ApiServices";
 
 export const AdvancedSettingServices = {
-    async createActivity(data) {
-        let response = await ExecutePost("advanced-settings/create", data);
+    async createAdvanceSettings(data) {
+        let response = await ExecutePost("advancedsettings/create", data);
         return response;
     },
 };

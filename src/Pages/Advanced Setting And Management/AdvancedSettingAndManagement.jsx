@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import { Button, TextField, Typography } from '@mui/material';
 import Tab from '@mui/material/Tab';
@@ -14,6 +14,7 @@ import { styled } from '@mui/material/styles';
 import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
+import AuthService from '../../Services/AuthServices';
 
 const Root = styled(Box)(({ theme }) => ({
     margin: 0,
@@ -81,11 +82,9 @@ export default function AdvancedSettingAndManagement() {
         alertMessage: "",
         isAlertOpen: false,
     });
-    const [isLoading, setIsLoading] = useState(false);
     const [colorValue, setColorValue] = useState('#ffffff');
     const [value, setValue] = useState('1');
 
-    // Separate edit states for each field
     const [editStates, setEditStates] = useState({
         team: false,
         department: false,
@@ -105,10 +104,12 @@ export default function AdvancedSettingAndManagement() {
     };
 
     const handleSubmit = async () => {
-        // Logic to handle submit for all fields
+        if (!userFields?.team || !userFields?.department || !userFields?.roles) {
+            return
+        }
         try {
-            setIsLoading(true);
-            let res = await AdvancedSettingServices.createActivity(userFields);
+            let userId = AuthService.getUserid()
+            let res = await AdvancedSettingServices.createAdvanceSettings(userFields);
             if (res.success) {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                 setEditStates({ team: false, department: false, roles: false });
@@ -118,8 +119,6 @@ export default function AdvancedSettingAndManagement() {
         } catch (error) {
             console.error(error);
             setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: "An error occurred." });
-        } finally {
-            setIsLoading(false);
         }
     };
     return (
@@ -146,7 +145,7 @@ export default function AdvancedSettingAndManagement() {
                             <TabPanel sx={{ display: "flex", flexDirection: "column", gap: "20px" }} value="1">
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                        <Box>
+                                        <Box sx={{ width: "100%" }}>
                                             <Typography sx={{ fontWeight: "600" }}>Create Teams</Typography>
                                             {editStates.team ? (
                                                 <TextField
@@ -156,10 +155,10 @@ export default function AdvancedSettingAndManagement() {
                                                     fullWidth
                                                     variant="standard"
                                                     InputProps={{ disableUnderline: true }}
-                                                    sx={{ '& .MuiInputBase-root': { border: 'none' } }}
+                                                    sx={{ '& .MuiInputBase-root': { height: '20px', backgroundColor: "#fff", border: 'none' } }}
                                                 />
                                             ) : (
-                                                <Typography className='lastName' sx={{ color: "#959595", textTransform: "none" }}>
+                                                <Typography className='lastName' sx={{ height: '20px', color: "#959595", textTransform: "none" }}>
                                                     {userFields.team || "Development team"}
                                                 </Typography>
                                             )}
@@ -171,7 +170,7 @@ export default function AdvancedSettingAndManagement() {
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                        <Box>
+                                        <Box sx={{ width: "100%" }}>
                                             <Typography sx={{ fontWeight: "600" }}>Create Department</Typography>
                                             {editStates.department ? (
                                                 <TextField
@@ -196,7 +195,7 @@ export default function AdvancedSettingAndManagement() {
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                        <Box>
+                                        <Box sx={{ width: "100%" }}>
                                             <Typography sx={{ fontWeight: "600" }}>Create Roles</Typography>
                                             {editStates.roles ? (
                                                 <TextField
@@ -206,7 +205,7 @@ export default function AdvancedSettingAndManagement() {
                                                     fullWidth
                                                     variant="standard"
                                                     InputProps={{ disableUnderline: true }}
-                                                    sx={{ '& .MuiInputBase-root': { border: 'none' } }}
+                                                    sx={{ '& .MuiInputBase-root': { border: 'none', padding: "0px 10px" } }}
                                                 />
                                             ) : (
                                                 <Typography className='lastName' sx={{ color: "#959595", textTransform: "none" }}>

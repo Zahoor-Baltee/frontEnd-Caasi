@@ -130,21 +130,41 @@ const Root = styled(Box)({
 });
 const NewDashboard = () => {
     const [dashboard, setDashboard] = useState({
-        activityByMonth: []
+        activityByMonth: [],
+        absenceByMonth: []
     })
     const [currentMonth, setCurrentMonth] = useState('');
     useEffect(() => {
         getActivitByMonth()
-        const getCurrentMonthName = () => {
-            const date = new Date();
-            const monthNames = [
-                "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
-            return monthNames[date.getMonth()];
-        };
-        setCurrentMonth(getCurrentMonthName());
+        getAbsenceByMonth()
+        getCurrentMonthName();
     }, [])
+    const getCurrentMonthName = () => {
+        const date = new Date();
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        setCurrentMonth(monthNames[date.getMonth()]);
+    };
+    //Get absence
+    const getAbsenceByMonth = async () => {
+        let currentdate = Helpers.getCurrentDate()
+        try {
+            let data = {
+                userId: AuthService.getUserid(),
+                month: currentdate.month,
+                year: currentdate.year
+            }
+            let res = await DashboardService.getAbsenceReportsByMonth(data)
+            if (res.success) {
+                setDashboard((prevState) => ({ ...prevState, absenceByMonth: res.data }));
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    //Get activity
     const getActivitByMonth = async () => {
         let currentdate = Helpers.getCurrentDate()
         try {
@@ -155,8 +175,7 @@ const NewDashboard = () => {
             }
             let res = await DashboardService.getActivityReportsByMonth(data)
             if (res.success) {
-
-                setDashboard({ ...dashboard, activityByMonth: res.data })
+                setDashboard((prevState) => ({ ...prevState, activityByMonth: res.data }));
             }
         } catch (error) {
             console.log(error)
@@ -484,7 +503,7 @@ const NewDashboard = () => {
                                             </Box>
                                         </Box>
                                         <Box >
-                                            {dashboard?.activityByMonth?.map((el, ind) => (
+                                            {dashboard?.activityByMonth?.slice(Math.max(dashboard?.activityByMonth?.length - 3, 0)).map((el, ind) => (
                                                 <Box key={ind} marginBottom={2}>
                                                     <Typography sx={{
                                                         fontWeight: 700,
@@ -530,7 +549,7 @@ const NewDashboard = () => {
                             </Grid>
                             <Grid item xs={3}>
                                 <Box className='absenceRequests'>
-                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "13px" }}>
+                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                                         <Box>
                                             <Typography sx={{
                                                 fontWeight: 500,
@@ -558,82 +577,37 @@ const NewDashboard = () => {
                                                     lineHeight: "28px",
                                                     letteSpacing: "-2%",
                                                     color: "#0171bc",
-                                                }}>38</Typography>
+                                                }}>{dashboard?.absenceByMonth?.length}</Typography>
                                             </Box>
 
                                         </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Box>
-                                                <Typography sx={{
-                                                    fontWeight: 700,
-                                                    fontSize: "14px",
-                                                    lineHeight: "28px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#1B2559",
-                                                }}>Carlos Fonte</Typography>
-                                                <Typography sx={{
-                                                    fontWeight: 500,
-                                                    fontSize: "12px",
-                                                    lineHeight: "20px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#A3AED0",
-                                                }}>12 May 2024</Typography>
+                                        {dashboard?.absenceByMonth?.slice(Math.max(dashboard?.absenceByMonth?.length - 3, 0))?.map((el, ind) => (
+                                            <Box key={ind} sx={{ display: "flex", justifyContent: "space-between" }}>
+                                                <Box>
+                                                    <Box marginBottom={1}>
+                                                        <Typography sx={{
+                                                            fontWeight: 700,
+                                                            fontSize: "14px",
+                                                            lineHeight: "28px",
+                                                            letteSpacing: "-2%",
+                                                            color: "#1B2559",
+                                                        }}>{el.name} {el.lastName}</Typography>
+                                                        <Typography sx={{
+                                                            fontWeight: 500,
+                                                            fontSize: "12px",
+                                                            lineHeight: "20px",
+                                                            letteSpacing: "-2%",
+                                                            color: "#A3AED0",
+                                                        }}>{Helpers.dateFormater(el.createdAt)}</Typography>
 
+                                                    </Box>
+                                                </Box>
+                                                <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                    <ArrowRightIcon sx={{ fontSize: "24px", color: "red" }} />
+                                                    <Typography sx={{ fontWeight: "bold", fontSize: "14px", color: "red" }}>{el.reasonOfAbsence}</Typography>
+                                                </Box>
                                             </Box>
-                                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                                                <ArrowRightIcon sx={{ fontSize: "24px", color: "red" }} />
-                                                <Typography sx={{ fontWeight: "bold", fontSize: "14px", color: "red" }}>illness</Typography>
-                                            </Box>
-
-                                        </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Box>
-                                                <Typography sx={{
-                                                    fontWeight: 700,
-                                                    fontSize: "14px",
-                                                    lineHeight: "28px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#1B2559",
-                                                }}>Carlos Fonte</Typography>
-                                                <Typography sx={{
-                                                    fontWeight: 500,
-                                                    fontSize: "12px",
-                                                    lineHeight: "20px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#A3AED0",
-                                                }}>12 May 2024</Typography>
-
-                                            </Box>
-                                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                                                <ArrowRightIcon sx={{ fontSize: "24px", color: "red" }} />
-                                                <Typography sx={{ fontWeight: "bold", fontSize: "14px", color: "red" }}>illness</Typography>
-                                            </Box>
-
-                                        </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Box>
-                                                <Typography sx={{
-                                                    fontWeight: 700,
-                                                    fontSize: "14px",
-                                                    lineHeight: "28px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#1B2559",
-                                                }}>Carlos Fonte</Typography>
-                                                <Typography sx={{
-                                                    fontWeight: 500,
-                                                    fontSize: "12px",
-                                                    lineHeight: "20px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#A3AED0",
-                                                }}>12 May 2024</Typography>
-
-                                            </Box>
-                                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                                                <ArrowRightIcon sx={{ fontSize: "24px", color: "red" }} />
-                                                <Typography sx={{ fontWeight: "bold", fontSize: "14px", color: "red" }}>illness</Typography>
-                                            </Box>
-
-                                        </Box>
+                                        ))}
                                         <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: "5px" }}>
                                             <Typography sx={{
                                                 fontWeight: 700,
@@ -668,7 +642,7 @@ const NewDashboard = () => {
                                                     lineHeight: "28px",
                                                     letteSpacing: "-2%",
                                                     color: "#1B2559",
-                                                }}>Pending Activity Reports</Typography>
+                                                }}>Pending Expense Reports</Typography>
                                             </Box>
                                             <Box>
                                                 <Typography sx={{
