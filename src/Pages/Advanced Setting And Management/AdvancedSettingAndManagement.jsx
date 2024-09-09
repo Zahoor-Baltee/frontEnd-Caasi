@@ -1,16 +1,19 @@
-import React from 'react';
-import styled from '@emotion/styled'; // This is correct
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import { Button, Typography } from '@mui/material';
+import { Button, TextField, Typography } from '@mui/material';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import { RiDeleteBin6Line } from "react-icons/ri";
 import logo from '../../Assets/cassilogo.png'
 import { MuiColorInput } from 'mui-color-input'
-
+import { LuPenSquare } from "react-icons/lu";
+import { AdvancedSettingServices } from '../../Services/AdvanceSetting/AdvanceSetting';
+import { styled } from '@mui/material/styles';
+import FormGroup from '@mui/material/FormGroup';
+import Switch from '@mui/material/Switch';
+import Stack from '@mui/material/Stack';
 
 const Root = styled(Box)(({ theme }) => ({
     margin: 0,
@@ -24,17 +27,100 @@ const Root = styled(Box)(({ theme }) => ({
         }
     }
 }));
+const AntSwitch = styled(Switch)(({ theme }) => ({
+    width: 28,
+    height: 16,
+    padding: 0,
+    display: 'flex',
+    '&:active': {
+        '& .MuiSwitch-thumb': {
+            width: 15,
+        },
+        '& .MuiSwitch-switchBase.Mui-checked': {
+            transform: 'translateX(9px)',
+        },
+    },
+    '& .MuiSwitch-switchBase': {
+        padding: 2,
+        '&.Mui-checked': {
+            transform: 'translateX(12px)',
+            color: '#fff',
+            '& + .MuiSwitch-track': {
+                opacity: 1,
+                backgroundColor: '#1890ff',
+                ...theme.applyStyles('dark', {
+                    backgroundColor: '#177ddc',
+                }),
+            },
+        },
+    },
+    '& .MuiSwitch-thumb': {
+        boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
+        width: 12,
+        height: 12,
+        borderRadius: 6,
+        transition: theme.transitions.create(['width'], {
+            duration: 200,
+        }),
+    },
+    '& .MuiSwitch-track': {
+        borderRadius: 16 / 2,
+        opacity: 1,
+        backgroundColor: 'rgba(0,0,0,.25)',
+        boxSizing: 'border-box',
+        ...theme.applyStyles('dark', {
+            backgroundColor: 'rgba(255,255,255,.35)',
+        }),
+    },
+}));
 
 export default function AdvancedSettingAndManagement() {
-    const [colorValue, setColorValue] = React.useState('#ffffff')
+    const [userFields, setUserFields] = useState({});
+    const [alert, setAlert] = useState({
+        alertColor: "primary",
+        alertMessage: "",
+        isAlertOpen: false,
+    });
+    const [isLoading, setIsLoading] = useState(false);
+    const [colorValue, setColorValue] = useState('#ffffff');
+    const [value, setValue] = useState('1');
+
+    // Separate edit states for each field
+    const [editStates, setEditStates] = useState({
+        team: false,
+        department: false,
+        roles: false,
+    });
 
     const handleColorChange = (newValue) => {
-        setColorValue(newValue)
-    }
-    const [value, setValue] = React.useState('1');
+        setColorValue(newValue);
+    };
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+    };
+
+    const handleEditToggle = (field) => {
+        setEditStates((prevState) => ({ ...prevState, [field]: !prevState[field] }));
+    };
+
+    const handleSubmit = async () => {
+        // Logic to handle submit for all fields
+        try {
+            setIsLoading(true);
+            let res = await AdvancedSettingServices.createActivity(userFields);
+            if (res.success) {
+                setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
+                setEditStates({ team: false, department: false, roles: false });
+            } else {
+                setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: res.error });
+            }
+        } catch (error) {
+            console.error(error);
+            setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: "An error occurred." });
+        } finally {
+            setIsLoading(false);
+        }
     };
     return (
         <Root>
@@ -42,8 +128,8 @@ export default function AdvancedSettingAndManagement() {
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <Typography sx={{ fontWeight: "bold" }}>Advanced Setting and Management</Typography>
                     <Box sx={{ display: "flex", gap: "15px" }}>
-                        <Button variant="text">Cancel</Button>
-                        <Button variant="contained">Save</Button>
+                        <Button variant="text" >Cancel</Button>
+                        <Button variant="contained" onClick={handleSubmit}>Save</Button>
                     </Box>
                 </Box>
                 <Box>
@@ -62,21 +148,49 @@ export default function AdvancedSettingAndManagement() {
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Box>
                                             <Typography sx={{ fontWeight: "600" }}>Create Teams</Typography>
-                                            <Typography sx={{ color: "#959595" }}>Developement team</Typography>
+                                            {editStates.team ? (
+                                                <TextField
+                                                    className='inputField1'
+                                                    value={userFields.team || ""}
+                                                    onChange={(e) => setUserFields({ ...userFields, team: e.target.value })}
+                                                    fullWidth
+                                                    variant="standard"
+                                                    InputProps={{ disableUnderline: true }}
+                                                    sx={{ '& .MuiInputBase-root': { border: 'none' } }}
+                                                />
+                                            ) : (
+                                                <Typography className='lastName' sx={{ color: "#959595", textTransform: "none" }}>
+                                                    {userFields.team || "Development team"}
+                                                </Typography>
+                                            )}
                                         </Box>
                                         <Box>
-                                            <CreateOutlinedIcon />
+                                            <LuPenSquare onClick={() => handleEditToggle('team')} style={{ cursor: "pointer", color: "#0171BC", fontSize: "25px" }} />
                                         </Box>
                                     </Box>
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Box>
-                                            <Typography sx={{ fontWeight: "600" }}>Create Departments</Typography>
-                                            <Typography sx={{ color: "#959595" }}>Developement team</Typography>
+                                            <Typography sx={{ fontWeight: "600" }}>Create Department</Typography>
+                                            {editStates.department ? (
+                                                <TextField
+                                                    className='inputField1'
+                                                    value={userFields.department || ""}
+                                                    onChange={(e) => setUserFields({ ...userFields, department: e.target.value })}
+                                                    fullWidth
+                                                    variant="standard"
+                                                    InputProps={{ disableUnderline: true }}
+                                                    sx={{ '& .MuiInputBase-root': { border: 'none' } }}
+                                                />
+                                            ) : (
+                                                <Typography className='lastName' sx={{ color: "#959595", textTransform: "none" }}>
+                                                    {userFields.department || "Development department"}
+                                                </Typography>
+                                            )}
                                         </Box>
                                         <Box>
-                                            <CreateOutlinedIcon />
+                                            <LuPenSquare onClick={() => handleEditToggle('department')} style={{ cursor: "pointer", color: "#0171BC", fontSize: "25px" }} />
                                         </Box>
                                     </Box>
                                 </Box>
@@ -84,10 +198,24 @@ export default function AdvancedSettingAndManagement() {
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Box>
                                             <Typography sx={{ fontWeight: "600" }}>Create Roles</Typography>
-                                            <Typography sx={{ color: "#959595" }}>Developement team</Typography>
+                                            {editStates.roles ? (
+                                                <TextField
+                                                    className='inputField1'
+                                                    value={userFields.roles || ""}
+                                                    onChange={(e) => setUserFields({ ...userFields, roles: e.target.value })}
+                                                    fullWidth
+                                                    variant="standard"
+                                                    InputProps={{ disableUnderline: true }}
+                                                    sx={{ '& .MuiInputBase-root': { border: 'none' } }}
+                                                />
+                                            ) : (
+                                                <Typography className='lastName' sx={{ color: "#959595", textTransform: "none" }}>
+                                                    {userFields.roles || "Development roles"}
+                                                </Typography>
+                                            )}
                                         </Box>
                                         <Box>
-                                            <CreateOutlinedIcon />
+                                            <LuPenSquare onClick={() => handleEditToggle('roles')} style={{ cursor: "pointer", color: "#0171BC", fontSize: "25px" }} />
                                         </Box>
                                     </Box>
                                 </Box>
@@ -96,9 +224,11 @@ export default function AdvancedSettingAndManagement() {
                                         <Box>
                                             <Typography sx={{ fontWeight: "600" }}>Activity Reports</Typography>
                                         </Box>
-                                        <Box>
-                                            <CreateOutlinedIcon />
-                                        </Box>
+                                        <FormGroup>
+                                            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                                                <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
+                                            </Stack>
+                                        </FormGroup>
                                     </Box>
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
@@ -106,9 +236,11 @@ export default function AdvancedSettingAndManagement() {
                                         <Box>
                                             <Typography sx={{ fontWeight: "600" }}>Expense Reports</Typography>
                                         </Box>
-                                        <Box>
-                                            <CreateOutlinedIcon />
-                                        </Box>
+                                        <FormGroup>
+                                            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                                                <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
+                                            </Stack>
+                                        </FormGroup>
                                     </Box>
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
@@ -116,9 +248,11 @@ export default function AdvancedSettingAndManagement() {
                                         <Box>
                                             <Typography sx={{ fontWeight: "600" }}>configure all the categories for activity reports </Typography>
                                         </Box>
-                                        <Box>
-                                            <CreateOutlinedIcon />
-                                        </Box>
+                                        <FormGroup>
+                                            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                                                <AntSwitch sx={{ fontSize: "25px" }} defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
+                                            </Stack>
+                                        </FormGroup>
                                     </Box>
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
@@ -128,7 +262,7 @@ export default function AdvancedSettingAndManagement() {
                                             <Typography sx={{ color: "#959595" }}>Carlos Fonte</Typography>
                                         </Box>
                                         <Box>
-                                            <DeleteOutlinedIcon />
+                                            <RiDeleteBin6Line style={{ color: "#0171BC", fontSize: "25px" }} />
                                         </Box>
                                     </Box>
                                 </Box>
