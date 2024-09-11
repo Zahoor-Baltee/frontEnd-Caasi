@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, IconButton, InputAdornment } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -11,6 +11,7 @@ import { UserServices } from "../Services/User/UserServices";
 import { Link, useNavigate } from "react-router-dom";
 import AuthService from "../Services/AuthServices";
 import AlertSnackbar from "../Componenets/AlertSnackbar";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Root = styled(Box)({
   margin: 0,
@@ -66,6 +67,8 @@ const Root = styled(Box)({
 const Login = () => {
   const [data, setData] = useState({});
   const [condition, setCondition] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   // const [alert, setAlert] = useState({
   //   alertColor: "primary",
   //   alertMessage: "",
@@ -77,6 +80,9 @@ const Login = () => {
 
   const handleChange = (event) => {
     setData({ ...data, [event.target.name]: event.target.value });
+  };
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
   };
 
   const handleLogIn = async () => {
@@ -176,11 +182,20 @@ const Login = () => {
               onKeyDown={handleKeyDown}
               value={data?.password || ""}
               onChange={handleChange}
-              type="password"
+              type={showPassword ? "text" : "password"} // Corrected dynamic type
               id="password"
               placeholder="Enter Password"
               error={condition && !data?.password}
               helperText={condition && !data?.password && "Enter your Password"}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleTogglePasswordVisibility} edge="end">
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           </Box>
           <Link
@@ -192,10 +207,11 @@ const Login = () => {
               textAlign: "end",
               marginBottom: 2,
               fontWeight: "bolder",
-              cursor: "pointer"
+              cursor: "pointer",
+              marginBottom: "10px"
             }}
           >
-            <Typography variant="body2">Forget Password?</Typography>
+            Forget Password?
           </Link>
           <Button
             startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""}

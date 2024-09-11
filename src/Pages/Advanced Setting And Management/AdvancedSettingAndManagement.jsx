@@ -84,7 +84,8 @@ export default function AdvancedSettingAndManagement() {
         isAlertOpen: false,
     });
     const [formFields, setFormFields] = useState({
-        userName: "",
+        selectedUserId: "",
+        deleteUserId: "",
     });
     const [isSubmit, setIsSubmit] = useState(false);
     const [user, setUser] = useState([]);
@@ -121,7 +122,7 @@ export default function AdvancedSettingAndManagement() {
     };
     const getUserList = async () => {
         try {
-            let res = await UserServices.getlist()
+            let res = await UserServices.getUserDropdown()
             if (res.success) {
                 setUser(res.data)
             } else {
@@ -134,8 +135,10 @@ export default function AdvancedSettingAndManagement() {
     }
     const deleteUser = async () => {
         try {
-            const userid = AuthService.getUserid()
-            let res = await UserServices.deleteUser(userid)
+            let data = {
+                id: formFields.deleteUserId
+            }
+            let res = await UserServices.deleteUser(data)
             if (res.success) {
                 console.log('user delete successfully');
             }
@@ -186,15 +189,17 @@ export default function AdvancedSettingAndManagement() {
                             </Box>
                             <TabPanel sx={{ display: "flex", flexDirection: "column", gap: "20px" }} value="1">
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
+                                    <Typography sx={{ fontWeight: "600" }}>Select User</Typography>
                                     <FormControl fullWidth>
                                         <Select
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
                                             fullWidth
-                                            value={formFields?.userName}
-                                            error={!formFields.userName && isSubmit}
-                                            name="userName"
+                                            value={formFields?.selectedUserId}
+                                            error={!formFields.selectedUserId && isSubmit}
+                                            name="selectedUserId"
                                             size="small"
+                                            onChange={handleSelectUser}
                                             sx={{
                                                 padding: '5px 8px',
                                                 borderRadius: "8px",
@@ -205,15 +210,12 @@ export default function AdvancedSettingAndManagement() {
                                             }}
                                             displayEmpty
                                             MenuProps={{ PaperProps: { sx: { maxHeight: 260 } } }}
-
-                                        // onChange={handleSelectUser}
                                         >
-                                            <MenuItem value="">Select User</MenuItem>
                                             {user?.map((el, index) => (
-                                                <MenuItem key={index} value={`${el.firstName}${el.lastName}`}>{el.firstName}{el.lastName}</MenuItem>
+                                                <MenuItem key={index} value={el.id}>{el.userName}</MenuItem>
                                             ))}
                                         </Select>
-                                        {!formFields.userName && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
+                                        {!formFields.selectedUserId && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
                                     </FormControl>
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
@@ -330,14 +332,16 @@ export default function AdvancedSettingAndManagement() {
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Box sx={{ width: "100%" }}>
+                                            <Typography sx={{ fontWeight: "600" }}>Select User</Typography>
+
                                             <FormControl fullWidth>
                                                 <Select
                                                     labelId="demo-simple-select-label"
                                                     id="demo-simple-select"
                                                     fullWidth
-                                                    value={formFields?.userName}
-                                                    error={!formFields.userName && isSubmit}
-                                                    name="userName"
+                                                    value={formFields?.deleteUserId}
+                                                    error={!formFields.deleteUserId && isSubmit}
+                                                    name="deleteUserId"
                                                     size="small"
                                                     sx={{
                                                         padding: '5px 8px',
@@ -357,10 +361,10 @@ export default function AdvancedSettingAndManagement() {
                                                 >
                                                     <MenuItem sx={{ fontWeight: "600" }} value="">Delete User</MenuItem>
                                                     {user?.map((el, index) => (
-                                                        <MenuItem key={index} value={`${el.firstName}${el.lastName}`}>{el.fullName}</MenuItem>
+                                                        <MenuItem key={index} value={el._id}>{el.userName}</MenuItem>
                                                     ))}
                                                 </Select>
-                                                {!formFields.userName && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
+                                                {!formFields.deleteUserId && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
                                             </FormControl>
                                         </Box>
                                         <Box>

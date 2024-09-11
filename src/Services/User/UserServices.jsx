@@ -29,8 +29,8 @@ export const UserServices = {
     let response = await ExecuteGet(`users/users-dropdown`, data);
     return response;
   },
-  async deleteUser(id, data) {
-    let response = await ExecuteDelete(`users/${id}/delete`, data);
+  async deleteUser(data) {
+    let response = await ExecuteDelete(`users/${data.id}/delete`);
     return response;
   },
 };
