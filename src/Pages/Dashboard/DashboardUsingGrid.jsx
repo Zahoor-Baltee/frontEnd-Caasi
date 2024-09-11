@@ -11,7 +11,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { DashboardService } from '../../Services/Dashboard/DashboardServices';
 import AuthService from '../../Services/AuthServices';
 import { Helpers } from '../../Shell/Helper';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -186,7 +186,6 @@ const NewDashboard = () => {
     //Get Expense
     const getExpenseByMonth = async () => {
         let currentdate = Helpers.getCurrentDate()
-        debugger
         try {
             let data = {
                 userId: AuthService.getUserid(),
@@ -194,6 +193,8 @@ const NewDashboard = () => {
                 year: currentdate.year
             }
             let res = await DashboardService.getExpenseListByMonth(data)
+            debugger
+
             if (res.success) {
                 setDashboard((prevState) => ({ ...prevState, expenseByMonth: res.data }));
             }
@@ -201,13 +202,6 @@ const NewDashboard = () => {
             console.log(error)
         }
     }
-    let navigate = useNavigate()
-
-    const handleClick = () => {
-        let path = '/activityreport';
-        navigate(path);
-    }
-
 
     return (
         <Root>
@@ -473,10 +467,11 @@ const NewDashboard = () => {
 
 
                                         </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: "5px" }}>
+                                        <Box >
                                             <Link
                                                 to={'/recent-activity'}
                                                 style={{
+                                                    display: "flex", justifyContent: "end", alignItems: "center", gap: "5px",
                                                     textDecoration: 'none',
                                                     cursor: "pointer",
                                                     fontWeight: 700,
@@ -486,15 +481,15 @@ const NewDashboard = () => {
                                                     color: "#0171BC"
                                                 }} >
                                                 View all
+                                                <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
                                             </Link>
-                                            <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
                                         </Box>
                                     </Box>
                                 </Box>
                             </Grid>
                             <Grid item xs={3}>
                                 <Box className='absenceRequests'>
-                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "5px" }}>
                                         <Box>
                                             <Typography sx={{
                                                 fontWeight: 500,
@@ -547,10 +542,11 @@ const NewDashboard = () => {
                                             ))}
                                         </Box>
 
-                                        <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", }}>
+                                        <Box >
                                             <Link
                                                 to={'/activity'}
                                                 style={{
+                                                    display: "flex", justifyContent: "end", alignItems: "center",
                                                     textDecoration: 'none',
                                                     cursor: "pointer",
                                                     fontWeight: 700,
@@ -560,8 +556,8 @@ const NewDashboard = () => {
                                                     color: "#0171BC"
                                                 }} >
                                                 View all
+                                                <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
                                             </Link>
-                                            <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
                                         </Box>
                                     </Box>
                                 </Box>
@@ -627,10 +623,11 @@ const NewDashboard = () => {
                                                 </Box>
                                             </Box>
                                         ))}
-                                        <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: "5px" }}>
+                                        <Box >
                                             <Link
                                                 to={'/absence'}
                                                 style={{
+                                                    display: "flex", justifyContent: "end", alignItems: "center", gap: "5px",
                                                     textDecoration: 'none',
                                                     cursor: "pointer",
                                                     fontWeight: 700,
@@ -640,8 +637,9 @@ const NewDashboard = () => {
                                                     color: "#0171BC"
                                                 }} >
                                                 View all
+                                                <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
                                             </Link>
-                                            <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
+
                                         </Box>
                                     </Box>
                                 </Box>
@@ -700,10 +698,11 @@ const NewDashboard = () => {
                                                 </Box>
                                             </Box>
                                         ))}
-                                        <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: "5px" }}>
+                                        <Box >
                                             <Link
                                                 to={'/expense'}
                                                 style={{
+                                                    display: "flex", justifyContent: "end", alignItems: "center", gap: "5px",
                                                     textDecoration: 'none',
                                                     cursor: "pointer",
                                                     fontWeight: 700,
@@ -713,8 +712,8 @@ const NewDashboard = () => {
                                                     color: "#0171BC"
                                                 }} >
                                                 View all
+                                                <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
                                             </Link>
-                                            <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
                                         </Box>
                                     </Box>
                                 </Box>
