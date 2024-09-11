@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, FormControl, MenuItem, Select, TextField, Typography } from '@mui/material';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -15,6 +15,7 @@ import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
 import AuthService from '../../Services/AuthServices';
+import { UserServices } from '../../Services/User/UserServices';
 
 const Root = styled(Box)(({ theme }) => ({
     margin: 0,
@@ -82,6 +83,13 @@ export default function AdvancedSettingAndManagement() {
         alertMessage: "",
         isAlertOpen: false,
     });
+    const [formFields, setFormFields] = useState({
+        userName: "",
+        category: ""
+    });
+    const [isSubmit, setIsSubmit] = useState(false);
+    const [user, setUser] = useState([]);
+
     const [colorValue, setColorValue] = useState('#ffffff');
     const [value, setValue] = useState('1');
 
@@ -90,20 +98,43 @@ export default function AdvancedSettingAndManagement() {
         department: false,
         roles: false,
     });
-
+    useEffect(() => {
+        getUserList()
+    }, [])
     const handleColorChange = (newValue) => {
         setColorValue(newValue);
     };
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (e, newValue) => {
+        e.preventDefault();
         setValue(newValue);
     };
-
+    const handleSelectUser = (event) => {
+        event.preventDefault();
+        const { name, value } = event.target;
+        setFormFields((prevFields) => ({
+            ...prevFields,
+            [name]: value,
+        }));
+    };
     const handleEditToggle = (field) => {
         setEditStates((prevState) => ({ ...prevState, [field]: !prevState[field] }));
     };
+    const getUserList = async () => {
+        try {
+            let res = await UserServices.getlist()
+            if (res.success) {
+                setUser(res.data)
+            } else {
+                // alert("failed")
+            }
 
+        } catch (error) {
+            console.error(error)
+        }
+    }
     const handleSubmit = async () => {
+        setIsSubmit(true)
         if (!userFields?.team || !userFields?.department || !userFields?.roles) {
             return
         }
@@ -143,6 +174,37 @@ export default function AdvancedSettingAndManagement() {
                                 </TabList>
                             </Box>
                             <TabPanel sx={{ display: "flex", flexDirection: "column", gap: "20px" }} value="1">
+                                <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
+                                    <FormControl fullWidth>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            fullWidth
+                                            value={formFields?.userName}
+                                            error={!formFields.userName && isSubmit}
+                                            name="userName"
+                                            size="small"
+                                            sx={{
+                                                padding: '5px 8px',
+                                                borderRadius: "8px",
+                                                textAlign: "start",
+                                                '& .MuiOutlinedInput-notchedOutline': {
+                                                    border: 'none',
+                                                },
+                                            }}
+                                            displayEmpty
+                                            MenuProps={{ PaperProps: { sx: { maxHeight: 260 } } }}
+
+                                            onChange={handleSelectUser}
+                                        >
+                                            <MenuItem value="">Select User</MenuItem>
+                                            {user?.map((el, index) => (
+                                                <MenuItem key={index} value={`${el.firstName}${el.lastName}`}>{el.firstName}{el.lastName}</MenuItem>
+                                            ))}
+                                        </Select>
+                                        {!formFields.userName && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
+                                    </FormControl>
+                                </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Box sx={{ width: "100%" }}>
@@ -256,9 +318,36 @@ export default function AdvancedSettingAndManagement() {
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                        <Box>
-                                            <Typography sx={{ fontWeight: "600" }}>Delete User</Typography>
-                                            <Typography sx={{ color: "#959595" }}>Carlos Fonte</Typography>
+                                        <Box sx={{ width: "100%" }}>
+                                            <FormControl fullWidth>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    fullWidth
+                                                    value={formFields?.userName}
+                                                    error={!formFields.userName && isSubmit}
+                                                    name="userName"
+                                                    size="small"
+                                                    sx={{
+                                                        padding: '5px 8px',
+                                                        borderRadius: "8px",
+                                                        textAlign: "start",
+                                                        '& .MuiOutlinedInput-notchedOutline': {
+                                                            border: 'none',
+                                                        },
+                                                    }}
+                                                    displayEmpty
+                                                    MenuProps={{ PaperProps: { sx: { maxHeight: 260 } } }}
+
+                                                    onChange={handleSelectUser}
+                                                >
+                                                    <MenuItem sx={{ fontWeight: "600" }} value="">Delete User</MenuItem>
+                                                    {user?.map((el, index) => (
+                                                        <MenuItem key={index} value={`${el.firstName}${el.lastName}`}>{el.firstName}{el.lastName}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                                {!formFields.userName && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
+                                            </FormControl>
                                         </Box>
                                         <Box>
                                             <RiDeleteBin6Line style={{ color: "#0171BC", fontSize: "25px" }} />
