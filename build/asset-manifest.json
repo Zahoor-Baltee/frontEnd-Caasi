@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e41651c0.css",
+    "main.js": "/static/js/main.25e92c85.js",
+    "static/js/787.95d7f8ac.chunk.js": "/static/js/787.95d7f8ac.chunk.js",
+    "static/media/man.png": "/static/media/man.27df41f4c2ca2c84d184.png",
+    "static/media/Caasi-croped-logo.png": "/static/media/Caasi-croped-logo.0240195d5319fc2533ca.png",
+    "static/media/forgotPassword.jpeg": "/static/media/forgotPassword.bb96c7c41b0f5514f2b2.jpeg",
+    "static/media/cassilogo.png": "/static/media/cassilogo.5257d20f2159cc4e4aff.png",
+    "static/media/cassimainlogo.png": "/static/media/cassimainlogo.f14bd057f67f353e9c98.png",
+    "index.html": "/index.html",
+    "main.e41651c0.css.map": "/static/css/main.e41651c0.css.map",
+    "main.25e92c85.js.map": "/static/js/main.25e92c85.js.map",
+    "787.95d7f8ac.chunk.js.map": "/static/js/787.95d7f8ac.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e41651c0.css",
+    "static/js/main.25e92c85.js"
+  ]
+}

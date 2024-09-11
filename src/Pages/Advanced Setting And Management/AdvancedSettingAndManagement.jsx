@@ -217,7 +217,7 @@ export default function AdvancedSettingAndManagement() {
                                     </FormControl>
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
-                                    <Box sx={{ display: "flex", paddingBottom: "20px !important", justifyContent: "space-between", alignItems: "center" }}>
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", gap: "5px", alignItems: "center" }}>
                                         <Box sx={{ width: "100%" }}>
                                             <Typography sx={{ fontWeight: "600" }}>Create Teams</Typography>
                                             {editStates.team ? (
@@ -228,21 +228,21 @@ export default function AdvancedSettingAndManagement() {
                                                     fullWidth
                                                     variant="standard"
                                                     InputProps={{ disableUnderline: true }}
-                                                    sx={{ '& .MuiInputBase-root': { height: '20px', backgroundColor: "#fff", border: 'none' } }}
+                                                    sx={{ '& .MuiInputBase-root': { borderRadius: "10px", height: '40px', backgroundColor: "#fff", border: 'none', padding: "10px 10px" } }}
                                                 />
                                             ) : (
-                                                <Typography className='lastName' sx={{ height: '20px', color: "#959595", textTransform: "none" }}>
+                                                <Typography className='lastName' sx={{ height: '40px', color: "#959595", textTransform: "none" }}>
                                                     {userFields.team || "Development team"}
                                                 </Typography>
                                             )}
                                         </Box>
                                         <Box>
-                                            <LuPenSquare onClick={() => handleEditToggle('team')} style={{ cursor: "pointer", color: "#0171BC", fontSize: "25px" }} />
+                                            <LuPenSquare onClick={() => handleEditToggle('team')} style={{ cursor: "pointer", color: "#0171BC", fontSize: "20px" }} />
                                         </Box>
                                     </Box>
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
-                                    <Box sx={{ display: "flex", paddingBottom: "20px !important", justifyContent: "space-between", alignItems: "center" }}>
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", gap: "5px", alignItems: "center" }}>
                                         <Box sx={{ width: "100%" }}>
                                             <Typography sx={{ fontWeight: "600" }}>Create Department</Typography>
                                             {editStates.department ? (
@@ -253,21 +253,21 @@ export default function AdvancedSettingAndManagement() {
                                                     fullWidth
                                                     variant="standard"
                                                     InputProps={{ disableUnderline: true }}
-                                                    sx={{ '& .MuiInputBase-root': { border: 'none' } }}
+                                                    sx={{ '& .MuiInputBase-root': { borderRadius: "10px", height: '40px', backgroundColor: "#fff", border: 'none', padding: "10px 10px" } }}
                                                 />
                                             ) : (
-                                                <Typography className='lastName' sx={{ color: "#959595", textTransform: "none" }}>
+                                                <Typography className='lastName' sx={{ height: '40px', color: "#959595", textTransform: "none" }}>
                                                     {userFields.department || "Development department"}
                                                 </Typography>
                                             )}
                                         </Box>
                                         <Box>
-                                            <LuPenSquare onClick={() => handleEditToggle('department')} style={{ cursor: "pointer", color: "#0171BC", fontSize: "25px" }} />
+                                            <LuPenSquare onClick={() => handleEditToggle('department')} style={{ cursor: "pointer", color: "#0171BC", fontSize: "20px" }} />
                                         </Box>
                                     </Box>
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
-                                    <Box sx={{ display: "flex", paddingBottom: "20px !important", justifyContent: "space-between", alignItems: "center" }}>
+                                    <Box sx={{ display: "flex", gap: "5px", justifyContent: "space-between", alignItems: "center" }}>
                                         <Box sx={{ width: "100%" }}>
                                             <Typography sx={{ fontWeight: "600" }}>Create Roles</Typography>
                                             {editStates.roles ? (
@@ -278,16 +278,16 @@ export default function AdvancedSettingAndManagement() {
                                                     fullWidth
                                                     variant="standard"
                                                     InputProps={{ disableUnderline: true }}
-                                                    sx={{ '& .MuiInputBase-root': { border: 'none', padding: "0px 10px" } }}
+                                                    sx={{ '& .MuiInputBase-root': { borderRadius: "10px", height: '40px', backgroundColor: "#fff", border: 'none', padding: "10px 10px" } }}
                                                 />
                                             ) : (
-                                                <Typography className='lastName' sx={{ color: "#959595", textTransform: "none" }}>
+                                                <Typography className='lastName' sx={{ height: '40px', color: "#959595", textTransform: "none" }}>
                                                     {userFields.roles || "Development roles"}
                                                 </Typography>
                                             )}
                                         </Box>
                                         <Box>
-                                            <LuPenSquare onClick={() => handleEditToggle('roles')} style={{ cursor: "pointer", color: "#0171BC", fontSize: "25px" }} />
+                                            <LuPenSquare onClick={() => handleEditToggle('roles')} style={{ cursor: "pointer", color: "#0171BC", fontSize: "20px" }} />
                                         </Box>
                                     </Box>
                                 </Box>
@@ -364,7 +364,7 @@ export default function AdvancedSettingAndManagement() {
                                             </FormControl>
                                         </Box>
                                         <Box>
-                                            <RiDeleteBin6Line onClick={deleteUser} style={{ cursor: "pointer", color: "#0171BC", fontSize: "25px" }} />
+                                            <RiDeleteBin6Line onClick={deleteUser} style={{ cursor: "pointer", color: "#0171BC", fontSize: "20px" }} />
                                         </Box>
                                     </Box>
                                 </Box>

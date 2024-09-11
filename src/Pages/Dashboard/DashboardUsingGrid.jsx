@@ -193,8 +193,6 @@ const NewDashboard = () => {
                 year: currentdate.year
             }
             let res = await DashboardService.getExpenseListByMonth(data)
-            debugger
-
             if (res.success) {
                 setDashboard((prevState) => ({ ...prevState, expenseByMonth: res.data }));
             }
