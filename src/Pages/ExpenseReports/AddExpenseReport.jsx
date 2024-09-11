@@ -139,7 +139,7 @@ const ExpenseReportForm = ({ open, setOpen, isChange, setIsChange }) => {
 
     const handleClick = () => {
         console.log('Navigating to /expense-list');
-        navigate('/expense-list');
+        navigate('/expense');
     };
 
 

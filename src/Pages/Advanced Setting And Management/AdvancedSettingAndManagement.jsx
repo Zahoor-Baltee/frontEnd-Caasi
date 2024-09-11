@@ -133,6 +133,19 @@ export default function AdvancedSettingAndManagement() {
             console.error(error)
         }
     }
+    const deleteUser = async () => {
+        debugger
+        try {
+            const userid = AuthService.getUserid()
+            let res = await UserServices.deleteUser(userid)
+            if (res.success) {
+                console.log('user delete successfully');
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
     const handleSubmit = async () => {
         setIsSubmit(true)
         if (!userFields?.team || !userFields?.department || !userFields?.roles) {
@@ -343,14 +356,14 @@ export default function AdvancedSettingAndManagement() {
                                                 >
                                                     <MenuItem sx={{ fontWeight: "600" }} value="">Delete User</MenuItem>
                                                     {user?.map((el, index) => (
-                                                        <MenuItem key={index} value={`${el.firstName}${el.lastName}`}>{el.firstName}{el.lastName}</MenuItem>
+                                                        <MenuItem key={index} value={`${el.firstName}${el.lastName}`}>{el.fullName}</MenuItem>
                                                     ))}
                                                 </Select>
                                                 {!formFields.userName && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
                                             </FormControl>
                                         </Box>
                                         <Box>
-                                            <RiDeleteBin6Line style={{ color: "#0171BC", fontSize: "25px" }} />
+                                            <RiDeleteBin6Line onClick={deleteUser} style={{ cursor: "pointer", color: "#0171BC", fontSize: "25px" }} />
                                         </Box>
                                     </Box>
                                 </Box>

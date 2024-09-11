@@ -472,7 +472,7 @@ const AddActivityReport = () => {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                 setIsLoading(false)
                 setTimeout(() => {
-                    navigateUser("/activityreport")
+                    navigateUser("/activity")
                 }, 2000)
             } else {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
@@ -594,7 +594,6 @@ const AddActivityReport = () => {
                                 </Box>
                             </Box>
                         </Box>
-
                     </Grid>
 
                     <Grid item xs={12} md={4}>

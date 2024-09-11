@@ -11,7 +11,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { DashboardService } from '../../Services/Dashboard/DashboardServices';
 import AuthService from '../../Services/AuthServices';
 import { Helpers } from '../../Shell/Helper';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -382,7 +382,7 @@ const NewDashboard = () => {
                         <Grid container spacing={3}>
                             <Grid item xs={3}>
                                 <Box className='absenceRequests'>
-                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                                         <Box>
                                             <Typography sx={{
                                                 fontWeight: 500,
@@ -474,13 +474,19 @@ const NewDashboard = () => {
 
                                         </Box>
                                         <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: "5px" }}>
-                                            <Typography sx={{
-                                                fontWeight: 700,
-                                                fontSize: "16px",
-                                                lineHeight: "28px",
-                                                letteSpacing: "-2%",
-                                                color: "#0171BC"
-                                            }}>View all</Typography>
+                                            <Link
+                                                to={'/recent-activity'}
+                                                style={{
+                                                    textDecoration: 'none',
+                                                    cursor: "pointer",
+                                                    fontWeight: 700,
+                                                    fontSize: "16px",
+                                                    lineHeight: "28px",
+                                                    letteSpacing: "-2%",
+                                                    color: "#0171BC"
+                                                }} >
+                                                View all
+                                            </Link>
                                             <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
                                         </Box>
                                     </Box>
@@ -488,7 +494,7 @@ const NewDashboard = () => {
                             </Grid>
                             <Grid item xs={3}>
                                 <Box className='absenceRequests'>
-                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                                         <Box>
                                             <Typography sx={{
                                                 fontWeight: 500,
@@ -542,24 +548,20 @@ const NewDashboard = () => {
                                         </Box>
 
                                         <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", }}>
-                                            <Typography
-                                                onClick={handleClick}
-                                                sx={{
+                                            <Link
+                                                to={'/activity'}
+                                                style={{
+                                                    textDecoration: 'none',
+                                                    cursor: "pointer",
                                                     fontWeight: 700,
                                                     fontSize: "16px",
                                                     lineHeight: "28px",
                                                     letteSpacing: "-2%",
-                                                    color: "#0171BC",
-                                                    display: "flex",
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
-                                                    gap: "5px",
-                                                    cursor: "pointer"
-                                                }}>
+                                                    color: "#0171BC"
+                                                }} >
                                                 View all
-                                                <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
-                                            </Typography>
-
+                                            </Link>
+                                            <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
                                         </Box>
                                     </Box>
                                 </Box>
@@ -626,13 +628,19 @@ const NewDashboard = () => {
                                             </Box>
                                         ))}
                                         <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: "5px" }}>
-                                            <Typography sx={{
-                                                fontWeight: 700,
-                                                fontSize: "16px",
-                                                lineHeight: "28px",
-                                                letteSpacing: "-2%",
-                                                color: "#0171BC"
-                                            }}>View all</Typography>
+                                            <Link
+                                                to={'/absence'}
+                                                style={{
+                                                    textDecoration: 'none',
+                                                    cursor: "pointer",
+                                                    fontWeight: 700,
+                                                    fontSize: "16px",
+                                                    lineHeight: "28px",
+                                                    letteSpacing: "-2%",
+                                                    color: "#0171BC"
+                                                }} >
+                                                View all
+                                            </Link>
                                             <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
                                         </Box>
                                     </Box>
@@ -640,7 +648,7 @@ const NewDashboard = () => {
                             </Grid>
                             <Grid item xs={3}>
                                 <Box className='absenceRequests'>
-                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                                    <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                                         <Box>
                                             <Typography sx={{
                                                 fontWeight: 500,
@@ -693,13 +701,19 @@ const NewDashboard = () => {
                                             </Box>
                                         ))}
                                         <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: "5px" }}>
-                                            <Typography sx={{
-                                                fontWeight: 700,
-                                                fontSize: "16px",
-                                                lineHeight: "28px",
-                                                letteSpacing: "-2%",
-                                                color: "#0171BC"
-                                            }}>View all</Typography>
+                                            <Link
+                                                to={'/expense'}
+                                                style={{
+                                                    textDecoration: 'none',
+                                                    cursor: "pointer",
+                                                    fontWeight: 700,
+                                                    fontSize: "16px",
+                                                    lineHeight: "28px",
+                                                    letteSpacing: "-2%",
+                                                    color: "#0171BC"
+                                                }} >
+                                                View all
+                                            </Link>
                                             <ArrowRightAltRoundedIcon sx={{ color: "#0171BC" }} />
                                         </Box>
                                     </Box>

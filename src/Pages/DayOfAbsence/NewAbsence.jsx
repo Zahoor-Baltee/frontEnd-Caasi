@@ -381,7 +381,7 @@ const NewAbsence = () => {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                 setIsLoading(false)
                 setTimeout(() => {
-                    navigateUser("/day-absencelist")
+                    navigateUser("/absence")
                 }, 2000)
             } else {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
