@@ -9,5 +9,8 @@ export const DashboardService = {
         let response = await ExecuteGet(`absences/getabsencebymonth?userId=${data.userId}&month=${data.month}&year=${data.year}`);
         return response;
     },
-
+    async getExpenseListByMonth(data) {
+        let response = await ExecuteGet(`expense/getexpensebymonth?userId=${data.userId}&month=${data.month}&year=${data.year}`);
+        return response;
+    },
 };

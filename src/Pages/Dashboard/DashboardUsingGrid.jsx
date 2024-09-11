@@ -2,7 +2,6 @@ import { Box, styled, } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import Typography from "@mui/material/Typography";
 import ChartImg from '../../Assets/chart.jpg';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import TickPlacementBars from '../../Componenets/Chart';
 import ArrowRightAltRoundedIcon from '@mui/icons-material/ArrowRightAltRounded';
@@ -131,12 +130,14 @@ const Root = styled(Box)({
 const NewDashboard = () => {
     const [dashboard, setDashboard] = useState({
         activityByMonth: [],
-        absenceByMonth: []
+        absenceByMonth: [],
+        expenseByMonth: []
     })
     const [currentMonth, setCurrentMonth] = useState('');
     useEffect(() => {
         getActivitByMonth()
         getAbsenceByMonth()
+        getExpenseByMonth()
         getCurrentMonthName();
     }, [])
     const getCurrentMonthName = () => {
@@ -181,6 +182,25 @@ const NewDashboard = () => {
             console.log(error)
         }
     }
+
+    //Get Expense
+    const getExpenseByMonth = async () => {
+        let currentdate = Helpers.getCurrentDate()
+        debugger
+        try {
+            let data = {
+                userId: AuthService.getUserid(),
+                month: currentdate.month,
+                year: currentdate.year
+            }
+            let res = await DashboardService.getExpenseListByMonth(data)
+            if (res.success) {
+                setDashboard((prevState) => ({ ...prevState, expenseByMonth: res.data }));
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     let navigate = useNavigate()
 
     const handleClick = () => {
@@ -193,7 +213,6 @@ const NewDashboard = () => {
         <Root>
             <Box className="mainContainer">
                 <Box sx={{ display: "flex", flexDirection: "column", gap: "30px" }}>
-                    {/* --------------------Second Section Start--------------- */}
                     <Box sx={{ flexGrow: 1 }}>
                         <Grid container spacing={3}>
                             <Grid item xs={6}>
@@ -359,8 +378,6 @@ const NewDashboard = () => {
                             </Grid>
                         </Grid>
                     </Box>
-                    {/* --------------------Second Section End--------------- */}
-                    {/* --------------------Third Section Start--------------- */}
                     <Box sx={{ flexGrow: 1 }}>
                         <Grid container spacing={3}>
                             <Grid item xs={3}>
@@ -651,72 +668,30 @@ const NewDashboard = () => {
                                                     lineHeight: "28px",
                                                     letteSpacing: "-2%",
                                                     color: "#0171bc",
-                                                }}>38</Typography>
+                                                }}>{dashboard?.expenseByMonth?.length}</Typography>
                                             </Box>
 
                                         </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Box>
-                                                <Typography sx={{
-                                                    fontWeight: 700,
-                                                    fontSize: "14px",
-                                                    lineHeight: "28px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#1B2559",
-                                                }}>Carlos Fonte</Typography>
-                                                <Typography sx={{
-                                                    fontWeight: 500,
-                                                    fontSize: "12px",
-                                                    lineHeight: "20px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#A3AED0",
-                                                }}>12 May 2024</Typography>
-
+                                        {dashboard?.expenseByMonth?.slice(Math.max(dashboard?.expenseByMonth?.length - 3, 0))?.map((el, ind) => (
+                                            <Box key={ind} sx={{ display: "flex", justifyContent: "space-between" }}>
+                                                <Box>
+                                                    <Typography sx={{
+                                                        fontWeight: 700,
+                                                        fontSize: "14px",
+                                                        lineHeight: "28px",
+                                                        letteSpacing: "-2%",
+                                                        color: "#1B2559",
+                                                    }}> {el.userName}</Typography>
+                                                    <Typography sx={{
+                                                        fontWeight: 500,
+                                                        fontSize: "12px",
+                                                        lineHeight: "20px",
+                                                        letteSpacing: "-2%",
+                                                        color: "#A3AED0",
+                                                    }}>{Helpers.dateFormater(el.createdAt)}</Typography>
+                                                </Box>
                                             </Box>
-
-                                        </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Box>
-                                                <Typography sx={{
-                                                    fontWeight: 700,
-                                                    fontSize: "14px",
-                                                    lineHeight: "28px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#1B2559",
-                                                }}>Carlos Fonte</Typography>
-                                                <Typography sx={{
-                                                    fontWeight: 500,
-                                                    fontSize: "12px",
-                                                    lineHeight: "20px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#A3AED0",
-                                                }}>12 May 2024</Typography>
-
-                                            </Box>
-
-
-                                        </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Box>
-                                                <Typography sx={{
-                                                    fontWeight: 700,
-                                                    fontSize: "14px",
-                                                    lineHeight: "28px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#1B2559",
-                                                }}>Carlos Fonte</Typography>
-                                                <Typography sx={{
-                                                    fontWeight: 500,
-                                                    fontSize: "12px",
-                                                    lineHeight: "20px",
-                                                    letteSpacing: "-2%",
-                                                    color: "#A3AED0",
-                                                }}>12 May 2024</Typography>
-
-                                            </Box>
-
-
-                                        </Box>
+                                        ))}
                                         <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center", gap: "5px" }}>
                                             <Typography sx={{
                                                 fontWeight: 700,
