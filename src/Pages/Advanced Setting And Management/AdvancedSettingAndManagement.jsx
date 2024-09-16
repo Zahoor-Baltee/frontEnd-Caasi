@@ -97,7 +97,9 @@ export default function AdvancedSettingAndManagement() {
         team: false,
         department: false,
         roles: false,
+        dropdown: false
     });
+
     useEffect(() => {
         getUserList()
     }, [])
@@ -112,17 +114,26 @@ export default function AdvancedSettingAndManagement() {
     const handleSelectUser = (event) => {
         event.preventDefault();
         const { name, value } = event.target;
-        setFormFields((prevFields) => ({
-            ...prevFields,
-            [name]: value,
-        }));
+        setUserFields({ ...formFields, [name]: value });
+    };
+    const handleChangeInput = (event) => {
+        const { name, value, checked, type } = event.target;
+        if (type === "checkbox") {
+            setUserFields({ ...userFields, [name]: checked });
+        } else {
+
+            setUserFields({ ...userFields, [name]: value })
+        }
     };
     const handleEditToggle = (field) => {
-        setEditStates((prevState) => ({ ...prevState, [field]: !prevState[field] }));
+        setEditStates({ ...editStates, [field]: !editStates[field] });
     };
     const getUserList = async () => {
         try {
             let res = await UserServices.getUserDropdown()
+
+            console.log(res);
+
             if (res.success) {
                 setUser(res.data)
             } else {
@@ -149,12 +160,15 @@ export default function AdvancedSettingAndManagement() {
     }
     const handleSubmit = async () => {
         setIsSubmit(true)
+        let cId = AuthService.getUserid()
         if (!userFields?.team || !userFields?.department || !userFields?.roles) {
             return
         }
+        let data = userFields
+        data.clientId = cId
+        data.reportName = value === "1" ? "General" : value === "2" ? "Activity Report" : value === "3" ? "Expense Report" : "Notifications"
         try {
-            let userId = AuthService.getUserid()
-            let res = await AdvancedSettingServices.createAdvanceSettings(userFields);
+            let res = await AdvancedSettingServices.createAdvanceSettings(data);
             if (res.success) {
                 setAlert({ ...alert, isAlertOpen: true, alertColor: "success", alertMessage: res.message });
                 setEditStates({ team: false, department: false, roles: false });
@@ -166,6 +180,7 @@ export default function AdvancedSettingAndManagement() {
             setAlert({ ...alert, isAlertOpen: true, alertColor: "error", alertMessage: "An error occurred." });
         }
     };
+
     return (
         <Root>
             <Box className='mainContainer'>
@@ -188,35 +203,63 @@ export default function AdvancedSettingAndManagement() {
                                 </TabList>
                             </Box>
                             <TabPanel sx={{ display: "flex", flexDirection: "column", gap: "20px" }} value="1">
-                                <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
-                                    <Typography sx={{ fontWeight: "600" }}>Select User</Typography>
-                                    <FormControl fullWidth>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            fullWidth
-                                            value={formFields?.selectedUserId}
-                                            error={!formFields.selectedUserId && isSubmit}
-                                            name="selectedUserId"
-                                            size="small"
-                                            onChange={handleSelectUser}
-                                            sx={{
-                                                padding: '5px 8px',
-                                                borderRadius: "8px",
-                                                textAlign: "start",
-                                                '& .MuiOutlinedInput-notchedOutline': {
-                                                    border: 'none',
-                                                },
-                                            }}
-                                            displayEmpty
-                                            MenuProps={{ PaperProps: { sx: { maxHeight: 260 } } }}
-                                        >
-                                            {user?.map((el, index) => (
-                                                <MenuItem key={index} value={el.id}>{el.userName}</MenuItem>
-                                            ))}
-                                        </Select>
-                                        {!formFields.selectedUserId && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
-                                    </FormControl>
+                                <Typography sx={{ fontWeight: "600" }}>Select User</Typography>
+                                <Box sx={{ display: "flex", alignItems: "center", borderBottom: 3, borderColor: 'divider' }}>
+                                    <Box sx={{ width: "100%" }}>
+                                        {editStates.dropdown ? (
+                                            <FormControl fullWidth>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    fullWidth
+                                                    value={userFields?.userId}
+                                                    error={!userFields.userId && isSubmit}
+                                                    name="userId"
+                                                    size="small"
+                                                    onChange={handleSelectUser}
+                                                    sx={{
+                                                        padding: '5px 8px',
+                                                        borderRadius: "8px",
+                                                        textAlign: "start",
+                                                        '& .MuiOutlinedInput-notchedOutline': {
+                                                            border: 'none',
+                                                        },
+                                                        '& .MuiSelect-icon': {
+                                                            display: 'none', // Hide the icon
+                                                        },
+                                                    }}
+                                                    displayEmpty
+                                                    MenuProps={{ PaperProps: { sx: { maxHeight: 260 } } }}
+                                                >
+                                                    <MenuItem sx={{ fontWeight: "600" }} value="">Select User</MenuItem>
+                                                    {user?.map((el, index) => (
+                                                        <MenuItem key={index} value={el._id}>{el.firstName} {el.lastName}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                                {!userFields.userId && isSubmit && (
+                                                    <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>
+                                                        User Name is required
+                                                    </Typography>
+                                                )}
+                                            </FormControl>
+                                        ) : (
+                                            <Typography
+                                                className="lastName"
+                                                sx={{ height: '40px', color: "#959595", textTransform: "none" }}
+                                            >
+                                                {formFields?.selectedUserId
+                                                    ? `${user?.find((el) => el._id === formFields.selectedUserId)?.firstName || ''} ${user?.find((el) => el._id === formFields.selectedUserId)?.lastName || ''}`
+                                                    : "Select User"
+                                                }
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                    <Box>
+                                        <LuPenSquare
+                                            onClick={() => handleEditToggle('dropdown')}
+                                            style={{ cursor: "pointer", color: "#0171BC", fontSize: "20px" }}
+                                        />
+                                    </Box>
                                 </Box>
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", gap: "5px", alignItems: "center" }}>
@@ -300,7 +343,7 @@ export default function AdvancedSettingAndManagement() {
                                         </Box>
                                         <FormGroup>
                                             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                                                <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
+                                                <AntSwitch name='activityReport' checked={userFields.activityReport} onChange={handleChangeInput} inputProps={{ 'aria-label': 'ant design' }} />
                                             </Stack>
                                         </FormGroup>
                                     </Box>
@@ -312,7 +355,7 @@ export default function AdvancedSettingAndManagement() {
                                         </Box>
                                         <FormGroup>
                                             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                                                <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
+                                                <AntSwitch name='expenseReport' checked={userFields.expenseReport} onChange={handleChangeInput} inputProps={{ 'aria-label': 'ant design' }} />
                                             </Stack>
                                         </FormGroup>
                                     </Box>
@@ -324,7 +367,7 @@ export default function AdvancedSettingAndManagement() {
                                         </Box>
                                         <FormGroup>
                                             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                                                <AntSwitch sx={{ fontSize: "25px" }} defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
+                                                <AntSwitch name='configureAllCategoryForActivityReport' sx={{ fontSize: "25px" }} checked={userFields.configureAllCategoryForActivityReport} onChange={handleChangeInput} inputProps={{ 'aria-label': 'ant design' }} />
                                             </Stack>
                                         </FormGroup>
                                     </Box>
@@ -332,8 +375,7 @@ export default function AdvancedSettingAndManagement() {
                                 <Box sx={{ borderBottom: 3, borderColor: 'divider' }}>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Box sx={{ width: "100%" }}>
-                                            <Typography sx={{ fontWeight: "600" }}>Select User</Typography>
-
+                                            <Typography sx={{ fontWeight: "600" }}>Delete User</Typography>
                                             <FormControl fullWidth>
                                                 <Select
                                                     labelId="demo-simple-select-label"
@@ -359,9 +401,9 @@ export default function AdvancedSettingAndManagement() {
 
                                                     onChange={handleSelectUser}
                                                 >
-                                                    <MenuItem sx={{ fontWeight: "600" }} value="">Delete User</MenuItem>
+                                                    {/* <MenuItem sx={{ fontWeight: "600" }} value="">Delete User</MenuItem> */}
                                                     {user?.map((el, index) => (
-                                                        <MenuItem key={index} value={el._id}>{el.userName}</MenuItem>
+                                                        <MenuItem key={index} value={el._id}>{el.firstName} {el.lastName}</MenuItem>
                                                     ))}
                                                 </Select>
                                                 {!formFields.deleteUserId && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
@@ -370,6 +412,7 @@ export default function AdvancedSettingAndManagement() {
                                         <Box>
                                             <RiDeleteBin6Line onClick={deleteUser} style={{ cursor: "pointer", color: "#0171BC", fontSize: "20px" }} />
                                         </Box>
+
                                     </Box>
                                 </Box>
                                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-around" }}>

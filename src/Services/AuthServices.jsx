@@ -31,6 +31,10 @@ const AuthService = {
     getUserid() {
         let firstName = this.getUserData()._id
         return firstName
+    },
+    getClientid() {
+        let firstName = this.getUserData().clientId
+        return firstName
     }
 }
 export default AuthService;
