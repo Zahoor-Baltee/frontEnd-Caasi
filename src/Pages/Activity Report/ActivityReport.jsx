@@ -250,12 +250,9 @@ const ActivityReport = () => {
                     <IconButton>
                         <KeyboardArrowDownIcon onClick={() => handleOpenDetail(params.value)} />
                     </IconButton>
-
                 </>
-
             )
         },
-
     ];
     useEffect(() => {
         getActivityReportList()
@@ -279,7 +276,6 @@ const ActivityReport = () => {
             setIsLoading(false)
         }
     }
-
     // navigate to Details
     const handleOpenDetail = (id) => {
         navigate("/expensereports", { state: { id: id } })
@@ -298,13 +294,11 @@ const ActivityReport = () => {
         const contact = userFields?.contact ? userFields.contact.toLowerCase() : '';
         const date = userFields?.date ? userFields.date.toLowerCase() : '';
         const name = userFields?.name ? userFields.name.toLowerCase() : '';
-
         const filterData = activity.list.filter((activityItem) => {
             const activityStatus = activityItem.status ? activityItem.status.toLowerCase() : '';
             const activityContact = activityItem.contactNumber ? activityItem.contactNumber.toLowerCase() : '';
             const activityDate = activityItem.dateOfSubmitted ? activityItem.dateOfSubmitted.toLowerCase() : '';
             const activityName = activityItem.name ? activityItem.name.toLowerCase() : '';
-
             return (
                 (!status || activityStatus.includes(status)) &&
                 (!contact || activityContact.includes(contact)) &&
@@ -312,7 +306,6 @@ const ActivityReport = () => {
                 (!name || activityName.includes(name))
             );
         });
-
         setActivity({ ...activity, filterList: filterData });
     };
     const handleChange = (e) => {
@@ -320,9 +313,7 @@ const ActivityReport = () => {
     };
     return (
         <Root>
-
             <Box className="mainContainer">
-
                 <Box className="mainBox">
                     {/* --------------------Header Section--------------- */}
                     <Grid justifyContent="flex-end" xs={12} container className="headerSection">
@@ -364,10 +355,8 @@ const ActivityReport = () => {
                                         <MenuItem value='inactive'>InActive</MenuItem>
                                     </Select>
                                 </FormControl>
-
                             </Grid>
                             <Grid item xs={5.5} >
-
                                 <Typography sx={{ textTransform: "none" }}>Contact</Typography>
                                 <TextField className='inputField1' fullWidth size='small' type='number'
                                     value={userFields?.contact || ''}
@@ -379,7 +368,6 @@ const ActivityReport = () => {
                                     value={userFields?.date || ''}
                                     onChange={handleChange}
                                     name='date' />
-
                             </Grid>
                             <Grid item xs={12} mt={2} textAlign="right"  >
                                 <Button startIcon={isLoading ? <CircularProgress sx={{ color: "#fff" }} size={20} /> : ""} onClick={serchUser} sx={{
@@ -388,7 +376,6 @@ const ActivityReport = () => {
                                 }} variant="contained">Search</Button>
                             </Grid>
                         </Grid> : ""}
-
                     </Grid>
                     {/* --------------------Header Section Complete--------------- */}
                     <Box sx={{ marginTop: isFltShow ? 0 : "12px", height: isFltShow ? 750 : 1000, overflowY: "auto" }}>
@@ -411,7 +398,6 @@ const ActivityReport = () => {
                                 noRowsOverlay: CustomNoRowsOverlay,  // Ensure to use the correct casing
                             }}
                         />
-
                     </Box>
                 </Box>
             </Box>

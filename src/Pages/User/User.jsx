@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, TextField, InputAdornment, Button, IconButton, Grid } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
-import MenuItem from '@mui/material/MenuItem';
 import Typography from "@mui/material/Typography";
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import { TbEdit } from "react-icons/tb";
 import styled from '@mui/system/styled';
 import userImage from '../../Assets/man.png'
@@ -12,7 +9,6 @@ import CircularProgress from "@mui/material/CircularProgress"
 import { DataGrid } from '@mui/x-data-grid';
 import { UserServices } from '../../Services/User/UserServices';
 import { useNavigate } from 'react-router-dom';
-import SubmitLoader from '../../Componenets/SubmitLoader';
 import CustomNoRowsOverlay from '../../Componenets/NoDataFound';
 
 
@@ -256,7 +252,6 @@ const User = () => {
                     </Grid>
                 </Grid>
             </Box>
-            {/* <SubmitLoader /> */}
 
 
         </Root>
