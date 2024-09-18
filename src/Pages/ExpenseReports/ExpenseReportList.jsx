@@ -59,7 +59,7 @@ const Root = styled(Box)({
         padding: "20px",
         backgroundColor: "#fafbfc",
         "& .mainBox": {
-            backgroundColor: "#efecec",
+            // backgroundColor: "#efecec",
             borderRadius: "20px 20px 0px 0px ",
             padding: "20px 40px"
         },

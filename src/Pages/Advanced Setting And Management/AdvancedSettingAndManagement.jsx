@@ -269,7 +269,7 @@ export default function AdvancedSettingAndManagement() {
                                                 <TextField
                                                     className='inputField1'
                                                     value={userFields.team || ""}
-                                                    onChange={(e) => setUserFields({ ...userFields, team: e.target.value })}
+                                                    onChange={handleChangeInput}
                                                     fullWidth
                                                     variant="standard"
                                                     InputProps={{ disableUnderline: true }}
@@ -294,7 +294,7 @@ export default function AdvancedSettingAndManagement() {
                                                 <TextField
                                                     className='inputField1'
                                                     value={userFields.department || ""}
-                                                    onChange={(e) => setUserFields({ ...userFields, department: e.target.value })}
+                                                    onChange={handleChangeInput}
                                                     fullWidth
                                                     variant="standard"
                                                     InputProps={{ disableUnderline: true }}
@@ -319,7 +319,7 @@ export default function AdvancedSettingAndManagement() {
                                                 <TextField
                                                     className='inputField1'
                                                     value={userFields.roles || ""}
-                                                    onChange={(e) => setUserFields({ ...userFields, roles: e.target.value })}
+                                                    onChange={handleChangeInput}
                                                     fullWidth
                                                     variant="standard"
                                                     InputProps={{ disableUnderline: true }}
@@ -381,8 +381,8 @@ export default function AdvancedSettingAndManagement() {
                                                     labelId="demo-simple-select-label"
                                                     id="demo-simple-select"
                                                     fullWidth
-                                                    value={formFields?.deleteUserId}
-                                                    error={!formFields.deleteUserId && isSubmit}
+                                                    value={userFields?.deleteUserId}
+                                                    error={!userFields.deleteUserId && isSubmit}
                                                     name="deleteUserId"
                                                     size="small"
                                                     sx={{
@@ -406,7 +406,7 @@ export default function AdvancedSettingAndManagement() {
                                                         <MenuItem key={index} value={el._id}>{el.firstName} {el.lastName}</MenuItem>
                                                     ))}
                                                 </Select>
-                                                {!formFields.deleteUserId && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
+                                                {!userFields.deleteUserId && isSubmit ? <Typography sx={{ marginLeft: "15px", color: "red", fontSize: "10px" }}>User Name is required</Typography> : ""}
                                             </FormControl>
                                         </Box>
                                         <Box>
